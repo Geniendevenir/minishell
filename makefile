@@ -11,6 +11,7 @@ OBJ_DIR				= obj/
 CC					= gcc
 CFLAGS				= -Wall -Werror -Wextra -I
 RM					= rm -f
+READLINE			= -lreadline
 
 # Source Files
 MINI_SHELL_DIR		=	$(SRC_DIR)
@@ -31,7 +32,7 @@ $(LIBFT):
 all: 				$(NAME)
 
 $(NAME): 			$(OBJ) $(LIBFT)
-					@$(CC) $(CFLAGS) $(INC) $(OBJ) $(LIBFT) -o $(NAME)
+					@$(CC) $(CFLAGS) $(INC) $(OBJ) $(READLINE) $(LIBFT) -o $(NAME)
 
 # Compile object files from source files
 $(OBJ_DIR)%.o:		$(SRC_DIR)%.c 

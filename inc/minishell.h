@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/05/30 11:42:09 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/05/30 14:39:29 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,16 @@
 # include <errno.h>
 # include <poll.h>
 # include <sys/msg.h>
+
+typedef struct s_sig
+{
+	int		sig_quit;
+	int		sig_int;
+	int		p_status;
+	int		cmd_stat;
+	char	*line;
+}	t_sig;
+
+extern t_sig	g_sig;
 
 #endif
