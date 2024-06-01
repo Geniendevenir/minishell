@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:25:36 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/01 16:59:15 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/01 20:05:19 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,20 @@ t_env	*ft_envnew(char *key, char *value)
 	return (list);
 }
 
+t_env	*init_env(t_env *p_env, char **env)
+{
+	p_env = malloc(sizeof(t_env));
+	if (!p_env)
+		return (NULL);
+	p_env = env_to_struct(env);
+	if (!p_env)
+		return (free(p_env), NULL);
+	if (create_signal() == -1)
+		return (free(p_env), NULL);
+	g_sig.cmd_stat = 0;
+	return (p_env);
+}
+
 t_env	*ft_envlast(t_env *lst)
 {
 	if (!lst)
@@ -53,6 +67,7 @@ void	ft_env_add_back(t_env **lst, t_env *new)
 	else
 		*lst = new;
 }
+
 t_env	*env_to_struct(char **env)
 {
 	char			*tmp;
@@ -81,15 +96,3 @@ t_env	*env_to_struct(char **env)
 	}
 	return (env_struct);
 }
-
-t_env	*init_env(t_env *p_env, char **env)
-{
-	p_env = env_to_struct(env);
-	if (!p_env)
-		return (free(p_env), NULL);
-	if (create_signal() == -1)
-		return (free(p_env), NULL);
-	g_sig.cmd_stat = 0;
-	return (p_env);
-}
-

@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/01 16:58:50 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/01 20:06:08 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,14 +62,14 @@ extern t_sig	g_sig;
 
 /*					SIGNALS					*/
 
-int		event(void);
-int		create_signal(void);
+int	event(void);
+int	create_signal(void);
 void	init_signal(int nb);
 
 /*					 ENV					*/
 
 t_env	*init_env(t_env *p_env, char **env);
-t_env	*ft_envnew(char *key, char *value);
+t_env	*env_to_struct(char **env);
 
 
 /*					 FREE					*/
@@ -78,12 +78,9 @@ void	free_env(t_env *envp);
 
 /*					 UTILS					*/
 
+
 char	*ft_strndup(char *str, int n);
 int		ft_strcmp(char *s1, char *s2);
-
-/*		   			PRINT_UTILS				*/
-
-void print_env(t_env *env);
-
+void 	print_env(t_env *env);
 
 #endif
