@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/01 20:06:08 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/01 20:23:21 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,10 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
+typedef struct s_all
+{
+	t_env	*env;
+}	t_all;
 
 typedef struct s_sig
 {
@@ -68,7 +72,7 @@ void	init_signal(int nb);
 
 /*					 ENV					*/
 
-t_env	*init_env(t_env *p_env, char **env);
+t_all	*init_env(char **env);
 t_env	*env_to_struct(char **env);
 
 

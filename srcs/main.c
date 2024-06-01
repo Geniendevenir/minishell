@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/01 20:07:24 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/01 20:25:25 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,17 @@ char    *minishell()
 
 int main(int argc, char **argv, char **env) 
 {
-	t_env *p_env;
-	
+	t_all	*p;
+
 	(void)argc;
 	(void) **argv;
-	p_env = NULL;
-	p_env = init_env(p_env, env);
+	p = init_env(env);
+	if (!p || p == NULL)
+		return (EXIT_FAILURE);
 	g_sig.line = NULL;
-	print_env(p_env);
+	print_env(p->env);
+	free_env(p->env);
+	free(p);
 	while(g_sig.line == NULL)
 	{
     	minishell();
