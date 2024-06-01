@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/01 15:26:20 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/01 17:00:32 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_sig g_sig;
 
-char    *minishell(t_env *env)
+char    *minishell()
 {
 	rl_event_hook = event;
 	init_signal(0);
@@ -48,11 +48,16 @@ int main(int argc, char **argv, char **env)
 	
 	(void)argc;
 	(void) **argv;
+	p_env = NULL;
+	if (!p_env)
+		return (EXIT_FAILURE);
 	p_env = init_env(p_env, env);
 	g_sig.line = NULL;
+	//print_env(p_env);
 	while(g_sig.line == NULL)
 	{
-    	minishell(p_env);
+    	minishell();
 	}
+	free_env(p_env);
 	return (EXIT_SUCCESS);
 }

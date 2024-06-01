@@ -20,6 +20,7 @@ MINI_SHELL_DIR		=	$(SRC_DIR)
 SRCS 				=   srcs/env.c\
 						srcs/free.c\
 						srcs/main.c \
+						srcs/print_utils.c \
 						srcs/signals.c\
 						srcs/utils.c\
 
