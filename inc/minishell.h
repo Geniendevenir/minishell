@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/05/30 14:39:29 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/01 15:48:02 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,19 @@
 # include <errno.h>
 # include <poll.h>
 # include <sys/msg.h>
+# include <../libft/inc/libft.h>
+# include <../libft/inc/ft_printf.h>
+# include <../libft/inc/get_next_line.h>
+
+
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	int				code;
+	struct s_env	*next;
+}	t_env;
+
 
 typedef struct s_sig
 {
@@ -46,5 +59,26 @@ typedef struct s_sig
 }	t_sig;
 
 extern t_sig	g_sig;
+
+/*					SIGNALS					*/
+
+int	event(void);
+int	create_signal(void);
+void	init_signal(int nb);
+
+/*					 ENV					*/
+
+t_env	*init_env(t_env *p_env, char **env);
+
+
+/*					 FREE					*/
+
+void	free_env(t_env *envp);
+
+/*					 UTILS					*/
+
+
+char	*ft_strndup(char *str, int n);
+
 
 #endif

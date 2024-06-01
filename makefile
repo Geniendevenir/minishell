@@ -17,7 +17,11 @@ READLINE			= -lreadline
 MINI_SHELL_DIR		=	$(SRC_DIR)
 
 # Concatenate all source files
-SRCS 				= srcs/main.c
+SRCS 				=   srcs/env.c\
+						srcs/free.c\
+						srcs/main.c \
+						srcs/signals.c\
+						srcs/utils.c\
 
 # Apply the pattern substitution to each source file in SRC and produce a corresponding list of object files in the OBJ_DIR
 OBJ 				= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
