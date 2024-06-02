@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/02 14:30:39 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/02 14:35:31 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ typedef struct s_all
 {
 	t_env	*env;
 	char	*line;
-	t_sig	*sig;
+	//t_sig	*sig;
 }	t_all;
 
 
