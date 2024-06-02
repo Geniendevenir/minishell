@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:25:36 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/01 20:23:49 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/02 14:31:01 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,16 @@ t_all	*init_env(char **env)
 	t_all *p;
 	
 	p = malloc(sizeof(t_all));
+	p->line = NULL;
 	if (!p)
 		return (NULL);
 	p->env = env_to_struct(env);
+	init_signal(p->sig,0);
 	if (!p->env)
 		return (free(p), NULL);
 	if (create_signal() == -1)
 		return (free(p), NULL);
-	g_sig.cmd_stat = 0;
+	p->sig->cmd_stat = 0;
 	return (p);
 }
 

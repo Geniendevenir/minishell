@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 11:10:17 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/01 11:16:32 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/02 14:32:50 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@ int	event(void)
 	return (42);
 }
 
-void	init_signal(int nb)
+void	init_signal(t_sig *sig, int nb)
 {
-	g_sig.sig_quit = nb;
-	g_sig.sig_int = nb;
-	g_sig.p_status = nb;
+	sig->sig_quit = nb;
+	sig->sig_int = nb;
+	sig->p_status = nb;
 }
 
 void sighandler(int signal)
