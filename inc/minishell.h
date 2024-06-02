@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/02 14:35:31 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/02 15:49:15 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ typedef struct s_all
 {
 	t_env	*env;
 	char	*line;
-	//t_sig	*sig;
+	t_sig	*sig;
 }	t_all;
 
 
@@ -70,17 +70,19 @@ extern t_sig	g_sig;
 
 int	event(void);
 int	create_signal(void);
-void	init_signal(t_sig *sig, int nb);
 
 /*					 ENV					*/
 
-t_all	*init_env(char **env);
 t_env	*env_to_struct(char **env);
 
+/*					 INIT					*/
+t_all	*init_all(char **env);
+t_sig	*init_signal(int nb);
 
 /*					 FREE					*/
 
 void	free_env(t_env *envp);
+void	free_all(t_all *p);
 
 /*					 UTILS					*/
 

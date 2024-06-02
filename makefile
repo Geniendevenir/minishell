@@ -19,6 +19,7 @@ MINI_SHELL_DIR		=	$(SRC_DIR)
 # Concatenate all source files
 SRCS 				=   srcs/env.c\
 						srcs/free.c\
+						srcs/init.c \
 						srcs/main.c \
 						srcs/print_utils.c \
 						srcs/signals.c\

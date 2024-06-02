@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:34:27 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/01 15:35:12 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/02 15:49:22 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,12 @@ void	free_env(t_env *envp)
 		free(temp);
 	}
 	return ;
+}
+
+void	free_all(t_all *p)
+{
+	free(p->line);
+	free_env(p->env);
+	free(p->sig);
+	free(p);
 }
