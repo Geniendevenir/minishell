@@ -17,14 +17,19 @@ READLINE			= -lreadline
 MINI_SHELL_DIR		=	$(SRC_DIR)
 
 # Concatenate all source files
-SRCS 				=   srcs/check_word.c\
-						srcs/env.c\
+SRCS 				=   srcs/env.c\
 						srcs/free.c\
-						srcs/init.c \
 						srcs/main.c \
 						srcs/print_utils.c \
 						srcs/signals.c\
 						srcs/utils.c\
+						srcs/parsing/check_lexer.c\
+						srcs/parsing/lexer.c\
+						srcs/parsing/token_management.c\
+						srcs/parsing/tokenizer_one.c\
+						srcs/parsing/tokenizer_two.c\
+						srcs/parsing/tokenizer_three.c\
+						srcs/parsing/tokenizer_utils.c\
 
 # Apply the pattern substitution to each source file in SRC and produce a corresponding list of object files in the OBJ_DIR
 OBJ 				= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
