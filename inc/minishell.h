@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/03 20:06:35 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/03 22:59:01 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ typedef struct s_all
 {
 	t_env	*env;
 	char	*line;
-	//t_sig	*sig;
+	t_sig	*sig;
 }	t_all;
 
 
@@ -151,17 +151,23 @@ extern t_sig	g_sig;
 
 int	event(void);
 int	create_signal(void);
-void	init_signal(t_sig *sig, int nb);
+/*					CHECK					*/
+
+int	check_cmd_exist(char *word, t_env *env);
 
 /*					 ENV					*/
 
-t_all	*init_env(char **env);
 t_env	*env_to_struct(char **env);
 
+/*					 INIT					*/
+t_all	*init_all(char **env);
+t_sig	*init_signal(int nb);
 
 /*					 FREE					*/
 
 void	free_env(t_env *envp);
+void	free_all(t_all *p);
+void	free_array(char **array);
 
 /*					 UTILS					*/
 

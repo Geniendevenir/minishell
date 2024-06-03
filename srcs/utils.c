@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:31:18 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/01 20:02:35 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/03 23:00:42 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char	*ft_strndup(char *str, int n)
 
 int	ft_strcmp(char *s1, char *s2)
 {
-	while (*s1 != '\0' || *s2 != '\0')
+	while (s1 && (*s1 != '\0' || *s2 != '\0'))
 	{
 		if (*s1 != *s2)
 			return (*s1 - *s2);
