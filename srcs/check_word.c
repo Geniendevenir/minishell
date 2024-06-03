@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 14:48:05 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/03 16:52:52 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/03 19:55:33 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,12 +86,98 @@ int	check_cmd_exist(char *word, t_env *env)
 		free(path);
 		i++;
 	}
-
 	free_array(paths);
 	return (0);
 }
 
-/* int main()
+enum s_state{
+    STATE_START,
+    STATE_LITTERAL,
+    STATE_STRING,
+    STATE_OPERATOR,
+    STATE_ENV,
+    STATE_DONE
+};
+
+enum s_type{
+    TOKEN_WORD,
+    TOKEN_DQUOTES,
+    TOKEN_SQUOTES,
+    TOKEN_AND,
+    TOKEN_OR,
+    TOKEN_PIPE,
+    TOKEN_REDIRECTIN,
+    TOKEN_REDIRECTOUT,
+    TOKEN_HEREDOC,
+    TOKEN_APPENDOUT,
+    TOKEN_LIMITER,
+    TOKEN_OPENPAR,
+    TOKEN_CLOSEPAR,
+    TOKEN_WHITESPACE,
+    TOKEN_ENV
+};
+
+typedef struct s_token {
+	enum s_type type;
+
+	char value;
+	long len;
+	struct t_token *next;
+} t_token;
+
+enum e_word {
+	WORD_FILEIN,
+	WORD_FILEOUT,
+	WORD_BUILTIN,
+	WORD_ABSPATH,
+	WORD_CMD,
+	WORD_OPTION,
+	WORD_LIMITER,
+	WORD_STRING,
+};
+
+typedef struct s_word {
+    enum s_type type;
+    enum s_state state;
+	enum e_word word_filein;
+	int here_doc;
+	int redi_in;
+	int redi_out;
+	int append;
+	int operator;
+	int cmd;
+    // A voir le format
+} t_word;
+
+
+char *check_word(char *word,t_word *booleen, t_env *env)
+{
+	if (booleen->redi_in == 1)
+	{
+		if (check_file(word) == 1)
+			return ("filein");
+		else
+			return("erreur");
+	}
+	else if (booleen->redi_out == 1)
+		return ("fileout");
+	else if (booleen->here_doc == 1 && booleen->cmd == 1)
+		return ("limiter");
+	else if (booleen->redi_in == 0 && booleen->redi_out == 0)
+	{
+		if (check_builtin(word) == 1)
+			return ("builtin");
+		else if (check_absolute_path_cmd(word) == 1)
+			return ("abs_path");
+		else if (check_cmd_exist(word, env) == 1)
+			return ("cmd");
+		else
+			return ("string");
+	}
+	return (NULL);
+}
+
+/*  int main()
 {
     char *path = "example.txt";
 	char *word = "echo";
