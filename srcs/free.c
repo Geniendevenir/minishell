@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:34:27 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/02 15:49:22 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/03 16:12:53 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,14 @@ void	free_all(t_all *p)
 	free_env(p->env);
 	free(p->sig);
 	free(p);
+}
+
+void	free_array(char **array)
+{
+	int	i;
+
+	i = -1;
+	while (array[++i])
+		free(array[i]);
+	free(array);
 }

@@ -17,7 +17,8 @@ READLINE			= -lreadline
 MINI_SHELL_DIR		=	$(SRC_DIR)
 
 # Concatenate all source files
-SRCS 				=   srcs/env.c\
+SRCS 				=   srcs/check_word.c\
+						srcs/env.c\
 						srcs/free.c\
 						srcs/init.c \
 						srcs/main.c \

@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/02 15:49:15 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/03 16:19:30 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,9 @@ extern t_sig	g_sig;
 
 int	event(void);
 int	create_signal(void);
+/*					CHECK					*/
+
+int	check_cmd_exist(char *word, t_env *env);
 
 /*					 ENV					*/
 
@@ -83,6 +86,7 @@ t_sig	*init_signal(int nb);
 
 void	free_env(t_env *envp);
 void	free_all(t_all *p);
+void	free_array(char **array);
 
 /*					 UTILS					*/
 

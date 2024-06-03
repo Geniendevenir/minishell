@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/02 15:52:58 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/03 16:54:29 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,9 @@ int main(int argc, char **argv, char **env)
 	p = init_all(env);
 	if (!p || p == NULL)
 		return (EXIT_FAILURE);
-	//print_env(p->env);
 	while(p->line == NULL)
 	{
-    	minishell(p);
+		minishell(p);
 	}
 	return (EXIT_SUCCESS);
 }
