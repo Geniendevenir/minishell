@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/03 22:58:04 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/05 12:30:13 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,3 +52,4 @@ int main(int argc, char **argv, char **env)
 	}
 	return (EXIT_SUCCESS);
 }
+

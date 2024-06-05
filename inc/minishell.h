@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/03 22:59:01 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/05 12:26:03 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@
 # include <errno.h>
 # include <poll.h>
 # include <sys/msg.h>
-# include <../libft/inc/libft.h>
-# include <../libft/inc/ft_printf.h>
-# include <../libft/inc/get_next_line.h>
+# include "../libft/inc/libft.h"
+# include "../libft/inc/ft_printf.h"
+# include "../libft/inc/get_next_line.h"
 
 
 /*					 LEXER					*/
@@ -51,6 +51,25 @@ enum s_state{
 	STATE_ENV,
 	STATE_DONE
 };
+
+/* enum s_type{
+	NOT_DEFINE,
+	TOKEN_WORD,
+	TOKEN_DQUOTES,
+	TOKEN_SQUOTES,
+	TOKEN_AND,
+	TOKEN_OR,
+	TOKEN_PIPE,
+	TOKEN_REDIRECTIN,
+	TOKEN_REDIRECTOUT,
+	TOKEN_HEREDOC,
+	TOKEN_APPENDOUT,
+	TOKEN_LIMITER,
+	TOKEN_OPENPAR,
+	TOKEN_CLOSEPAR,
+	TOKEN_WHITESPACE,
+	TOKEN_ENV
+};  */
 
 enum s_type{
 	NOT_DEFINE,
@@ -68,10 +87,21 @@ enum s_type{
 	TOKEN_OPENPAR,
 	TOKEN_CLOSEPAR,
 	TOKEN_WHITESPACE,
-	TOKEN_ENV
+	TOKEN_ENV,
+	WORD_FILEIN,
+	WORD_FILEOUT,
+	WORD_FILEOUT_APPEND,
+	WORD_BUILTIN,
+	WORD_ABSPATH,
+	WORD_CMD,
+	WORD_OPTION, // option / argument d'une commande
+	WORD_LIMITER,
+	WORD_STRING,
+	WORD_ERROR, //ERREUR de syntaxe
+	WORD_WTF, //dans le cas ou j'ai oublie un cas
 };
 
-typedef struct s_token {
+ typedef struct s_token {
 	enum s_type type;
 	enum s_state state;
 	char *value;
@@ -144,6 +174,15 @@ typedef struct s_all
 	t_sig	*sig;
 }	t_all;
 
+typedef struct s_word
+{
+	int redi_in;
+	int redi_out;
+	int here_doc;
+	int append;
+	int operator;
+	int cmd;
+} t_word;
 
 extern t_sig	g_sig;
 
@@ -154,6 +193,11 @@ int	create_signal(void);
 /*					CHECK					*/
 
 int	check_cmd_exist(char *word, t_env *env);
+int	check_builtin(char *word);
+int	check_file(char *word);
+int	check_absolute_path_cmd(char *word);
+int check_word_part(char *word, t_word *boolean, t_env *env);
+int check_word(char *word, t_word *boolean, t_env *env);
 
 /*					 ENV					*/
 

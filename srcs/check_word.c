@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 14:48:05 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/03 19:55:33 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/05 12:04:47 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,21 +18,19 @@
 #include <sys/stat.h>
 #include "../libft/inc/libft.h"
 
-
-////////////////////A ENLEVER
-
 /*check_file : 0 = file don't exist | 1 = file exist*/
-int check_file(char *word)
+int	check_file(char *word)
 {
-    struct stat st;
+	struct stat	st;
 
-    if (stat(word, &st) == -1)
-        return 0;
-    else
-        return 1;
+	if (stat(word, &st) == -1)
+		return (0);
+	else
+		return (1);
 }
+
 /*check_builtin : if word is a builtin return 1, else 0*/
-int check_builtin(char *word)
+int	check_builtin(char *word)
 {
 	if (ft_strcmp(word, "echo") == 0)
 		return (1);
@@ -54,13 +52,14 @@ int check_builtin(char *word)
 		return (0);
 }
 
-int check_absolute_path_cmd(char *word)
+int	check_absolute_path_cmd(char *word)
 {
-    if (access(word, X_OK) == 0)
-        return 1;
-    else
-        return 0;
+	if (access(word, X_OK) == 0)
+		return (1);
+	else
+		return (0);
 }
+
 int	check_cmd_exist(char *word, t_env *env)
 {
 	char	**paths;
@@ -90,92 +89,60 @@ int	check_cmd_exist(char *word, t_env *env)
 	return (0);
 }
 
-enum s_state{
-    STATE_START,
-    STATE_LITTERAL,
-    STATE_STRING,
-    STATE_OPERATOR,
-    STATE_ENV,
-    STATE_DONE
-};
 
-enum s_type{
-    TOKEN_WORD,
-    TOKEN_DQUOTES,
-    TOKEN_SQUOTES,
-    TOKEN_AND,
-    TOKEN_OR,
-    TOKEN_PIPE,
-    TOKEN_REDIRECTIN,
-    TOKEN_REDIRECTOUT,
-    TOKEN_HEREDOC,
-    TOKEN_APPENDOUT,
-    TOKEN_LIMITER,
-    TOKEN_OPENPAR,
-    TOKEN_CLOSEPAR,
-    TOKEN_WHITESPACE,
-    TOKEN_ENV
-};
-
-typedef struct s_token {
-	enum s_type type;
-
-	char value;
-	long len;
-	struct t_token *next;
-} t_token;
-
-enum e_word {
-	WORD_FILEIN,
-	WORD_FILEOUT,
-	WORD_BUILTIN,
-	WORD_ABSPATH,
-	WORD_CMD,
-	WORD_OPTION,
-	WORD_LIMITER,
-	WORD_STRING,
-};
-
-typedef struct s_word {
-    enum s_type type;
-    enum s_state state;
-	enum e_word word_filein;
-	int here_doc;
-	int redi_in;
-	int redi_out;
-	int append;
-	int operator;
-	int cmd;
-    // A voir le format
-} t_word;
-
-
-char *check_word(char *word,t_word *booleen, t_env *env)
+int check_word_part(char *word, t_word *boolean, t_env *env)
 {
-	if (booleen->redi_in == 1)
+	if (check_builtin(word) == 1)
 	{
-		if (check_file(word) == 1)
-			return ("filein");
-		else
-			return("erreur");
+		boolean->cmd = 1;
+		return (WORD_BUILTIN);
 	}
-	else if (booleen->redi_out == 1)
-		return ("fileout");
-	else if (booleen->here_doc == 1 && booleen->cmd == 1)
-		return ("limiter");
-	else if (booleen->redi_in == 0 && booleen->redi_out == 0)
+	else if (check_absolute_path_cmd(word) == 1)
 	{
-		if (check_builtin(word) == 1)
-			return ("builtin");
-		else if (check_absolute_path_cmd(word) == 1)
-			return ("abs_path");
-		else if (check_cmd_exist(word, env) == 1)
-			return ("cmd");
-		else
-			return ("string");
+		boolean->cmd = 1;
+		return (WORD_ABSPATH);
 	}
-	return (NULL);
+	else if (check_cmd_exist(word, env) == 1)
+	{
+		boolean->cmd = 1;
+		return (WORD_CMD);
+	}
+	else
+		return (WORD_WTF);
 }
+int check_word(char *word, t_word *boolean, t_env *env)
+{
+	if (boolean->redi_in == 1)
+	{
+		boolean->redi_in = 0;
+		if (check_file(word) == 1)
+			return (WORD_FILEIN);
+		else
+			return(WORD_ERROR);
+	}
+	else if (boolean->redi_out == 1)
+	{
+		boolean->redi_out = 0;
+		return (WORD_FILEOUT);
+	}
+	else if (boolean->append == 1)
+	{
+		boolean->append = 0;
+		return (WORD_FILEOUT_APPEND);
+	}
+	else if (boolean->here_doc == 1 && boolean->cmd == 1)
+	{
+		boolean->here_doc = 0;
+		boolean->cmd = 0;
+		return (WORD_LIMITER);
+	}
+	else if (boolean->cmd == 1 && boolean->operator == 0)
+		return (WORD_OPTION);
+	else if ((boolean->redi_in == 0) && (boolean->redi_out == 0) && (boolean->cmd == 0))
+		return (check_word_part(word, boolean, env));
+	return (WORD_WTF);
+}
+
 
 /*  int main()
 {
@@ -213,8 +180,5 @@ char *check_word(char *word,t_word *booleen, t_env *env)
 	{
         printf("La commande %s n'existe pas.\n", word);
     } 
-
-
-
     return 0;
 } */
