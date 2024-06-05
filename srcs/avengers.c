@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:27:35 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/05 12:29:20 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/05 18:05:24 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ void init_t_word(t_word *word)
 }
 
 int enumToString(int enumValue) {
-    if (enumValue >= 0 && enumValue < 27) {
+    if (enumValue >= 0 && enumValue < 27) 
+	{
         return enumValue;
     } else {
         return -1;
@@ -34,7 +35,7 @@ void define_word(char **value_oftoken, int *token_list, t_word *boolean, t_env *
 {
 	int i = 0;
 
-	while (token_list[i] && value_oftoken[i] != NULL && i < 16)
+	while (token_list[i] && value_oftoken[i] != NULL && i < 16) // i = len of the token list
 	{
 		//printf("value = %s | token = %d\n", value_oftoken[i], token_list[i]);
 		if (token_list[i] == TOKEN_REDIRECTIN)
@@ -48,16 +49,11 @@ void define_word(char **value_oftoken, int *token_list, t_word *boolean, t_env *
 		else if (token_list[i] == TOKEN_APPENDOUT || token_list[i] == TOKEN_REDIRECTIN ||
 				token_list[i] == TOKEN_REDIRECTOUT || token_list[i] == TOKEN_HEREDOC ||
 				token_list[i] == TOKEN_PIPE || token_list[i] == TOKEN_AND || token_list[i] == TOKEN_OR)
-		{
 			boolean->cmd = 0;
-		}
 		else if (token_list[i] == TOKEN_WORD)
-		{
 			token_list[i] = check_word(value_oftoken[i], boolean, env);
-		}
 		else
 			return;
-
 		i++;
 	}
 	return;

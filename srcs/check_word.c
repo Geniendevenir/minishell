@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 14:48:05 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/05 12:04:47 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/05 17:18:05 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int	check_cmd_exist(char *word, t_env *env)
 }
 
 
-int check_word_part(char *word, t_word *boolean, t_env *env)
+int check_word_part_cmd(char *word, t_word *boolean, t_env *env)
 {
 	if (check_builtin(word) == 1)
 	{
@@ -110,6 +110,19 @@ int check_word_part(char *word, t_word *boolean, t_env *env)
 	else
 		return (WORD_WTF);
 }
+
+int check_word_part_rediout(t_word *boolean)
+{
+	boolean->redi_out = 0;
+	return (WORD_FILEOUT);
+}
+
+int check_word_part_append(t_word *boolean)
+{
+	boolean->redi_out = 0;
+	return (WORD_FILEOUT_APPEND);
+}
+
 int check_word(char *word, t_word *boolean, t_env *env)
 {
 	if (boolean->redi_in == 1)
@@ -121,15 +134,9 @@ int check_word(char *word, t_word *boolean, t_env *env)
 			return(WORD_ERROR);
 	}
 	else if (boolean->redi_out == 1)
-	{
-		boolean->redi_out = 0;
-		return (WORD_FILEOUT);
-	}
+		return (check_word_part_rediout(boolean));
 	else if (boolean->append == 1)
-	{
-		boolean->append = 0;
-		return (WORD_FILEOUT_APPEND);
-	}
+		return (check_word_part_append(boolean));
 	else if (boolean->here_doc == 1 && boolean->cmd == 1)
 	{
 		boolean->here_doc = 0;
@@ -139,7 +146,7 @@ int check_word(char *word, t_word *boolean, t_env *env)
 	else if (boolean->cmd == 1 && boolean->operator == 0)
 		return (WORD_OPTION);
 	else if ((boolean->redi_in == 0) && (boolean->redi_out == 0) && (boolean->cmd == 0))
-		return (check_word_part(word, boolean, env));
+		return (check_word_part_cmd(word, boolean, env));
 	return (WORD_WTF);
 }
 
