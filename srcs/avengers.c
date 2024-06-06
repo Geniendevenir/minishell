@@ -6,12 +6,63 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:27:35 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/05 18:05:24 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/06 15:37:28 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
+
+int	check_double_syntax(t_token *token_list)
+{
+	t_token *tmp;
+
+	tmp = token_list;
+	while(tmp->next)
+	{
+		if (token_list->type == 0 || token_list->type == 1 || token_list->type == 14 ||
+		token_list->type == 2 || token_list->type == 3 || token_list->type == 12 ||
+		token_list->type == 13)
+			tmp->next;
+		if (tmp->type == tmp->next->type)
+		{
+			return (1);
+		}
+		else
+			tmp->next;
+	}
+	return (0);
+}
+/* enum s_type{
+	NOT_DEFINE,
+	TOKEN_WORD,
+	TOKEN_DQUOTES,
+	TOKEN_SQUOTES,
+	TOKEN_AND,
+	TOKEN_OR,
+	TOKEN_PIPE,
+	TOKEN_REDIRECTIN,
+	TOKEN_REDIRECTOUT,
+	TOKEN_HEREDOC,
+	TOKEN_APPENDOUT,
+	TOKEN_LIMITER,
+	TOKEN_OPENPAR,
+	TOKEN_CLOSEPAR,
+	TOKEN_WHITESPACE,
+	TOKEN_ENV,
+	WORD_FILEIN,
+	WORD_FILEOUT,
+	WORD_FILEOUT_APPEND,
+	WORD_BUILTIN,
+	WORD_ABSPATH,
+	WORD_CMD,
+	WORD_OPTION, // option / argument d'une commande
+	WORD_LIMITER,
+	WORD_STRING,
+	WORD_ERROR, //ERREUR de syntaxe
+	WORD_WTF, //dans le cas ou j'ai oublie un cas
+};
+ */
 void init_t_word(t_word *word)
 {
 	word->redi_in = 0;
