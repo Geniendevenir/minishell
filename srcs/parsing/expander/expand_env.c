@@ -1,55 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   check_lexer.c                                      :+:      :+:    :+:   */
+/*   expand_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/02 17:23:10 by allan             #+#    #+#             */
-/*   Updated: 2024/06/02 22:37:33 by allan            ###   ########.fr       */
+/*   Created: 2024/06/08 10:52:47 by allan             #+#    #+#             */
+/*   Updated: 2024/06/08 12:26:01 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool check_semicolon(char *cmd_line)
+/* bool	expand_quoted_env(t_token **token_list, t_env *env)
 {
-	int	i;
+	t_token	*current;
 
-	i = 0;
-	while (cmd_line[i])
+	while (*token_list && ((*token_list)->type == TOKEN_DQUOTES))
 	{
-		if (cmd_line[i] == ';')
+		if (find_first_dquotes(token_list, env) == 1)
 			return (1);
-		i++;
 	}
-	return (0);
-}
-
-bool check_quotes(char *cmd_line)
-{
-	int i;
-	
-	i = 0;
-	while(cmd_line[i])
+	if (!(*token_list) || !(*token_list)->next)
+		return (0);
+	current = *token_list;
+	token_print(&current);
+	while (current && current->next)
 	{
-		if (cmd_line[i] == '\"')
+		if (current->next->type == TOKEN_DQUOTES)
 		{
-			i++;
-			while (cmd_line[i] && cmd_line[i] != '\"')
-				i++;
-			if (!cmd_line[i])
+			if (find_next_env(&current, env) == 1)
 				return (1);
 		}
-		else if (cmd_line[i] == '\'')
-		{
-			i++;
-			while (cmd_line[i] && cmd_line[i] != '\'')
-				i++;
-			if (!cmd_line[i])
-				return (1);
-		}
-		i++;
+		else
+			current = current->next;
 	}
 	return (0);
-}
+} */
+
+
+

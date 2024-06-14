@@ -1,43 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   expander_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/01 15:31:18 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/07 19:13:00 by allan            ###   ########.fr       */
+/*   Created: 2024/06/07 10:58:09 by allan             #+#    #+#             */
+/*   Updated: 2024/06/07 11:03:53 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "minishell.h"
 
-char	*ft_strndup(char *str, int n)
+void	print_envv(t_env **env)
 {
-	char	*dup;
-	int		i;
+	t_env *current;
 
-	i = 0;
-	dup = malloc(sizeof(char) * (n + 1));
-	if (!dup)
-		return (NULL);
-	while (i < n)
+	current = *env;
+	while (current)
 	{
-		dup[i] = str[i];
-		i++;
+		if (current->key)
+			printf("%s\n", current->key);
+		current = current->next;
 	}
-	dup[i] = '\0';
-	return (dup);
-}
-
-int	ft_strcmp(const char *s1, const char *s2)
-{
-	while (s1 && (*s1 != '\0' || *s2 != '\0'))
-	{
-		if (*s1 != *s2)
-			return (*s1 - *s2);
-		s1++;
-		s2++;
-	}
-	return (0);
 }

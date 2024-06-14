@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/03 22:58:04 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/06 21:34:18 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ char    *minishell(t_all *p)
     }
 	if (p->sig->sig_int == 0) 
 	{
+		parser(p->line, p->env);
 		add_history(p->line);
 	}
 	p->sig->sig_int = 0;
@@ -34,8 +35,7 @@ char    *minishell(t_all *p)
 	
 }
 
-//valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes
-//--suppressions=./.readline.supp ./minishell
+//valgrind --leak-check=full --show-leak-kinds=all --suppressions=./.readline.supp ./minishell
 
 int main(int argc, char **argv, char **env) 
 {

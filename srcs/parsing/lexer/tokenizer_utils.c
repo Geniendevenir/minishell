@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 10:19:15 by allan             #+#    #+#             */
-/*   Updated: 2024/06/03 18:28:30 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/06 19:02:00 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ bool	is_env(char c)
 
 bool	is_valid_env(char c)
 {
-	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_'
+	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c == '_') 
 		|| (c >= '0' && c <= '9'))
 		return (0);
 	return (1);
@@ -45,19 +45,27 @@ bool	is_word(char c)
 	return (0);
 }
 
+bool	is_wildcard(const char *cmd_line, int i)
+{
+	while (cmd_line[i] && (is_word(cmd_line[i]) == 0 || cmd_line[i] == '*'))
+	{
+		if (cmd_line[i] == '*')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 bool	is_freeable(char *value)
 {
-	int	i;
-
-	i = ft_strlen(value);
-	if (ft_strncmp(value, " ", i) == 0 || ft_strncmp(value, ")", i)
-		|| ft_strncmp(value, "(", i) || ft_strncmp(value, "<", i))
+	if (!ft_strcmp(value, " ") || !ft_strcmp(value, ")")
+		|| !ft_strcmp(value, "(") || !ft_strcmp(value, "<"))
 		return (1);
-	if (ft_strncmp(value, "||", i) == 0 || ft_strncmp(value, "|", i)
-		|| ft_strncmp(value, "&&", i) || ft_strncmp(value, "<<", i))
+	if (!ft_strcmp(value, "||") || !ft_strcmp(value, "|")
+		|| !ft_strcmp(value, "&&") || !ft_strcmp(value, "<<"))
 		return (1);
-	if (ft_strncmp(value, ">>", i) == 0 || ft_strncmp(value, ">", i)
-		|| ft_strncmp(value, "$?", i))
+	if (!ft_strcmp(value, ">>") || !ft_strcmp(value, ">")
+		|| !ft_strcmp(value, "?"))
 		return (1);
 	return (0);
 }
