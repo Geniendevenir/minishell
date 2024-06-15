@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/15 13:31:17 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/15 16:49:51 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,8 @@ extern t_sig	g_sig;
 /*					 LEXER					*/
 
 typedef struct s_index {
-	int	*i;
-	int	*j;
+	size_t	*i;
+	size_t	j;
 }				t_index;
 
 
@@ -117,8 +117,10 @@ bool	check_semicolon(char *cmd_line);
 //lexer
 void	parser(char *cmd_line, t_env *env);
 bool	lexer(char *cmd_line, t_token **token_list);
-int		tokenizer_partwo(const char *cmd_line, size_t *i, t_token **token_list);
-int		tokenizer(const char *cmd_line, size_t *i, t_token **token_list);
+int		tokenizer_one(const char *cmd_line, size_t *i, t_token **token_list);
+int		tokenizer_two(const char *cmd_line, size_t *i, t_token **token_list);
+int		tokenizer_three(const char *cmd_line, size_t *i, t_token **token_list);
+int		tokenizer_four(const char *cmd_line, size_t *i, t_token **token_list);
 
 //token_management
 void	token_print(t_token **token_list);
@@ -143,9 +145,9 @@ bool	outputre_token(size_t *i, t_token **token_list);
 bool	lexical_token(const char *cmd_line, size_t *i, t_token **token_list);
 int		env_token(const char *cmd_line, size_t *i, t_token **token_list);
 bool	wildcard_token(const char *cmd_line, size_t *i, t_token **token_list);
-
 bool	dquotes_token(const char *cmd_line, size_t *i, t_token **token_list);
 bool	dquote_add_token(char *token_value, t_token **token_list, bool option);
+bool	env_dquotes(const char *cmd_line, t_index *index, t_token **token_list);
 
 //utils
 bool	is_whitespace(char c);

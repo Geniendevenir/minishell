@@ -6,11 +6,22 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:24:04 by allan             #+#    #+#             */
-/*   Updated: 2024/06/08 11:04:51 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/15 17:27:43 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/*
+		TO DO:
+	1 - Concatener env_token: OK
+	2 - Verifier tous les cas d'erreurs du lexer: OK
+	3 - Finir expander env: OK
+	4 - Verifier leak et erreurs expander env
+	5 - Faire le relink
+	6 - Wildcard
+	7 - Syntax 
+*/
 
 void parser(char *cmd_line, t_env *env)
 {
@@ -28,12 +39,12 @@ void parser(char *cmd_line, t_env *env)
 	token_print(&token_list);
 	//token_print_amazing(&token_list);
 
-	//if (expander(&token_list, env) == 1)
-		//return ;
+	if (expander(&token_list, env) == 1)
+		return ;
 	//syntax_check(); // Ultime check structure de l'input
 	//ast(); // Tour de Controle de l'execution
-	//printf("AFTER EXPANDER:\n");
-	//token_print(&token_list);
+	printf("AFTER EXPANDER:\n");
+	token_print(&token_list);
 	//token_print_amazing(&token_list);
 	token_free(&token_list);
 }

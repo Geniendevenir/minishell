@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:22:12 by allan             #+#    #+#             */
-/*   Updated: 2024/06/14 19:26:25 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/15 16:53:20 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 
 bool token_init(t_token *token_list)
 {
-	/* token_list = malloc(sizeof(t_token));
-	if (!token_list)
-		return (1); */
 	token_list->state = STATE_START;
 	token_list->type = NOT_DEFINE;
 	token_list->value = NULL;
@@ -160,9 +157,3 @@ const char* getToken_Class(t_token *current) {
     }
 	
 }
-//printf("%s->", current->value);
-/*
-token_remove()
-token_join()
-*/
-
