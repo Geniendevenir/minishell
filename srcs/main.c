@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/05 12:30:13 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/14 14:06:23 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ char    *minishell(t_all *p)
     }
 	if (p->sig->sig_int == 0) 
 	{
+		parser(p->line, p->env);
 		add_history(p->line);
 	}
 	p->sig->sig_int = 0;

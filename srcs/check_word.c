@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 14:48:05 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/05 17:18:05 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/14 17:20:00 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ int check_word_part_append(t_word *boolean)
 	return (WORD_FILEOUT_APPEND);
 }
 
-int check_word(char *word, t_word *boolean, t_env *env)
+enum s_type check_word(char *word, t_word *boolean, t_env *env)
 {
 	if (boolean->redi_in == 1)
 	{

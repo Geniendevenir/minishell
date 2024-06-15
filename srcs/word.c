@@ -1,68 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   avengers.c                                         :+:      :+:    :+:   */
+/*   word.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:27:35 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/06 15:37:28 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/15 16:42:31 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-
-int	check_double_syntax(t_token *token_list)
-{
-	t_token *tmp;
-
-	tmp = token_list;
-	while(tmp->next)
-	{
-		if (token_list->type == 0 || token_list->type == 1 || token_list->type == 14 ||
-		token_list->type == 2 || token_list->type == 3 || token_list->type == 12 ||
-		token_list->type == 13)
-			tmp->next;
-		if (tmp->type == tmp->next->type)
-		{
-			return (1);
-		}
-		else
-			tmp->next;
-	}
-	return (0);
-}
-/* enum s_type{
-	NOT_DEFINE,
-	TOKEN_WORD,
-	TOKEN_DQUOTES,
-	TOKEN_SQUOTES,
-	TOKEN_AND,
-	TOKEN_OR,
-	TOKEN_PIPE,
-	TOKEN_REDIRECTIN,
-	TOKEN_REDIRECTOUT,
-	TOKEN_HEREDOC,
-	TOKEN_APPENDOUT,
-	TOKEN_LIMITER,
-	TOKEN_OPENPAR,
-	TOKEN_CLOSEPAR,
-	TOKEN_WHITESPACE,
-	TOKEN_ENV,
-	WORD_FILEIN,
-	WORD_FILEOUT,
-	WORD_FILEOUT_APPEND,
-	WORD_BUILTIN,
-	WORD_ABSPATH,
-	WORD_CMD,
-	WORD_OPTION, // option / argument d'une commande
-	WORD_LIMITER,
-	WORD_STRING,
-	WORD_ERROR, //ERREUR de syntaxe
-	WORD_WTF, //dans le cas ou j'ai oublie un cas
-};
- */
 void init_t_word(t_word *word)
 {
 	word->redi_in = 0;
@@ -82,32 +31,48 @@ int enumToString(int enumValue) {
     }
 }
 
-void define_word(char **value_oftoken, int *token_list, t_word *boolean, t_env *env)
+int get_list_length(t_token *head)
 {
-	int i = 0;
+	int len;
+	t_token *current = head;
 
-	while (token_list[i] && value_oftoken[i] != NULL && i < 16) // i = len of the token list
+	len = 0;
+	while (current != NULL)
 	{
-		//printf("value = %s | token = %d\n", value_oftoken[i], token_list[i]);
-		if (token_list[i] == TOKEN_REDIRECTIN)
-			boolean->redi_in = 1;
-		else if (token_list[i] == TOKEN_REDIRECTOUT)
-			boolean->redi_out = 1;
-		else if (token_list[i] == TOKEN_HEREDOC)
-			boolean->here_doc = 1;
-		else if (token_list[i] == TOKEN_APPENDOUT)
-			boolean->append = 1;
-		else if (token_list[i] == TOKEN_APPENDOUT || token_list[i] == TOKEN_REDIRECTIN ||
-				token_list[i] == TOKEN_REDIRECTOUT || token_list[i] == TOKEN_HEREDOC ||
-				token_list[i] == TOKEN_PIPE || token_list[i] == TOKEN_AND || token_list[i] == TOKEN_OR)
-			boolean->cmd = 0;
-		else if (token_list[i] == TOKEN_WORD)
-			token_list[i] = check_word(value_oftoken[i], boolean, env);
-		else
-			return;
-		i++;
+		len++;
+		current = current->next;
 	}
-	return;
+
+	return (len);
+}
+
+void define_word(t_token **token_list, t_word *boolean, t_env *env)
+{
+	int i;
+	int len_list;
+	t_token *current;
+
+	i = -1;
+	len_list = get_list_length(*token_list);
+	current = *token_list;
+	while (current && ++i <= len_list)
+	{
+		if (current->type == TOKEN_REDIRECTIN)
+			boolean->redi_in = 1;
+		else if (current->type == TOKEN_REDIRECTOUT)
+			boolean->redi_out = 1;
+		else if (current->type == TOKEN_HEREDOC)
+			boolean->here_doc = 1;
+		else if (current->type == TOKEN_APPENDOUT)
+			boolean->append = 1;
+		else if (current->type == TOKEN_APPENDOUT || current->type == TOKEN_REDIRECTIN ||
+				current->type == TOKEN_REDIRECTOUT || current->type == TOKEN_HEREDOC ||
+				current->type == TOKEN_PIPE || current->type == TOKEN_AND || current->type == TOKEN_OR)
+			boolean->cmd = 0;
+		else if (current->type == TOKEN_WORD)
+			current->type = check_word(current->value, boolean, env);
+		current = current->next;
+	}
 }
 
 
