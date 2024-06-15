@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 14:38:47 by allan             #+#    #+#             */
-/*   Updated: 2024/06/14 12:42:58 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/15 13:22:21 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	tokenizer(const char *cmd_line, size_t *i, t_token **token_list)
 	if (is_whitespace(cmd_line[*i]))
 		error = whitespace_token(cmd_line, i, token_list);
 	else if (cmd_line[*i] == '\"')
-		error = env_dquotes_token(cmd_line, i, token_list);
+		error = dquotes_token(cmd_line, i, token_list);
 	else if (cmd_line[*i] == '\'')
 		error = squote_token(cmd_line, i, token_list);
 	else if (cmd_line[*i] == '(')

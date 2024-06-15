@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:26:32 by allan             #+#    #+#             */
-/*   Updated: 2024/06/05 14:10:45 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/14 19:27:57 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ bool or_token(size_t *i, t_token **token_list)
 {
 	t_token	*current;
 	
-	if (token_addback(token_list, "||") == 1)
+	if (token_addback(token_list, "||", 1) == 1)
 		return (1);
 	current = token_last(*token_list);
 	if (!current)
@@ -31,7 +31,7 @@ bool pipe_token(size_t *i, t_token **token_list)
 {
 	t_token	*current;
 	
-	if (token_addback(token_list, "|") == 1)
+	if (token_addback(token_list, "|", 1) == 1)
 		return (1);
 	current = token_last(*token_list);
 	if (!current)
@@ -48,7 +48,7 @@ int and_token(const char *cmd_line, size_t *i, t_token **token_list)
 	
 	if (cmd_line[*i + 1] != '&')
 		return (2);
-	if (token_addback(token_list, "&&") == 1)
+	if (token_addback(token_list, "&&", 1) == 1)
 		return (1);
 	current = token_last(*token_list);
 	if (!current)
@@ -63,7 +63,7 @@ bool heredoc_token(size_t *i, t_token **token_list)
 {
 	t_token	*current;
 	
-	if (token_addback(token_list, "<<") == 1)
+	if (token_addback(token_list, "<<", 1) == 1)
 		return (1);
 	current = token_last(*token_list);
 	if (!current)
@@ -78,7 +78,7 @@ bool inputre_token(size_t *i, t_token **token_list)
 {
 	t_token	*current;
 	
-	if (token_addback(token_list, "<") == 1)
+	if (token_addback(token_list, "<", 1) == 1)
 		return (1);
 	current = token_last(*token_list);
 	if (!current)

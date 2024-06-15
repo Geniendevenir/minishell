@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:22:12 by allan             #+#    #+#             */
-/*   Updated: 2024/06/06 21:55:13 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/14 19:26:25 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ t_token *token_last(t_token *token_list)
 	return (token_list);
 }
 
-bool	token_addback(t_token **token_list, char *value)
+bool	token_addback(t_token **token_list, char *value, bool option)
 {
 	t_token *token;
 	t_token	*last_token;
@@ -50,7 +50,7 @@ bool	token_addback(t_token **token_list, char *value)
 	token->value = ft_strdup(value);
 	if (!token->value)
 		return (1);
-	if (is_freeable(token->value) == 0)
+	if (is_freeable(token->value, option) == 0)
 		free(value);
 	token->next = NULL;
 	if ((*token_list)->value == NULL)

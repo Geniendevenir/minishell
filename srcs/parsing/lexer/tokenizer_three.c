@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 22:28:07 by allan             #+#    #+#             */
-/*   Updated: 2024/06/06 20:02:08 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/14 19:29:36 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ bool outputapp_token(size_t *i, t_token **token_list)
 {
 	t_token	*current;
 	
-	if (token_addback(token_list, ">>") == 1)
+	if (token_addback(token_list, ">>", 1) == 1)
 		return (1);
 	current = token_last(*token_list);
 	if (!current)
@@ -32,7 +32,7 @@ bool outputre_token(size_t *i, t_token **token_list)
 {
 	t_token	*current;
 	
-	if (token_addback(token_list, ">") == 1)
+	if (token_addback(token_list, ">", 1) == 1)
 		return (1);
 	current = token_last(*token_list);
 	if (!current)
@@ -55,7 +55,7 @@ int	env_token(const char *cmd_line, size_t *i, t_token **token_list)
 		return (3);
 	if (cmd_line[j + 1] == '?')
 	{
-		if (token_addback(token_list, "?") == 1)
+		if (token_addback(token_list, "?", 1) == 1)
 			return (1);
 		j++;
 	}
@@ -66,7 +66,7 @@ int	env_token(const char *cmd_line, size_t *i, t_token **token_list)
 		token_value = ft_substr(cmd_line, (*i) + 1, (j - *i)); //check valeur i et j;
 		if (!token_value)
 			return (1); //add error;
-		if (token_addback(token_list, token_value) == 1)
+		if (token_addback(token_list, token_value, 0) == 1)
 			return (1);
 	}
 	current = token_last(*token_list);
@@ -91,7 +91,7 @@ bool	wildcard_token(const char *cmd_line, size_t *i, t_token **token_list)
 	token_value = ft_substr(cmd_line, *i, (j - *i));
 	if (!token_value)
 		return (1);
-	if (token_addback(token_list, token_value) == 1)
+	if (token_addback(token_list, token_value, 0) == 1)
 		return (1);
 	current = token_last(*token_list);
 	if (!current)
@@ -115,7 +115,7 @@ bool lexical_token(const char *cmd_line, size_t *i, t_token **token_list)
 	token_value = ft_substr(cmd_line, *i, (j - *i)); //check valeur i et j;
 	if (!token_value)
 		return (1); //add error;
-	if (token_addback(token_list, token_value) == 1)
+	if (token_addback(token_list, token_value, 0) == 1)
 		return (1);
 	current = token_last(*token_list);
 	if (!current)

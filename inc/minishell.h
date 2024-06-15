@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/08 12:27:17 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/15 13:31:17 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,11 @@ extern t_sig	g_sig;
 
 /*					 LEXER					*/
 
+typedef struct s_index {
+	int	*i;
+	int	*j;
+}				t_index;
+
 
 enum s_state{
 	STATE_START,
@@ -120,12 +125,11 @@ void	token_print(t_token **token_list);
 void	token_print_amazing(t_token **token_list);
 bool 	token_init(t_token *token_list);
 t_token *token_last(t_token *token_list);
-bool	token_addback(t_token **token_list, char *value);
+bool	token_addback(t_token **token_list, char *value, bool option);
 void	token_free(t_token **token_list);
 
 //tokenizer
 bool	whitespace_token(const char *cmd_line, size_t *i, t_token **token_list);
-bool	dquote_token(const char *cmd_line, size_t *i, t_token **token_list);
 bool	squote_token(const char *cmd_line, size_t *i, t_token **token_list);
 bool	inpar_token(size_t *i, t_token **token_list);
 bool	outpar_token(size_t *i, t_token **token_list);
@@ -140,7 +144,7 @@ bool	lexical_token(const char *cmd_line, size_t *i, t_token **token_list);
 int		env_token(const char *cmd_line, size_t *i, t_token **token_list);
 bool	wildcard_token(const char *cmd_line, size_t *i, t_token **token_list);
 
-bool	env_dquotes_token(const char *cmd_line, size_t *i, t_token **token_list);
+bool	dquotes_token(const char *cmd_line, size_t *i, t_token **token_list);
 bool	dquote_add_token(char *token_value, t_token **token_list, bool option);
 
 //utils
@@ -148,7 +152,7 @@ bool	is_whitespace(char c);
 bool	is_word(char c);
 bool	is_env(char c);
 bool	is_valid_env(char c);
-bool	is_freeable(char *value);
+bool	is_freeable(char *value, bool option);
 bool	is_wildcard(const char *cmd_line, int i);
 
 //error
