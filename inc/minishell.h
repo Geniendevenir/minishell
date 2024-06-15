@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/15 16:49:51 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/15 23:49:15 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ void	token_print(t_token **token_list);
 void	token_print_amazing(t_token **token_list);
 bool 	token_init(t_token *token_list);
 t_token *token_last(t_token *token_list);
-bool	token_addback(t_token **token_list, char *value, bool option);
+bool	token_addback(t_token **token_list, char *value, int option);
 void	token_free(t_token **token_list);
 
 //tokenizer
@@ -154,7 +154,7 @@ bool	is_whitespace(char c);
 bool	is_word(char c);
 bool	is_env(char c);
 bool	is_valid_env(char c);
-bool	is_freeable(char *value, bool option);
+bool	is_freeable(char *value, int option);
 bool	is_wildcard(const char *cmd_line, int i);
 
 //error
@@ -166,14 +166,17 @@ const char	*getToken_Class(t_token *current);
 
 /*								EXPANDER						*/
 bool	expander(t_token **token_list, t_env *env);
+//expand env
 int		expand_env(t_token **token_list, t_env **env);
 bool	find_first_env(t_token **current, t_env **env);
 bool	find_next_env(t_token **current, t_env **env);
 void	remove_token(t_token **current, bool option);
 bool	replace_token(t_token *token,  char *new_value);
 void	remove_all_env(t_token **token_list);
-
 bool	expand_quoted_env(t_token **token_list, t_env *env); // to delete
+
+//relink
+int		relink_token(t_token **token_list);
 
 void	print_envv(t_env **env);
 

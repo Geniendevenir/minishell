@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 10:19:15 by allan             #+#    #+#             */
-/*   Updated: 2024/06/14 19:25:53 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/15 23:49:45 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,10 @@ bool	is_wildcard(const char *cmd_line, int i)
 	return (1);
 }
 
-bool	is_freeable(char *value, bool option)
+bool	is_freeable(char *value, int option)
 {
+	if (option == 2)
+		return (1);
 	if (option == 1)
 	{
 		if (!ft_strcmp(value, " ") || !ft_strcmp(value, ")")

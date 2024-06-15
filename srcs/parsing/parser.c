@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:24:04 by allan             #+#    #+#             */
-/*   Updated: 2024/06/15 17:27:43 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/15 23:07:42 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ void parser(char *cmd_line, t_env *env)
 	printf("AFTER LEXER:\n");
 	token_print(&token_list);
 	//token_print_amazing(&token_list);
-
 	if (expander(&token_list, env) == 1)
 		return ;
 	//syntax_check(); // Ultime check structure de l'input

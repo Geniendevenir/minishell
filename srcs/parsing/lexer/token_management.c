@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:22:12 by allan             #+#    #+#             */
-/*   Updated: 2024/06/15 16:53:20 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/15 23:48:42 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ t_token *token_last(t_token *token_list)
 	return (token_list);
 }
 
-bool	token_addback(t_token **token_list, char *value, bool option)
+bool	token_addback(t_token **token_list, char *value, int option)
 {
 	t_token *token;
 	t_token	*last_token;
