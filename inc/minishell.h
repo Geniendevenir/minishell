@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/15 18:02:54 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/15 19:25:28 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,6 +198,9 @@ int	event(void);
 int	create_signal(void);
 /*					CHECK					*/
 
+int	check_word_part_cmd(char *word, t_word *boolean, t_env *env);
+int	check_word_part_append(t_word *boolean);
+int	check_word_part_rediout(t_word *boolean);
 bool	check_double_syntax(t_token **token_list);
 bool	check_syntax(t_token **token_list);
 int	check_cmd_exist(char *word, t_env *env);

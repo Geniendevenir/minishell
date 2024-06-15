@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 14:48:05 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/14 17:20:00 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/15 19:27:46 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,41 +89,7 @@ int	check_cmd_exist(char *word, t_env *env)
 	return (0);
 }
 
-
-int check_word_part_cmd(char *word, t_word *boolean, t_env *env)
-{
-	if (check_builtin(word) == 1)
-	{
-		boolean->cmd = 1;
-		return (WORD_BUILTIN);
-	}
-	else if (check_absolute_path_cmd(word) == 1)
-	{
-		boolean->cmd = 1;
-		return (WORD_ABSPATH);
-	}
-	else if (check_cmd_exist(word, env) == 1)
-	{
-		boolean->cmd = 1;
-		return (WORD_CMD);
-	}
-	else
-		return (WORD_WTF);
-}
-
-int check_word_part_rediout(t_word *boolean)
-{
-	boolean->redi_out = 0;
-	return (WORD_FILEOUT);
-}
-
-int check_word_part_append(t_word *boolean)
-{
-	boolean->redi_out = 0;
-	return (WORD_FILEOUT_APPEND);
-}
-
-enum s_type check_word(char *word, t_word *boolean, t_env *env)
+enum s_type	check_word(char *word, t_word *boolean, t_env *env)
 {
 	if (boolean->redi_in == 1)
 	{
@@ -131,7 +97,7 @@ enum s_type check_word(char *word, t_word *boolean, t_env *env)
 		if (check_file(word) == 1)
 			return (WORD_FILEIN);
 		else
-			return(WORD_ERROR);
+			return (WORD_ERROR);
 	}
 	else if (boolean->redi_out == 1)
 		return (check_word_part_rediout(boolean));
@@ -145,11 +111,11 @@ enum s_type check_word(char *word, t_word *boolean, t_env *env)
 	}
 	else if (boolean->cmd == 1 && boolean->operator == 0)
 		return (WORD_OPTION);
-	else if ((boolean->redi_in == 0) && (boolean->redi_out == 0) && (boolean->cmd == 0))
+	else if ((boolean->redi_in == 0) && (boolean->redi_out == 0)
+		&& (boolean->cmd == 0))
 		return (check_word_part_cmd(word, boolean, env));
 	return (WORD_WTF);
 }
-
 
 /*  int main()
 {
