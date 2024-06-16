@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/16 13:32:51 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/16 16:38:23 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,7 @@ int		env_token(const char *cmd_line, size_t *i, t_token **token_list);
 bool	wildcard_token(const char *cmd_line, size_t *i, t_token **token_list);
 bool	dquotes_token(const char *cmd_line, size_t *i, t_token **token_list);
 bool	dquote_add_token(char *token_value, t_token **token_list, bool option);
+bool	dquotes_last_token(const char *cmd_line, t_index *index, t_token **token_list);
 bool	env_dquotes(const char *cmd_line, t_index *index, t_token **token_list);
 
 //utils
@@ -176,9 +177,10 @@ void	remove_all_env(t_token **token_list);
 bool	expand_quoted_env(t_token **token_list, t_env *env); // to delete
 
 //relink
-int		relink_token(t_token **token_list);
+int		relink_token(t_token **token_list, int *error);
 t_token	*relink_word(t_token *current, t_token **new_list, int *error);
 bool	relink_operator(t_token *current, t_token **new_list);
+bool	add_word(t_token **new_list, char *word);
 
 void	print_envv(t_env **env);
 

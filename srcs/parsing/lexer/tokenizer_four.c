@@ -6,12 +6,36 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 14:02:01 by allan             #+#    #+#             */
-/*   Updated: 2024/06/15 14:18:33 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/16 21:00:48 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+bool	dquotes_token(const char *cmd_line, size_t *i, t_token **token_list) //FIX le I
+{
+	t_index	index;
+
+	index.i = i;
+	(*index.i)++;
+	index.j = *index.i;
+	while (cmd_line[index.j] && cmd_line[index.j] != '\"')
+	{
+		if (cmd_line[index.j] == '$' && is_env(cmd_line[index.j + 1]) == 0)
+		{
+			if (env_dquotes(cmd_line, &index, token_list) == 1)
+				return (1);
+		}
+		if (cmd_line[*index.i] == '$' && is_env(cmd_line[*index.i + 1]) == 0)
+			(*index.i)++;
+		else if (cmd_line[index.j] != '\"')
+			index.j++;
+	}
+	if (dquotes_last_token(cmd_line, &index, token_list) == 1)
+		return (1);
+	*i = index.j + 1;
+	return (0);
+}
 
 bool	env_dquotes(const char *cmd_line, t_index *index, t_token **token_list)
 {
@@ -52,31 +76,6 @@ bool	dquotes_last_token(const char *cmd_line, t_index *index, t_token **token_li
 			return (1);
 		dquote_add_token(token_value, token_list, 0);
 	}
-	return (0);
-}
-
-bool	dquotes_token(const char *cmd_line, size_t *i, t_token **token_list)
-{
-	t_index	index;
-
-	index.i = i;
-	(*index.i)++;
-	index.j = *index.i;
-	while (cmd_line[index.j] && cmd_line[index.j] != '\"')
-	{
-		if (cmd_line[index.j] == '$' && is_env(cmd_line[index.j + 1]) == 0)
-		{
-			if (env_dquotes(cmd_line, &index, token_list) == 1)
-				return (1);
-		}
-		if (cmd_line[*index.i] == '$' && is_env(cmd_line[*index.i + 1]) == 0)
-			(*index.i)++;
-		else
-			index.j++;
-	}
-	if (dquotes_last_token(cmd_line, &index, token_list) == 1)
-		return (1);
-	*i = index.j + 1;
 	return (0);
 }
 
