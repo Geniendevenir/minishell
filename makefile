@@ -39,6 +39,7 @@ SRCS 				=   srcs/env.c\
 						srcs/parsing/expander/remove_env.c\
 						srcs/parsing/expander/expander_utils.c\
 						srcs/parsing/expander/expand_env.c\
+						srcs/parsing/expander/relink_token.c\
 
 # Apply the pattern substitution to each source file in SRC and produce a corresponding list of object files in the OBJ_DIR
 OBJ 				= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))

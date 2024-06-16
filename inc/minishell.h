@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/15 23:49:15 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/16 13:32:51 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,8 @@ bool	expand_quoted_env(t_token **token_list, t_env *env); // to delete
 
 //relink
 int		relink_token(t_token **token_list);
+t_token	*relink_word(t_token *current, t_token **new_list, int *error);
+bool	relink_operator(t_token *current, t_token **new_list);
 
 void	print_envv(t_env **env);
 

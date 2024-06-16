@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 16:47:23 by allan             #+#    #+#             */
-/*   Updated: 2024/06/15 23:35:13 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/16 13:21:12 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,8 @@ bool	expander(t_token **token_list, t_env *env)
 		error_lexer(1); //error malloc
 		return (1);
 	}
+	printf("\nAfter expand_env:\n");
+	token_print(token_list);
 	if (relink_token(token_list) == 1)
 	{
 		error_lexer(1); //error malloc

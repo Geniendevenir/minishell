@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 10:52:47 by allan             #+#    #+#             */
-/*   Updated: 2024/06/15 23:10:01 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/16 13:19:22 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ int		expand_env(t_token **token_list, t_env **env)
 	if (!(*token_list) || !(*token_list)->next)
 		return (0);
 	current = *token_list;
-	token_print(&current);
 	while (current && current->next)
 	{
 		if (current->next->type == TOKEN_ENV)
