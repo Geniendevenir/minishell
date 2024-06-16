@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/15 19:25:28 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/16 15:00:55 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,5 +233,6 @@ char	*ft_strndup(char *str, int n);
 int		ft_strcmp(char *s1, char *s2);
 void 	print_env(t_env *env);
 void	print_error_token(char *value);
+void	print_error_token_special(char *value);
 
 #endif
