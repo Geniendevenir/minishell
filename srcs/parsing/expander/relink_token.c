@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 23:11:11 by allan             #+#    #+#             */
-/*   Updated: 2024/06/16 16:17:31 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/18 22:05:48 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,29 +19,29 @@
 3 - else passer au token suivant
 */
 
-int		relink_token(t_token **token_list, int *error)
+int		relink_token(t_token **token_list, t_token *current, int *error)
 {
 	t_token	*new_list;
-	t_token	*current;
 	
 	new_list = malloc(sizeof(t_token));
 	if (!new_list)
 		return (1);
 	token_init(new_list);
-	current = *token_list;
 	while (current)
 	{
 		if (current->state == STATE_WORD)
 			current = relink_word(current, &new_list, error);
 		else
+		{
 			*error = relink_operator(current, &new_list);
+			if (current)
+				current = current->next;
+		}
 		if (*error == 1)
 		{
 			token_free(&new_list);
 			return (1);
 		}
-		if (current)
-			current = current->next;
 	}
 	token_free(token_list);
 	*token_list = new_list;
@@ -52,32 +52,37 @@ t_token	*relink_word(t_token *current, t_token **new_list, int *error)
 {
 	char	*word;
 	char	*new_word;
+	bool	wildcard;
 	
-	word = NULL;
-	new_word = NULL;
-	*error = 1;
+	relink_word_init(&word, &new_word, &wildcard);
 	while (current && current->state == STATE_WORD)
 	{
+		if (current->type == TOKEN_WILDCARD)
+			wildcard = 1;
 		if (!word)
 			new_word = ft_strdup(current->value);
 		else
 			new_word = ft_strjoin(word, current->value);
-		if (!new_word)
-		{
-			free(word);
-			return (NULL);
-		}
 		free(word);
+		if (!new_word)
+			return (NULL);
 		word = new_word;
 		current = current->next;
 	}
-	if (add_word(new_list, word) == 1)
+	if (add_word(new_list, word, wildcard) == 1)
 		return (NULL);
 	*error = 0;
 	return (current);
 }
 
-bool	add_word(t_token **new_list, char *word)
+void	relink_word_init(char **word, char **new_word, bool *wildcard)
+{
+	*word = NULL;
+	*new_word = NULL;
+	*wildcard = 0;
+}
+
+bool	add_word(t_token **new_list, char *word, bool option)
 {
 	t_token *last;
 	
@@ -87,12 +92,20 @@ bool	add_word(t_token **new_list, char *word)
 		return (1);
 	}
 	last = token_last(*new_list);
-	last->state = STATE_WORD;
-	last->type = TOKEN_WORD;
+	if (option == 0)
+	{
+		last->state = STATE_WORD;
+		last->type = TOKEN_WORD;
+	}
+	else
+	{
+		last->state = STATE_WORD;
+		last->type = TOKEN_WILDCARD;
+	}
 	return (0);
 }
 
-bool	relink_operator(t_token *current, t_token **new_list)
+bool	relink_operator(t_token *current, t_token **new_list) //AJOUTER WILDCARD ET SAVE LE TYPE
 {
 	t_token *last;
 	

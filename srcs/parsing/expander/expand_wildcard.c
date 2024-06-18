@@ -1,18 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander.c                                         :+:      :+:    :+:   */
+/*   expand_wildcard.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/05 16:47:23 by allan             #+#    #+#             */
-/*   Updated: 2024/06/19 01:16:30 by allan            ###   ########.fr       */
+/*   Created: 2024/06/18 21:24:08 by allan             #+#    #+#             */
+/*   Updated: 2024/06/19 01:34:17 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
+
+		SPECIAL CASE: 
+		HIDDEN FILES with "."
+		
+		
 		WILDCARD CASES:
 
 		CASE 1:	Hello*.txt
@@ -79,59 +84,45 @@
 	2 - SI EXISTE REMPLACER PAR LE NOM DU FICHIER
 	3 - SINON GARDER LA SYNTAX DE BASE BEGGIN*END
 	FIN
-
-	ENV:
-
-	BIEN REGARDER CE CAS
-	test$USERhello*txt
-	test*txt: command not found
 */
 
-/*
-	FIND_ENV
-
-	C'est le tout premier node et:
-	CASE 1: On trouve l'env
-	CASE 2: On trouve pas l'env
-
-	C'est un node random:
-	CASE 1: On trouve l'env
-	CASE 2: On trouve pas l'env
-
-	C'est le dernier node
-	CASE 1: On trouve l'env
-	CASE 2: On trouve pas l'env 
-*/
-
-bool	expander(t_token **token_list, t_env *env)
+int	expand_wildcard(t_token **token_list, t_token *current, int *error)
 {
-	int error;
-	t_token	*current;
-
-	if (!env)
-		remove_all_env(token_list);
-	else if (expand_env(token_list, &env) == 1) // Expand ENV First
-	{
-		error_lexer(1); //error malloc
+	t_token	*new_list;
+	
+	new_list = malloc(sizeof(t_token));
+	if (!new_list)
 		return (1);
-	}
-	printf("\nAfter expand_env:\n");
-	token_print(token_list);
-	error = 1;
-	current = *token_list;
-	if (relink_token(token_list, current, &error) == 1)
+	token_init(new_list);
+	while (current)
 	{
-		error_lexer(1); //error malloc
-		return (1);
+		if (current->type == TOKEN_WILDCARD)
+			find_wildcard(current, &new_list, error);
+		else
+		{
+			*error = relink_operator(current, &new_list);
+			if (current)
+				current = current->next;
+		}
+		if (*error == 1)
+		{
+			token_free(&new_list);
+			return (1);
+		}
 	}
-	error = 1;
-	current = *token_list;
-	if (expand_wildcard(token_list, current, &error) == 1) //Then expand Wild Card
-	{
-		error_lexer(1); //error malloc
-		return (1);
-	}
+	token_free(token_list);
+	*token_list = new_list;
 	return (0);
 }
 
-//printf("test1\n");
+void find_wildcard(char *wildcard, t_token **new_list, int *error)
+{
+	int	i;
+
+	i = 0;
+	while (/* condition */)
+	{
+		/* code */
+	}
+	
+}

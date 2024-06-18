@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/16 16:38:23 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/19 01:12:37 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,13 +174,16 @@ bool	find_next_env(t_token **current, t_env **env);
 void	remove_token(t_token **current, bool option);
 bool	replace_token(t_token *token,  char *new_value);
 void	remove_all_env(t_token **token_list);
-bool	expand_quoted_env(t_token **token_list, t_env *env); // to delete
 
 //relink
-int		relink_token(t_token **token_list, int *error);
+int		relink_token(t_token **token_list, t_token *current, int *error);
 t_token	*relink_word(t_token *current, t_token **new_list, int *error);
 bool	relink_operator(t_token *current, t_token **new_list);
-bool	add_word(t_token **new_list, char *word);
+bool	add_word(t_token **new_list, char *word, bool option);
+void	relink_word_init(char **word, char **new_word, bool *wildcard);
+
+//wildcard
+int	expand_wildcard(t_token **token_list, t_token *current, int *error);
 
 void	print_envv(t_env **env);
 

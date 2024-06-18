@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:24:04 by allan             #+#    #+#             */
-/*   Updated: 2024/06/16 13:19:31 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/18 21:26:35 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@
 	1 - Concatener env_token: OK
 	2 - Verifier tous les cas d'erreurs du lexer: OK
 	3 - Finir expander env: OK
-	4 - RAJOUTER LE CAS $? dans expander env
-	4 - Verifier leak et erreurs expander env
-	5 - Faire le relink
+	4 - RAJOUTER LE CAS $? dans expander env TO DO
+	4 - Verifier leak et erreurs expander env OK
+	5 - Faire le relink OK
 	6 - Wildcard
 	7 - Syntax 
 */
@@ -45,6 +45,6 @@ void parser(char *cmd_line, t_env *env)
 	//ast(); // Tour de Controle de l'execution
 	printf("\nAFTER EXPANDER:\n");
 	token_print(&token_list);
-	//token_print_amazing(&token_list);
+	token_print_amazing(&token_list);
 	token_free(&token_list);
 }
