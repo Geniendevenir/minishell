@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/16 15:00:55 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/16 16:48:25 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ enum s_type{
 	WORD_OPTION, // option / argument d'une commande
 	WORD_LIMITER,
 	WORD_STRING,
-	WORD_ERROR, //ERREUR de syntaxe
+	WORD_ERROR, //ERREUR (le WORD n'est pas classifie)
 	WORD_WTF, //dans le cas ou j'ai oublie un cas
 };
 
@@ -194,22 +194,22 @@ void	print_envv(t_env **env);
 
 /*					SIGNALS					*/
 
-int	event(void);
-int	create_signal(void);
+int			event(void);
+int			create_signal(void);
 /*					CHECK					*/
 
-int	check_word_part_cmd(char *word, t_word *boolean, t_env *env);
-int	check_word_part_append(t_word *boolean);
-int	check_word_part_rediout(t_word *boolean);
-bool	check_double_syntax(t_token **token_list);
-bool	check_syntax(t_token **token_list);
-int	check_cmd_exist(char *word, t_env *env);
-int	check_builtin(char *word);
-int	check_file(char *word);
-int	check_absolute_path_cmd(char *word);
-int check_word_part(char *word, t_word *boolean, t_env *env);
-enum s_type check_word(char *word, t_word *boolean, t_env *env);
-void define_word(t_token **token_list, t_word *boolean, t_env *env);
+int			check_word_part_cmd(char *word, t_word *boolean, t_env *env);
+int			check_word_part_append(t_word *boolean);
+int			check_word_part_rediout(t_word *boolean);
+bool		check_double_syntax(t_token **token_list);
+bool		check_syntax(t_token **token_list);
+int			check_cmd_exist(char *word, t_env *env);
+int			check_builtin(char *word);
+int			check_file(char *word);
+int			check_absolute_path_cmd(char *word);
+int			check_word_part(char *word, t_word *boolean, t_env *env);
+enum s_type	check_word(char *word, t_word *boolean, t_env *env);
+bool		define_word(t_token **token_list, t_word *boolean, t_env *env);
 
 /*					 ENV					*/
 
@@ -232,7 +232,8 @@ void	free_array(char **array);
 char	*ft_strndup(char *str, int n);
 int		ft_strcmp(char *s1, char *s2);
 void 	print_env(t_env *env);
-void	print_error_token(char *value);
+void	print_error_token(t_token *current);
 void	print_error_token_special(char *value);
+void	print_error_cmd_not_found(t_token *current);
 
 #endif

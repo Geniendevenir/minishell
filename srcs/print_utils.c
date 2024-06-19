@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:41:06 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/16 15:06:54 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/16 16:47:35 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,24 +24,34 @@ void print_env(t_env *env)
     }
 }
 
-void	print_error_token(char *value)
+void	print_error_token(t_token *current)
 {
-	write(2, "bash: parse error near '", 24);
-	write(2, value, ft_strlen(value));
-	write(2, "'\n", 2);
+	if (current->type == 12 && current->next->type == 13)
+		write(2, "bash: syntax error near unexpected token `)'\n", 45);
+	else
+	{
+		write(2, "bash: syntax error near unexpected token `", 42);
+		write(2, current->value, ft_strlen(current->value));
+		write(2, "'\n", 2);
+	}
 }
 
 void	print_error_token_special(char *value)
 {
-	if (!(ft_strcmp(value, ">")) || !(ft_strcmp(value, "<")) || !(ft_strcmp(value, "<<")) || !(ft_strcmp(value, ">>")))
+	if (!(ft_strcmp(value, ">")) || !(ft_strcmp(value, "<")) 
+		|| !(ft_strcmp(value, "<<")) || !(ft_strcmp(value, ">>")))
 	{
-		write(2, "bash: parse error near ", 24);
-		write(2, "'\\n'\n", ft_strlen("'\\n'\n"));
+		write(2, "bash: syntax error near unexpected token `newline'\n", 51);
 	}
 	else
 	{
-		write(2, "bash: parse error near '", 24);
+		write(2, "bash: syntax error near unexpected token `", 42);
 		write(2, value, ft_strlen(value));
 		write(2, "'\n", 2);
 	}
+}
+void print_error_cmd_not_found(t_token *current)
+{
+	write(2, current->value, ft_strlen(current->value));
+	write(2, ": command not found\n", 20);
 }

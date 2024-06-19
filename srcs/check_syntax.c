@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 16:42:50 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/16 15:03:41 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/16 17:14:35 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ bool	if_in_check_double_syntax(t_token *c, int number)
 	{
 		if (c->type == 1 || c->type == 14 ||
 		c->type == 2 || c->type == 3 || c->type == 12 || c->type == 13)
-				return (1);
+			return (1);
 		else
 			return (0);
 	}
@@ -35,9 +35,12 @@ bool	if_in_check_double_syntax(t_token *c, int number)
 
 int	while_of_check_double_syntax(t_token *current, int is_operator)
 {
-	while (current && if_in_check_double_syntax(current, 1))
+	while (current && (if_in_check_double_syntax(current, 1)))
+	{
+		if ((current && current->next) && (current->type == 12 && current->next->type == 13))
+			return (2);
 		current = current->next;
-	is_operator = 1;
+	}
 	if (current == NULL || current->next == NULL)
 		return (0);
 	current = current->next;
@@ -45,7 +48,7 @@ int	while_of_check_double_syntax(t_token *current, int is_operator)
 	{
 		if (current && if_in_check_double_syntax(current, 2))
 		{
-			print_error_token(current->value);
+			print_error_token(current);
 			return (1);
 		}
 		else if(current && current->type == TOKEN_WHITESPACE)
@@ -64,12 +67,17 @@ bool	check_double_syntax(t_token **token_list)
 	t_token	*current;
 	int is_operator;
 
-	is_operator = 0;
+	is_operator = 1;
 	current = *token_list;
 	while(current && current->next)
 	{
 		if (while_of_check_double_syntax(current, is_operator) == 1)
 		{
+			return (1);
+		}
+		else if (while_of_check_double_syntax(current, is_operator) == 2)
+		{
+			print_error_token(current);
 			return (1);
 		}
 		else
@@ -119,12 +127,14 @@ bool check_if_first_operator(t_token **token_list)
 	}
 	if (current->type == TOKEN_AND || current->type == TOKEN_OR || current->type == TOKEN_PIPE)
 	{
-		print_error_token(current->value);
+		print_error_token(current);
 		return (1);
 	}
 	else
 		return (0);
 }
+
+
 
 bool check_syntax(t_token **token_list)
 {

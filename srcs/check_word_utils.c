@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 19:24:26 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/15 19:27:53 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/16 15:24:03 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	check_word_part_cmd(char *word, t_word *boolean, t_env *env)
 		return (WORD_CMD);
 	}
 	else
-		return (WORD_WTF);
+		return (WORD_ERROR);
 }
 
 int	check_word_part_rediout(t_word *boolean)

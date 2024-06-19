@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:27:35 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/15 19:23:11 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/16 15:59:34 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,28 @@ int	get_list_length(t_token *head)
 	}
 	return (len);
 }
-
-void	define_word(t_token **token_list, t_word *boolean, t_env *env)
+bool	if_define_word(t_token *current)
 {
-	int		i;
-	int		len_list;
+	if (current->type == 10 || current->type == 7 
+		|| current->type == 8 || current->type == 9
+		|| current->type == 6 || current->type == 4 || current->type == 5)
+		return (1);
+	else
+		return (0);
+}
+
+void	print_and_free_define_word(t_token **list, t_token *current)
+{
+	print_error_cmd_not_found(current);
+	token_free(list);
+}
+
+bool	define_word(t_token **token_list, t_word *boolean, t_env *env)
+{
 	t_token	*current;
 
-	i = -1;
-	len_list = get_list_length(*token_list);
 	current = *token_list;
-	while (current && ++i <= len_list)
+	while (current)
 	{
 		if (current->type == TOKEN_REDIRECTIN)
 			boolean->redi_in = 1;
@@ -56,12 +67,16 @@ void	define_word(t_token **token_list, t_word *boolean, t_env *env)
 			boolean->here_doc = 1;
 		else if (current->type == TOKEN_APPENDOUT)
 			boolean->append = 1;
-		else if (current->type == 10 || current->type == 7
-			|| current->type == 8 || current->type == 9
-			|| current->type == 6 || current->type == 4 || current->type == 5)
+		else if (if_define_word(current) == 1)
 			boolean->cmd = 0;
 		else if (current->type == TOKEN_WORD)
 			current->type = check_word(current->value, boolean, env);
+		if (current->type == WORD_ERROR)
+		{
+			print_and_free_define_word(token_list, current);
+			return (1);
+		}
 		current = current->next;
 	}
+	return (0);
 }
