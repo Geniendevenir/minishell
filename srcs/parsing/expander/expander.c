@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 16:47:23 by allan             #+#    #+#             */
-/*   Updated: 2024/06/19 01:16:30 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/19 23:18:56 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,9 +124,7 @@ bool	expander(t_token **token_list, t_env *env)
 		error_lexer(1); //error malloc
 		return (1);
 	}
-	error = 1;
-	current = *token_list;
-	if (expand_wildcard(token_list, current, &error) == 1) //Then expand Wild Card
+	if (expand_wildcard(token_list, &error) == 1) //Then expand Wild Card
 	{
 		error_lexer(1); //error malloc
 		return (1);

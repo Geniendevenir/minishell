@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 21:24:08 by allan             #+#    #+#             */
-/*   Updated: 2024/06/19 01:34:17 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/19 23:18:38 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,43 +86,77 @@
 	FIN
 */
 
-int	expand_wildcard(t_token **token_list, t_token *current, int *error)
+int	expand_wildcard(t_token **token_list, int *error)
 {
-	t_token	*new_list;
+	t_token *current;
+	char	*pattern;
 	
-	new_list = malloc(sizeof(t_token));
-	if (!new_list)
-		return (1);
-	token_init(new_list);
+	pattern = NULL;
+	*error = 1;
+	current = *token_list;
 	while (current)
 	{
 		if (current->type == TOKEN_WILDCARD)
-			find_wildcard(current, &new_list, error);
-		else
 		{
-			*error = relink_operator(current, &new_list);
-			if (current)
-				current = current->next;
+			pattern = ft_strdup(current->value);
+			if (!pattern)
+				return (1);
+			error = find_wildcard(pattern, current, error);
+			free(pattern);
 		}
-		if (*error == 1)
-		{
-			token_free(&new_list);
-			return (1);
-		}
+		else // besoin du else ?
+			current = current->next;
 	}
-	token_free(token_list);
-	*token_list = new_list;
 	return (0);
 }
 
-void find_wildcard(char *wildcard, t_token **new_list, int *error)
+int find_wildcard(char *pattern, t_token *current, int *error)
 {
-	int	i;
-
-	i = 0;
-	while (/* condition */)
-	{
-		/* code */
-	}
+	DIR				*d;
+    struct dirent	*dir;
+	bool			found;
 	
+	found = 0;
+    d = opendir(".");
+    if (!d)
+	{
+        perror("opendir");
+        return (1); //add error
+    }
+    while ((dir = readdir(d)) != NULL)
+	{
+        if (file_match(pattern, dir->d_name, error))
+		{
+            error = add_file(&current, dir->d_name, found);
+			found = 1;
+		}
+		if (error == 1)
+			return (1); //add error
+    }
+    closedir(d);
+	return (0);
+}
+
+bool	file_match(char *pattern, char *file_name, int *error)
+{
+	return (0);
+}
+
+bool	add_file(t_token **current, char *file_name, bool found)
+{
+	if (found == 0)
+	{
+		free((*current)->value);
+		(*current)->value = ft_strdup(file_name);
+		if (!(*current)->value)
+			return (1);
+	}
+	else
+	{
+		if (token_addnext(current, file_name) == 1)
+			return (1);
+		(*current) = (*current)->next;
+	}
+	(*current)->type = TOKEN_WORD;
+	return (0);
 }

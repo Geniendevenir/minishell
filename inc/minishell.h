@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/19 01:12:37 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/19 22:59:24 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,7 @@ void	token_print_amazing(t_token **token_list);
 bool 	token_init(t_token *token_list);
 t_token *token_last(t_token *token_list);
 bool	token_addback(t_token **token_list, char *value, int option);
+bool	token_addnext(t_token *current, char *value);
 void	token_free(t_token **token_list);
 
 //tokenizer

@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 23:11:11 by allan             #+#    #+#             */
-/*   Updated: 2024/06/18 22:05:48 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/19 23:16:05 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ bool	add_word(t_token **new_list, char *word, bool option)
 	return (0);
 }
 
-bool	relink_operator(t_token *current, t_token **new_list) //AJOUTER WILDCARD ET SAVE LE TYPE
+bool	relink_operator(t_token *current, t_token **new_list)
 {
 	t_token *last;
 	

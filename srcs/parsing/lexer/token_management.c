@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:22:12 by allan             #+#    #+#             */
-/*   Updated: 2024/06/15 23:48:42 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/19 23:12:20 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,13 @@ bool	token_addback(t_token **token_list, char *value, int option)
 		return (1); */
 	token = malloc(sizeof(t_token));
 	if (!token)
-		return (1);
+		return (1); // problem value not freed
 	token_init(token);
 	token->value = ft_strdup(value);
-	if (!token->value)
-		return (1);
 	if (is_freeable(token->value, option) == 0)
 		free(value);
+	if (!token->value)
+		return (1);
 	token->next = NULL;
 	if ((*token_list)->value == NULL)
 	{
@@ -61,6 +61,24 @@ bool	token_addback(t_token **token_list, char *value, int option)
 		last_token = token_last(*token_list);
 		last_token->next = token;
 	}
+	return (0);
+}
+
+bool	token_addnext(t_token **current, char *value)
+{
+	t_token *token;
+
+	if (!current) //check si possible de supprimer
+		return (1);
+	token = malloc(sizeof(t_token));
+	if (!token)
+		return (1);
+	token_init(token);
+	token->value = ft_strdup(value);
+	if (!token->value)
+		return (1);
+	token->next = (*current)->next;
+	(*current)->next = token;
 	return (0);
 }
 
