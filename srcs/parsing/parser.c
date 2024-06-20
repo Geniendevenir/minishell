@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:24:04 by allan             #+#    #+#             */
-/*   Updated: 2024/06/18 21:26:35 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/20 18:03:27 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,6 @@ void parser(char *cmd_line, t_env *env)
 	//ast(); // Tour de Controle de l'execution
 	printf("\nAFTER EXPANDER:\n");
 	token_print(&token_list);
-	token_print_amazing(&token_list);
+	//token_print_amazing(&token_list);
 	token_free(&token_list);
 }

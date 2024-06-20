@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 21:24:08 by allan             #+#    #+#             */
-/*   Updated: 2024/06/20 17:57:10 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/20 18:01:57 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,6 @@ int	expand_wildcard(t_token **token_list, int *error)
 	{
 		if (current->type == TOKEN_WILDCARD)
 		{
-			printf("test 1\n");
 			wildcard = ft_strdup(current->value);
 			if (!wildcard)
 				return (1);
@@ -110,7 +109,6 @@ int	expand_wildcard(t_token **token_list, int *error)
 			free(wildcard);
 			if (*error != 0)
 				return (1);
-			printf("test n\n");
 		}
 		current = current->next;
 	}
@@ -130,26 +128,21 @@ int find_wildcard(char *wildcard, t_token *current, int *error)
         perror("opendir");
         return (1); //add error
     }
-	printf("test 2\n");
 	found = 0;
     while (1)
 	{
-		printf("a\n");
 		dir = readdir(d);
 		if (dir == NULL)
 			break ;
-		printf("b\n");
 		match_init(wildcard, dir->d_name, &match);
         if (file_match(match))
 		{
-			printf("c\n");
             *error = add_file(&current, dir->d_name, found);
 			if (*error == 1)
 			{
 				closedir(d);
 				return (1); //add error
 			}
-			printf("d\n");
 			found = 1;
 		}
     }
@@ -164,15 +157,7 @@ void	match_init(char *wildcard, char *file_name, t_wildcard *match)
 	match->star = NULL;
 	match->backtrack = file_name;
 }
-//*txt
-//test.txt
-/*
-file_name =	test.txt
-wildcard =	*txt
-star = 		txt
-backtrack =	test.txt
 
-*/
 bool	file_match(t_wildcard match)
 {
     while (*match.file_name)
@@ -216,6 +201,5 @@ bool	add_file(t_token **current, char *file_name, bool found)
 		(*current) = (*current)->next;
 	}
 	(*current)->type = TOKEN_WORD;
-	printf("test 3\n");
 	return (0);
 }
