@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 21:24:08 by allan             #+#    #+#             */
-/*   Updated: 2024/06/19 23:18:38 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/20 17:57:10 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,60 +86,118 @@
 	FIN
 */
 
+/*
+printf("test 1\n");
+*/
+
 int	expand_wildcard(t_token **token_list, int *error)
 {
 	t_token *current;
-	char	*pattern;
+	char	*wildcard;
 	
-	pattern = NULL;
+	wildcard = NULL;
 	*error = 1;
 	current = *token_list;
 	while (current)
 	{
 		if (current->type == TOKEN_WILDCARD)
 		{
-			pattern = ft_strdup(current->value);
-			if (!pattern)
+			printf("test 1\n");
+			wildcard = ft_strdup(current->value);
+			if (!wildcard)
 				return (1);
-			error = find_wildcard(pattern, current, error);
-			free(pattern);
+			*error = find_wildcard(wildcard, current, error);
+			free(wildcard);
+			if (*error != 0)
+				return (1);
+			printf("test n\n");
 		}
-		else // besoin du else ?
-			current = current->next;
+		current = current->next;
 	}
 	return (0);
 }
 
-int find_wildcard(char *pattern, t_token *current, int *error)
+int find_wildcard(char *wildcard, t_token *current, int *error)
 {
 	DIR				*d;
     struct dirent	*dir;
+	t_wildcard	match;
 	bool			found;
-	
-	found = 0;
+
     d = opendir(".");
     if (!d)
 	{
         perror("opendir");
         return (1); //add error
     }
-    while ((dir = readdir(d)) != NULL)
+	printf("test 2\n");
+	found = 0;
+    while (1)
 	{
-        if (file_match(pattern, dir->d_name, error))
+		printf("a\n");
+		dir = readdir(d);
+		if (dir == NULL)
+			break ;
+		printf("b\n");
+		match_init(wildcard, dir->d_name, &match);
+        if (file_match(match))
 		{
-            error = add_file(&current, dir->d_name, found);
+			printf("c\n");
+            *error = add_file(&current, dir->d_name, found);
+			if (*error == 1)
+			{
+				closedir(d);
+				return (1); //add error
+			}
+			printf("d\n");
 			found = 1;
 		}
-		if (error == 1)
-			return (1); //add error
     }
     closedir(d);
 	return (0);
 }
 
-bool	file_match(char *pattern, char *file_name, int *error)
+void	match_init(char *wildcard, char *file_name, t_wildcard *match)
 {
-	return (0);
+	match->file_name = file_name;
+	match->wildcard = wildcard;
+	match->star = NULL;
+	match->backtrack = file_name;
+}
+//*txt
+//test.txt
+/*
+file_name =	test.txt
+wildcard =	*txt
+star = 		txt
+backtrack =	test.txt
+
+*/
+bool	file_match(t_wildcard match)
+{
+    while (*match.file_name)
+	{
+        if (*match.wildcard == '*')
+		{
+            match.star = match.wildcard++;
+            match.backtrack = match.file_name;
+        }
+		else if (*match.wildcard == *match.file_name || *match.wildcard == '?')
+		{
+            match.wildcard++;
+            match.file_name++;
+        }
+		else if (match.star)
+		{
+            match.wildcard = match.star + 1;
+            match.file_name = ++match.backtrack;
+        }
+		else
+            return (0);
+    }
+    while (*match.wildcard == '*')
+		match.wildcard++;
+    return (!(*match.wildcard)); //File_name Match Wildcard
 }
 
 bool	add_file(t_token **current, char *file_name, bool found)
@@ -158,5 +216,6 @@ bool	add_file(t_token **current, char *file_name, bool found)
 		(*current) = (*current)->next;
 	}
 	(*current)->type = TOKEN_WORD;
+	printf("test 3\n");
 	return (0);
 }

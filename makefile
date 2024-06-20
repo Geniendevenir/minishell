@@ -9,7 +9,7 @@ OBJ_DIR				= obj/
 
 # Compiler and CFlags
 CC					= gcc
-CFLAGS				= -Wall -Wextra -Werro -I
+CFLAGS				= -Wall -Wextra -Werror -I
 #-Werror
 RM					= rm -f
 READLINE			= -lreadline

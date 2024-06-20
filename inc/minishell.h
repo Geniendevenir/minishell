@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/19 22:59:24 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/20 14:26:44 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,13 @@ typedef struct s_token {
 	struct s_token *next;
 }				t_token;
 
+typedef struct s_wildcard {
+	const char *file_name;
+    const char *wildcard;
+    const char *star;
+    const char *backtrack;
+}				t_wildcard;
+
 //check_lexer
 bool	check_quotes(char *cmd_line);
 bool	check_semicolon(char *cmd_line);
@@ -128,7 +135,7 @@ void	token_print_amazing(t_token **token_list);
 bool 	token_init(t_token *token_list);
 t_token *token_last(t_token *token_list);
 bool	token_addback(t_token **token_list, char *value, int option);
-bool	token_addnext(t_token *current, char *value);
+bool	token_addnext(t_token **current, char *value);
 void	token_free(t_token **token_list);
 
 //tokenizer
@@ -184,7 +191,11 @@ bool	add_word(t_token **new_list, char *word, bool option);
 void	relink_word_init(char **word, char **new_word, bool *wildcard);
 
 //wildcard
-int	expand_wildcard(t_token **token_list, t_token *current, int *error);
+int		expand_wildcard(t_token **token_list, int *error);
+int		find_wildcard(char *wildcard, t_token *current, int *error);
+void	match_init(char *wildcard, char *file_name, t_wildcard *match);
+bool	file_match(t_wildcard match);
+bool	add_file(t_token **current, char *file_name, bool found);
 
 void	print_envv(t_env **env);
 
