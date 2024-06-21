@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/16 16:48:25 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/20 18:19:08 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,10 @@ extern t_sig	g_sig;
 
 /*					 LEXER					*/
 
+typedef struct s_index {
+	size_t	*i;
+	size_t	j;
+}				t_index;
 
 enum s_state{
 	STATE_START,
@@ -124,6 +128,20 @@ typedef struct s_token {
 	struct s_token *next;
 }				t_token;
 
+typedef struct s_wildcard {
+	const char *file_name;
+    const char *wildcard;
+    const char *star;
+    const char *backtrack;
+}				t_wildcard;
+
+typedef struct s_ast {
+	enum s_type type;
+	char *value;
+	struct s_ast *left;
+	struct s_ast *right;
+	struct s_ast *parent;
+}				t_ast;
 //check_lexer
 bool	check_quotes(char *cmd_line);
 bool	check_semicolon(char *cmd_line);
@@ -131,20 +149,22 @@ bool	check_semicolon(char *cmd_line);
 //lexer
 void	parser(char *cmd_line, t_env *env);
 bool	lexer(char *cmd_line, t_token **token_list);
-int		tokenizer_partwo(const char *cmd_line, size_t *i, t_token **token_list);
-int		tokenizer(const char *cmd_line, size_t *i, t_token **token_list);
+int		tokenizer_one(const char *cmd_line, size_t *i, t_token **token_list);
+int		tokenizer_two(const char *cmd_line, size_t *i, t_token **token_list);
+int		tokenizer_three(const char *cmd_line, size_t *i, t_token **token_list);
+int		tokenizer_four(const char *cmd_line, size_t *i, t_token **token_list);
 
 //token_management
 void	token_print(t_token **token_list);
 void	token_print_amazing(t_token **token_list);
 bool 	token_init(t_token *token_list);
 t_token *token_last(t_token *token_list);
-bool	token_addback(t_token **token_list, char *value);
+bool	token_addback(t_token **token_list, char *value, int option);
+bool	token_addnext(t_token **current, char *value);
 void	token_free(t_token **token_list);
 
 //tokenizer
 bool	whitespace_token(const char *cmd_line, size_t *i, t_token **token_list);
-bool	dquote_token(const char *cmd_line, size_t *i, t_token **token_list);
 bool	squote_token(const char *cmd_line, size_t *i, t_token **token_list);
 bool	inpar_token(size_t *i, t_token **token_list);
 bool	outpar_token(size_t *i, t_token **token_list);
@@ -158,27 +178,29 @@ bool	outputre_token(size_t *i, t_token **token_list);
 bool	lexical_token(const char *cmd_line, size_t *i, t_token **token_list);
 int		env_token(const char *cmd_line, size_t *i, t_token **token_list);
 bool	wildcard_token(const char *cmd_line, size_t *i, t_token **token_list);
-
-bool	env_dquotes_token(const char *cmd_line, size_t *i, t_token **token_list);
+bool	dquotes_token(const char *cmd_line, size_t *i, t_token **token_list);
 bool	dquote_add_token(char *token_value, t_token **token_list, bool option);
+bool	dquotes_last_token(const char *cmd_line, t_index *index, t_token **token_list);
+bool	env_dquotes(const char *cmd_line, t_index *index, t_token **token_list);
+
 
 //utils
 bool	is_whitespace(char c);
 bool	is_word(char c);
 bool	is_env(char c);
 bool	is_valid_env(char c);
-bool	is_freeable(char *value);
+bool	is_freeable(char *value, int option);
 bool	is_wildcard(const char *cmd_line, int i);
 
 //error
 void	error_lexer(int error);
-
 void		amazing_printing(t_token *current, int i);
 const char	*getToken_Class(t_token *current);
 
 
 /*								EXPANDER						*/
 bool	expander(t_token **token_list, t_env *env);
+//expand env
 int		expand_env(t_token **token_list, t_env **env);
 bool	find_first_env(t_token **current, t_env **env);
 bool	find_next_env(t_token **current, t_env **env);
@@ -186,7 +208,19 @@ void	remove_token(t_token **current, bool option);
 bool	replace_token(t_token *token,  char *new_value);
 void	remove_all_env(t_token **token_list);
 
-bool	expand_quoted_env(t_token **token_list, t_env *env); // to delete
+//relink
+int		relink_token(t_token **token_list, t_token *current, int *error);
+t_token	*relink_word(t_token *current, t_token **new_list, int *error);
+bool	relink_operator(t_token *current, t_token **new_list);
+bool	add_word(t_token **new_list, char *word, bool option);
+void	relink_word_init(char **word, char **new_word, bool *wildcard);
+
+//wildcard
+int		expand_wildcard(t_token **token_list, int *error);
+int		find_wildcard(char *wildcard, t_token *current, int *error);
+void	match_init(char *wildcard, char *file_name, t_wildcard *match);
+bool	file_match(t_wildcard match);
+bool	add_file(t_token **current, char *file_name, bool found);
 
 void	print_envv(t_env **env);
 

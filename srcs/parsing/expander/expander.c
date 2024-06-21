@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 16:47:23 by allan             #+#    #+#             */
-/*   Updated: 2024/06/08 12:28:51 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/20 16:21:29 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,17 +58,33 @@
 		-> TOKEN_WORD: .txt
 		-> TOKEN_ENV: $USER
 
+		CASE 11: (presence d'un fichier nomme: tet)
+		-> COMMAND: cd te*et
+		-> Ne trouve pas les palindrome: bash: cd: te*et: No such file or directory
+
+		CASE 12: (presence fichier: tet et test*txt)
+		-> COMMAND: cd te**
+		-> Retour: bash: cd: too many arguments (trouve les deux fichiers)
+
+		CASE 13: (presence fichier: *ok)
+		-> COMMAND: cd *o
+		->Retour: bash: cd: *o: No such file or directory (ne finit pas par o mais par k)
+
 	ETAPE 1: Creer un TOKEN_WILDCARD / UNE REDIRECTION TOKEN_WORD VERS TOKEN_WILDCARD
 	ETAPE 2: EXPAND ENV. IF FOUND -> REPLACE NEW VALUE. IF NOT FOUND -> DELETE THE TOKEN. 
 	ETAPE 3: RECOLLER LES WORD/ENV/WILDCARD SI il n'y a pas d'espaces entre
 	ETAPE 4: EXPAND WILDCARD
+	POUR WILDCARD:
+	1 - (ex: BEGGIN*END) REGARDER SI DOSSIER COMMANCANT STRICTEMENT PAR BEGIN ET FINISSANT PAR END
+	2 - SI EXISTE REMPLACER PAR LE NOM DU FICHIER
+	3 - SINON GARDER LA SYNTAX DE BASE BEGGIN*END
 	FIN
 
 	ENV:
 
 	BIEN REGARDER CE CAS
 	test$USERhello*txt
-	testallanhello.txt: command not found
+	test*txt: command not found
 */
 
 /*
@@ -89,104 +105,31 @@
 
 bool	expander(t_token **token_list, t_env *env)
 {
+	int error;
+	t_token	*current;
+
 	if (!env)
-	{
 		remove_all_env(token_list);
-		return (0);
-	}
-	if (expand_env(token_list, &env) == 1) // Expand ENV First
+	else if (expand_env(token_list, &env) == 1) // Expand ENV First
 	{
 		error_lexer(1); //error malloc
 		return (1);
 	}
-	//relink_token();
-	//expand_wildcard(); //Then expand Wild Card
+	printf("\nAfter expand_env:\n");
+	token_print(token_list);
+	error = 1;
+	current = *token_list;
+	if (relink_token(token_list, current, &error) == 1)
+	{
+		error_lexer(1); //error malloc
+		return (1);
+	}
+	if (expand_wildcard(token_list, &error) == 1) //Then expand Wild Card
+	{
+		error_lexer(1); //error malloc
+		return (1);
+	}
 	return (0);
 }
 
 //printf("test1\n");
-
-int		expand_env(t_token **token_list, t_env **env)
-{
-	t_token	*current;
-
-	while (*token_list && ((*token_list)->type == TOKEN_ENV))
-	{
-		if (find_first_env(token_list, env) == 1)
-			return (1);
-	}
-	if (!(*token_list) || !(*token_list)->next)
-		return (0);
-	current = *token_list;
-	token_print(&current);
-	while (current && current->next)
-	{
-		if (current->next->type == TOKEN_ENV) //
-		{
-			if (find_next_env(&current, env) == 1)
-				return (1);
-		}
-		else
-			current = current->next;
-	}
-	return (0);
-}
-
-bool	find_first_env(t_token **current, t_env **env)
-{
-	t_env	*find;
-
-	find = *env;
-	while (find)
-	{
-		if (ft_strcmp((*current)->value, find->key) == 0)
-		{
-			if (replace_token((*current), find->value) == 1)
-				return (1);
-			(*current)->type = TOKEN_WORD;
-			return (0);
-		}
-		find = find->next;
-	}
-	remove_token(current, 0);
-	return (0);
-}
-
-bool	find_next_env(t_token **current, t_env **env)
-{
-	t_env	*find;
-
-	find = *env;
-	while (find)
-	{
-		if (ft_strcmp((*current)->next->value, find->key) == 0)
-		{
-			if (replace_token((*current)->next, find->value) == 1)
-				return (1);
-			(*current)->next->type = TOKEN_WORD;
-			return (0);
-		}
-		find = find->next;
-	}
-	remove_token(current, 1);
-	return (0);
-}
-
-bool	replace_token(t_token *token,  char *new_value) //OK
-{
-	if (token->value == NULL)
-	{
-		token->value = ft_strdup(new_value);
-		if (!token->value)
-			return (1);
-	}
-	else
-	{
-		free(token->value);
-		token->value = NULL;
-		token->value = ft_strdup(new_value);
-		if (!token->value)
-			return (1);
-	}
-	return (0);
-}

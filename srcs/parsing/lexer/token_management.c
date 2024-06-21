@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:22:12 by allan             #+#    #+#             */
-/*   Updated: 2024/06/14 18:44:14 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/20 18:32:24 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 
 bool token_init(t_token *token_list)
 {
-	/* token_list = malloc(sizeof(t_token));
-	if (!token_list)
-		return (1); */
 	token_list->state = STATE_START;
 	token_list->type = NOT_DEFINE;
 	token_list->value = NULL;
@@ -36,7 +33,7 @@ t_token *token_last(t_token *token_list)
 	return (token_list);
 }
 
-bool	token_addback(t_token **token_list, char *value)
+bool	token_addback(t_token **token_list, char *value, int option)
 {
 	t_token *token;
 	t_token	*last_token;
@@ -45,13 +42,13 @@ bool	token_addback(t_token **token_list, char *value)
 		return (1); */
 	token = malloc(sizeof(t_token));
 	if (!token)
-		return (1);
+		return (1); // problem value not freed
 	token_init(token);
 	token->value = ft_strdup(value);
+	if (is_freeable(token->value, option) == 0)
+		free(value);
 	if (!token->value)
 		return (1);
-	if (is_freeable(token->value) == 0)
-		free(value);
 	token->next = NULL;
 	if ((*token_list)->value == NULL)
 	{
@@ -64,6 +61,24 @@ bool	token_addback(t_token **token_list, char *value)
 		last_token = token_last(*token_list);
 		last_token->next = token;
 	}
+	return (0);
+}
+
+bool	token_addnext(t_token **current, char *value)
+{
+	t_token *token;
+
+	if (!current) //check si possible de supprimer
+		return (1);
+	token = malloc(sizeof(t_token));
+	if (!token)
+		return (1);
+	token_init(token);
+	token->value = ft_strdup(value);
+	if (!token->value)
+		return (1);
+	token->next = (*current)->next;
+	(*current)->next = token;
 	return (0);
 }
 
@@ -116,7 +131,7 @@ void	token_print_amazing(t_token **token_list)
 		current = current->next;
 		i++;
 	}
-	//printf("NULL\n");
+	printf("NULL\n");
 }
 
 void	amazing_printing(t_token *current, int i)
@@ -132,10 +147,9 @@ void	amazing_printing(t_token *current, int i)
     printf("----------------------------------\n");
 }
 
-const char* getToken_Class(t_token *current)
-{
+const char* getToken_Class(t_token *current) {
 	const char* Token_Class[] = {
-		"NOT_DEFINE",
+    	"NOT_DEFINE",
 		"TOKEN_WORD",
 		"TOKEN_DQUOTES",
 		"TOKEN_SQUOTES",
@@ -165,15 +179,10 @@ const char* getToken_Class(t_token *current)
 		"WORD_ERROR",
 		"WORD_WTF",
 	};
-	if (current->type >= 0 && current->type < 29) {
-	    return Token_Class[current->type];
-	} else {
-	    return "NULL";
-	}
+    if (current->type >= 0 && current->type < 28) {
+        return Token_Class[current->type];
+    } else {
+        return "NULL";
+    }
 	
 }
-/*
-token_remove()
-token_join()
-*/
-

@@ -8,12 +8,12 @@ SRC_DIR				= srcs/
 OBJ_DIR				= obj/
 
 # Compiler and CFlags
-CC					= gcc
+CC					= cc
 CFLAGS				= -Wall -Werror -Wextra -I
 RM					= rm -f
 READLINE			= -lreadline
 
-# Source Files
+# Source Filesmake
 MINI_SHELL_DIR		=	$(SRC_DIR)
 
 # Concatenate all source files
@@ -35,12 +35,15 @@ SRCS 				=   srcs/env.c\
 						srcs/parsing/lexer/tokenizer_one.c\
 						srcs/parsing/lexer/tokenizer_two.c\
 						srcs/parsing/lexer/tokenizer_three.c\
+						srcs/parsing/lexer/tokenizer_four.c\
 						srcs/parsing/lexer/tokenizer_utils.c\
 						srcs/parsing/lexer/error_lexer.c\
 						srcs/parsing/expander/expander.c\
 						srcs/parsing/expander/remove_env.c\
 						srcs/parsing/expander/expander_utils.c\
 						srcs/parsing/expander/expand_env.c\
+						srcs/parsing/expander/relink_token.c\
+						srcs/parsing/expander/expand_wildcard.c\
 
 # Apply the pattern substitution to each source file in SRC and produce a corresponding list of object files in the OBJ_DIR
 OBJ 				= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))

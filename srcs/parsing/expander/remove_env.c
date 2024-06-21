@@ -6,18 +6,13 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 10:56:18 by allan             #+#    #+#             */
-/*   Updated: 2024/06/07 10:57:36 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/15 23:09:23 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	remove_quotes_env()
-{
-	
-}
-
-void	remove_all_env(t_token **token_list) //RAJOUTER LE CAS DES SQUOTES
+void	remove_all_env(t_token **token_list)
 {
 	t_token	*current;
 
