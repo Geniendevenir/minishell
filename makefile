@@ -18,9 +18,6 @@ MINI_SHELL_DIR		=	$(SRC_DIR)
 
 # Concatenate all source files
 SRCS 				=   srcs/env.c\
-						srcs/check_word.c\
-						srcs/check_word_utils.c\
-						srcs/check_syntax.c\
 						srcs/free.c\
 						srcs/main.c \
 						srcs/init.c\
@@ -28,6 +25,11 @@ SRCS 				=   srcs/env.c\
 						srcs/signals.c\
 						srcs/utils.c\
 						srcs/word.c\
+						srcs/true_ast.c\
+						srcs/parsing/syntax/check_word.c\
+						srcs/parsing/syntax/check_word_utils.c\
+						srcs/parsing/syntax/check_syntax.c\
+						srcs/parsing/syntax/check_parenthesis.c\
 						srcs/parsing/parser.c\
 						srcs/parsing/lexer/check_lexer.c\
 						srcs/parsing/lexer/lexer.c\

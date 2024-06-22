@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/20 18:19:08 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/22 20:00:11 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,6 +226,9 @@ void	print_envv(t_env **env);
 
 //////////////////////////////////////////////////////////
 
+/*						AST					*/
+
+t_ast* parseExpression(t_token **token_list);
 /*					SIGNALS					*/
 
 int			event(void);
@@ -269,5 +272,7 @@ void 	print_env(t_env *env);
 void	print_error_token(t_token *current);
 void	print_error_token_special(char *value);
 void	print_error_cmd_not_found(t_token *current);
+void	printAST(t_ast* node, int level);
+const char* getAST_Class(t_ast *current);
 
 #endif

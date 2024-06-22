@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:22:12 by allan             #+#    #+#             */
-/*   Updated: 2024/06/20 18:32:24 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/22 19:05:17 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,8 @@ void	amazing_printing(t_token *current, int i)
     printf("----------------------------------\n");
 }
 
-const char* getToken_Class(t_token *current) {
+const char* getToken_Class(t_token *current)
+{
 	const char* Token_Class[] = {
     	"NOT_DEFINE",
 		"TOKEN_WORD",

@@ -6,13 +6,13 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 13:31:07 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/20 17:33:28 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/22 19:08:57 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool check_parenthesis_number(t_token *token_list)
+/* bool check_parenthesis_number(t_token *token_list)
 {
 	int count;
 	t_token *current;
@@ -35,9 +35,9 @@ bool check_parenthesis_number(t_token *token_list)
 		return (1);
 	else
 		return (0);
-}
+} */
 
-bool check_parenthesis(t_token *token_list)
+/* bool check_parenthesis(t_token *token_list)
 {
 	
 	int nb_cmd = 0;
@@ -59,4 +59,4 @@ bool check_parenthesis(t_token *token_list)
 		
 		current = current->next;
 	}
-}
+} */
