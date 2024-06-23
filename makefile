@@ -24,8 +24,8 @@ SRCS 				=   srcs/env.c\
 						srcs/print_utils.c \
 						srcs/signals.c\
 						srcs/utils.c\
-						srcs/word.c\
-						srcs/true_ast.c\
+						srcs/parsing/ast/true_ast.c\
+						srcs/parsing/syntax/word.c\
 						srcs/parsing/syntax/check_word.c\
 						srcs/parsing/syntax/check_word_utils.c\
 						srcs/parsing/syntax/check_syntax.c\

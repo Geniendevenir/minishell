@@ -8,5 +8,9 @@
 		"tuple": "c",
 		"type_traits": "c",
 		"utility": "c"
-	}
+	},
+	"files.autoSave": "afterDelay",
+    "editor.detectIndentation": false,
+	"editor.insertSpaces": false,
+	"editor.renderWhitespace": "all"
 }

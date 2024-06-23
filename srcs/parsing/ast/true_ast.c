@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   true_ast.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 18:41:34 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/22 20:10:47 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/23 12:43:18 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,46 +182,46 @@ t_ast	*handleOption(t_token **tokens, t_ast* current)
 
 
 //definir root pour factoriser
-t_ast* parseExpression(t_token **token_list)
+t_ast* parseExpression(t_token **tokens)
 {
 	t_ast *root;
 	t_ast *current;
-	t_token *tokens;
 
 	root = NULL;
 	current = NULL;
-	tokens = *token_list;
-	while (tokens != NULL) {
+	while (*tokens) //echo //test
+	{
+		printf("token = %s\n", (*tokens)->value);
 		// Traiter le jeton courant
-		if (tokens->type == TOKEN_OPENPAR)
+		if ((*tokens)->type == TOKEN_OPENPAR)
 		{
-			current = handleOpenParenthesis(&tokens, current);
+			current = handleOpenParenthesis(tokens, current);
 			if (!root)
 				root = current;
 		}
-		else if (tokens->type == TOKEN_CLOSEPAR)
-			return handleCloseParenthesis(&tokens, root);
-		else if (tokens->type == TOKEN_AND || tokens->type == TOKEN_OR)
+		else if ((*tokens)->type == TOKEN_CLOSEPAR)
+			return handleCloseParenthesis(tokens, root);
+		else if ((*tokens)->type == TOKEN_AND || (*tokens)->type == TOKEN_OR)
 		{
-			root = handleAndOr(&tokens, root);
+			root = handleAndOr(tokens, root);
 			current = root;
 		}
-		else if (tokens->type == WORD_BUILTIN || tokens->type == WORD_CMD || tokens->type == TOKEN_DQUOTES || tokens->type == TOKEN_SQUOTES)
+		else if ((*tokens)->type == WORD_BUILTIN || (*tokens)->type == WORD_CMD || (*tokens)->type == TOKEN_DQUOTES || (*tokens)->type == TOKEN_SQUOTES)
 		{
-			current = handleBuiltinCmdQuotes(&tokens, current);
+			current = handleBuiltinCmdQuotes(tokens, current);
 			if (!root) {
 				root = current;
 			}
 		}
-		else if (tokens->type == WORD_OPTION)
+		else if ((*tokens)->type == WORD_OPTION)
 		{
-			current = handleOption(&tokens, current);
+			current = handleOption(tokens, current);
 			if (!root) {
 				root = current;
 			}
 		}
-		else if (tokens->type == TOKEN_WHITESPACE)
-            tokens = tokens->next;
+		else if ((*tokens)->type == TOKEN_WHITESPACE)
+            (*tokens) = (*tokens)->next;
         else
             return NULL;
 	}

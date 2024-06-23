@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/22 19:04:00 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/23 12:47:03 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "./minishell.h"
 
 t_sig	g_sig;
 
@@ -34,8 +34,7 @@ char	*minishell(t_all *p)
 	return (p->line);
 }
 
-//valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes
-//--suppressions=./.readline.supp ./minishell
+//valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --suppressions=./.readline.supp ./minishell
 
 int	main(int argc, char **argv, char **env)
 {

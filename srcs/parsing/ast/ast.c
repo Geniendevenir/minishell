@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 14:30:25 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/22 18:41:19 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/23 13:04:19 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,7 +172,7 @@ t_ast	*handleOption(Token* tokens, int* index, t_ast* current)
 t_ast* parseExpression(Token* tokens, int* index, int numTokens) 
 {
 	t_ast* root;
-	t_ast* root;
+	t_ast* current;
 	
     root = NULL;
     current = NULL;

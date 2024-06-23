@@ -3,14 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:24:04 by allan             #+#    #+#             */
-/*   Updated: 2024/06/22 20:03:21 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/23 13:09:00 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+
+/*
+
+TO DO:
+-Finir / Corriger AST
+-Builtins
+-Check Leak
+-Error Management de TOUT le code
+-Premier Tour de norminette
+-Execution
+-Cas $?
+-Test Google Doc
+
+*/
 
 void parser(char *cmd_line, t_env *env) // a rajouter env quand expander fini
 {

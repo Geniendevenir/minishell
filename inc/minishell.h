@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/22 20:00:11 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/22 20:58:35 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ typedef struct s_wildcard {
 
 typedef struct s_ast {
 	enum s_type type;
-	char *value;
+	char		*value;
 	struct s_ast *left;
 	struct s_ast *right;
 	struct s_ast *parent;
