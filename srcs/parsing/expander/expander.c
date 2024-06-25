@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 16:47:23 by allan             #+#    #+#             */
-/*   Updated: 2024/06/20 16:21:29 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/25 16:56:16 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,23 +110,26 @@ bool	expander(t_token **token_list, t_env *env)
 
 	if (!env)
 		remove_all_env(token_list);
-	else if (expand_env(token_list, &env) == 1) // Expand ENV First
+	else if (expand_env(token_list, &env) == 1)
 	{
-		error_lexer(1); //error malloc
+		error_lexer(1);
+		token_free(token_list);
 		return (1);
 	}
-	printf("\nAfter expand_env:\n");
-	token_print(token_list);
+	//printf("\nAfter expand_env:\n");
+	//token_print(token_list);
 	error = 1;
 	current = *token_list;
 	if (relink_token(token_list, current, &error) == 1)
 	{
-		error_lexer(1); //error malloc
+		error_lexer(1);
+		token_free(token_list);
 		return (1);
 	}
 	if (expand_wildcard(token_list, &error) == 1) //Then expand Wild Card
 	{
-		error_lexer(1); //error malloc
+		error_lexer(error); //error malloc
+		token_free(token_list);
 		return (1);
 	}
 	return (0);

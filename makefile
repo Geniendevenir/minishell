@@ -9,7 +9,7 @@ OBJ_DIR				= obj/
 
 # Compiler and CFlags
 CC					= cc
-CFLAGS				= -Wall -Werror -Wextra -I
+CFLAGS				= -Wall -Wextra -I
 RM					= rm -f
 READLINE			= -lreadline
 
@@ -24,7 +24,6 @@ SRCS 				=   srcs/env.c\
 						srcs/print_utils.c \
 						srcs/signals.c\
 						srcs/utils.c\
-						srcs/parsing/ast/true_ast.c\
 						srcs/parsing/syntax/word.c\
 						srcs/parsing/syntax/check_word.c\
 						srcs/parsing/syntax/check_word_utils.c\
@@ -39,13 +38,14 @@ SRCS 				=   srcs/env.c\
 						srcs/parsing/lexer/tokenizer_three.c\
 						srcs/parsing/lexer/tokenizer_four.c\
 						srcs/parsing/lexer/tokenizer_utils.c\
-						srcs/parsing/lexer/error_lexer.c\
+						srcs/parsing/error_parser.c\
 						srcs/parsing/expander/expander.c\
 						srcs/parsing/expander/remove_env.c\
 						srcs/parsing/expander/expander_utils.c\
 						srcs/parsing/expander/expand_env.c\
 						srcs/parsing/expander/relink_token.c\
 						srcs/parsing/expander/expand_wildcard.c\
+						srcs/parsing/ast/ast_try.c\
 
 # Apply the pattern substitution to each source file in SRC and produce a corresponding list of object files in the OBJ_DIR
 OBJ 				= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))

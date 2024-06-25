@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 21:24:08 by allan             #+#    #+#             */
-/*   Updated: 2024/06/20 18:01:57 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/23 21:20:16 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ int	expand_wildcard(t_token **token_list, int *error)
 			*error = find_wildcard(wildcard, current, error);
 			free(wildcard);
 			if (*error != 0)
-				return (1);
+				return (*error);
 		}
 		current = current->next;
 	}
@@ -124,10 +124,7 @@ int find_wildcard(char *wildcard, t_token *current, int *error)
 
     d = opendir(".");
     if (!d)
-	{
-        perror("opendir");
-        return (1); //add error
-    }
+        return (6); //check true error
 	found = 0;
     while (1)
 	{
@@ -141,7 +138,7 @@ int find_wildcard(char *wildcard, t_token *current, int *error)
 			if (*error == 1)
 			{
 				closedir(d);
-				return (1); //add error
+				return (1);
 			}
 			found = 1;
 		}

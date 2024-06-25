@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 23:11:11 by allan             #+#    #+#             */
-/*   Updated: 2024/06/19 23:16:05 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/23 21:07:12 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int		relink_token(t_token **token_list, t_token *current, int *error)
 	token_init(new_list);
 	while (current)
 	{
+		*error = 1;
 		if (current->state == STATE_WORD)
 			current = relink_word(current, &new_list, error);
 		else
@@ -114,6 +115,8 @@ bool	relink_operator(t_token *current, t_token **new_list)
 		if (token_addback(new_list, current->value, 2) == 1)
 			return (1);
 		last = token_last(*new_list);
+		/*if (!last)
+			return (1); ?*/
 		last->state = current->state;
 		last->type = current->type;
 	}

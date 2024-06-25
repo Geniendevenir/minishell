@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:41:06 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/22 19:08:16 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/25 16:46:55 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,23 +54,4 @@ void print_error_cmd_not_found(t_token *current)
 {
 	write(2, current->value, ft_strlen(current->value));
 	write(2, ": command not found\n", 20);
-}
-
-void printAST(t_ast* node, int level)
-{
-    if (node == NULL) return;
-    
-    // Print the right subtree first (with increased level)
-    if (node->right) {
-        printAST(node->right, level + 1);
-    }
-
-    // Print current node with proper indentation
-    for (int i = 0; i < level; i++) printf("    ");
-    printf("%s: %s\n",getAST_Class(node), node->value);
-
-    // Print the left subtree (with increased level)
-    if (node->left) {
-        printAST(node->left, level + 1);
-    }
 }

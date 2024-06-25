@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_management.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:22:12 by allan             #+#    #+#             */
-/*   Updated: 2024/06/22 19:05:17 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/23 21:17:43 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,18 @@ bool	token_addback(t_token **token_list, char *value, int option)
 	t_token	*last_token;
 	
 	/* if (!token_list) //check si possible de supprimer
-		return (1); */
+	{
+		if (is_freeable(token->value, option) == 0)
+		free(value);
+		return (1);
+	} ?? */
 	token = malloc(sizeof(t_token));
 	if (!token)
-		return (1); // problem value not freed
+	{
+		if (is_freeable(token->value, option) == 0)
+		free(value);
+		return (1);
+	}
 	token_init(token);
 	token->value = ft_strdup(value);
 	if (is_freeable(token->value, option) == 0)
@@ -76,7 +84,10 @@ bool	token_addnext(t_token **current, char *value)
 	token_init(token);
 	token->value = ft_strdup(value);
 	if (!token->value)
+	{
+		free(token);
 		return (1);
+	}
 	token->next = (*current)->next;
 	(*current)->next = token;
 	return (0);

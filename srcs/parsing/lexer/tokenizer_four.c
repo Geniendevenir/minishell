@@ -6,9 +6,10 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 14:02:01 by allan             #+#    #+#             */
-/*   Updated: 2024/06/16 21:00:48 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/23 18:51:16 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "minishell.h"
 
@@ -46,7 +47,8 @@ bool	env_dquotes(const char *cmd_line, t_index *index, t_token **token_list)
 		token_value = ft_substr(cmd_line, *index->i, (index->j - *index->i));
 		if (!token_value)
 			return (1);
-		dquote_add_token(token_value, token_list, 0); //substr de i + 1 index->jusqu'a index->j
+		if (dquote_add_token(token_value, token_list, 0) == 1) //substr de i + 1 index->jusqu'a index->j
+			return (1);
 	}
 	index->j++; //Se positionne apres le $
 	(*index->i) = index->j;
@@ -60,7 +62,8 @@ bool	env_dquotes(const char *cmd_line, t_index *index, t_token **token_list)
 	token_value = ft_substr(cmd_line, *index->i, (index->j - *index->i));
 	if (!token_value)
 		return (1);
-	dquote_add_token(token_value, token_list, 1);
+	if (dquote_add_token(token_value, token_list, 1) == 1)
+		return (1);
 	(*index->i) = index->j;
 	return (0);
 }
@@ -74,7 +77,8 @@ bool	dquotes_last_token(const char *cmd_line, t_index *index, t_token **token_li
 		token_value = ft_substr(cmd_line, *index->i, (index->j - *index->i));
 		if (!token_value)
 			return (1);
-		dquote_add_token(token_value, token_list, 0);
+		if (dquote_add_token(token_value, token_list, 0) == 1)
+			return (1);
 	}
 	return (0);
 }
@@ -88,8 +92,11 @@ bool	dquote_add_token(char *token_value, t_token **token_list, bool option)
 	if (token_addback(token_list, token_value, 0) == 1)
 		return (1);
 	current = token_last(*token_list);
-	if (!current)
-		return (1);//add error
+	/* if (!current)
+	{
+		free(token_value);
+		return (1);
+	} ? */
 	current->len = len;
 	current->state = STATE_WORD;
 	if (option == 1)
@@ -113,14 +120,17 @@ bool squote_token(const char *cmd_line, size_t *i, t_token **token_list)
 	}
 	while (cmd_line[j] && cmd_line[j] != '\'')
 		j++;
-	token_value = ft_substr(cmd_line, (*i) + 1, (j - *i) - 1); //check valeur i et j;
+	token_value = ft_substr(cmd_line, (*i) + 1, (j - *i) - 1);
 	if (!token_value)
 		return (1);
 	if (token_addback(token_list, token_value, 0) == 1)
 		return (1);
 	current = token_last(*token_list);
-	if (!current)
-		return (1);//add error
+	/* if (!current)
+	{
+		free(token_value);
+		return (1);
+	} ? */
 	current->len = (j - *i);
 	current->state = STATE_WORD;
 	current->type = TOKEN_SQUOTES;

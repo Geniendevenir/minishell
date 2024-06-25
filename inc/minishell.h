@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/22 20:58:35 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/25 17:27:05 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,7 +228,22 @@ void	print_envv(t_env **env);
 
 /*						AST					*/
 
-t_ast* parseExpression(t_token **token_list);
+t_ast* createNode(enum s_type type, char* value);
+t_ast* handleOpenParenthesis(t_token **tokens, t_ast* current);
+t_ast* handleCloseParenthesis(t_token **tokens, t_ast* root);
+t_ast* handleRedirect(t_token **tokens, t_ast* root);
+t_ast* handlePipe(t_token **tokens, t_ast* root);
+t_ast* handleAndOr(t_token **tokens, t_ast* root);
+t_ast* handleBuiltinCmdQuotes(t_token **tokens, t_ast* current);
+t_ast* handlePipe(t_token **tokens, t_ast* root);
+t_ast* handleRedirect(t_token **tokens, t_ast* root);
+t_ast* handleOption(t_token **tokens, t_ast* current);
+t_ast* parseExpression(t_token **tokens);
+t_ast* parseSubexpression(t_token **tokens);
+void printAST(t_ast* node, int level);
+
+const char* getAST_Class(t_ast *current);
+
 /*					SIGNALS					*/
 
 int			event(void);
@@ -272,7 +287,15 @@ void 	print_env(t_env *env);
 void	print_error_token(t_token *current);
 void	print_error_token_special(char *value);
 void	print_error_cmd_not_found(t_token *current);
-void	printAST(t_ast* node, int level);
-const char* getAST_Class(t_ast *current);
+
+
+
+/*						AST	TRY				*/
+
+#define PRECEDENCE_LOWEST 1
+#define PRECEDENCE_AND_OR 2
+#define PRECEDENCE_PIPE 3
+#define PRECEDENCE_REDIRECTION 4
+#define PRECEDENCE_HIGHEST 5
 
 #endif
