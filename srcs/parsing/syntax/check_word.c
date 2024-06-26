@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 14:48:05 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/15 19:27:46 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/26 21:30:39 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ enum s_type	check_word(char *word, t_word *boolean, t_env *env)
 		return (check_word_part_rediout(boolean));
 	else if (boolean->append == 1)
 		return (check_word_part_append(boolean));
-	else if (boolean->here_doc == 1 && boolean->cmd == 1)
+	else if (boolean->here_doc == 1)
 	{
 		boolean->here_doc = 0;
 		boolean->cmd = 0;

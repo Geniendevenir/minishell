@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/26 19:58:18 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/26 22:01:44 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,7 @@ t_token *token_last(t_token *token_list);
 bool	token_addback(t_token **token_list, char *value, int option);
 bool	token_addnext(t_token **current, char *value);
 void	token_free(t_token **token_list);
+t_token	*duplicate_token(const t_token *token);
 
 //tokenizer
 bool	whitespace_token(const char *cmd_line, size_t *i, t_token **token_list);
@@ -245,6 +246,7 @@ void	handle_parenthesis_open(t_token **tokens, t_ast **current, t_ast **root);
 void	handle_builtin_option(t_token **tokens, t_ast **current, t_ast **root);
 bool	if_cmd_option(t_token **tokens);
 void	part_handle_option(t_ast **current, t_ast **new_node, t_ast **temp);
+void	free_token_and_next_in_ast(t_token **tokens, t_token **temp);
 
 /*					SIGNALS					*/
 

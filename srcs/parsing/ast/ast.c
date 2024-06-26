@@ -6,16 +6,25 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 18:41:34 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/26 19:35:22 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/26 22:06:53 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void	free_token_and_next_in_ast(t_token **tokens, t_token **temp)
+{
+	*temp = *tokens;
+	*tokens = (*tokens)->next;
+	free((*temp)->value);
+	free((*temp));
+}
+
 t_ast	*parse_expression(t_token **tokens)
 {
 	t_ast	*root;
 	t_ast	*current;
+	t_token	*temp;
 
 	root = NULL;
 	current = NULL;
@@ -33,7 +42,7 @@ t_ast	*parse_expression(t_token **tokens)
 		else if (if_cmd_option(tokens))
 			handle_builtin_option(tokens, &current, &root);
 		else
-			(*tokens) = (*tokens)->next;
+			free_token_and_next_in_ast(tokens, &temp);
 	}
 	get_first_parent(&current);
 	return (current);
