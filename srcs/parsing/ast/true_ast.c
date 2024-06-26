@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   true_ast.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 18:41:34 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/23 12:43:18 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/26 15:13:36 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,35 +27,35 @@ t_ast* parseSubexpression(t_token **tokens);
 const char* getAST_Class(t_ast *current)
 {
 	const char* Token_Class[] = {
-    	"NOT_DEFINE",
-		"TOKEN_WORD",
-		"TOKEN_DQUOTES",
-		"TOKEN_SQUOTES",
-		"TOKEN_AND",
-		"TOKEN_OR",
-		"TOKEN_PIPE",
-		"TOKEN_REDIRECTIN",
-		"TOKEN_REDIRECTOUT",
-		"TOKEN_HEREDOC",
-		"TOKEN_APPENDOUT",
-		"TOKEN_LIMITER",
-		"TOKEN_OPENPAR",
-		"TOKEN_CLOSEPAR",
-		"TOKEN_WHITESPACE",
-		"TOKEN_ENV",
-		"TOKEN_WILDCARD",
-		"TOKEN_COUNT",
-		"WORD_FILEIN",
-		"WORD_FILEOUT",
-		"WORD_FILEOUT_APPEND",
-		"WORD_BUILTIN",
-		"WORD_ABSPATH",
-		"WORD_CMD",
-		"WORD_OPTION",
-		"WORD_LIMITER",
-		"WORD_STRING",
-		"WORD_ERROR",
-		"WORD_WTF",
+    	"|NOT_DEFINE",
+		"|TOKEN_WORD",
+		"|TOKEN_DQUOTES",
+		"|TOKEN_SQUOTES",
+		"|TOKEN_AND",
+		"|TOKEN_OR",
+		"|TOKEN_PIPE",
+		"|TOKEN_REDIRECTIN",
+		"|TOKEN_REDIRECTOUT",
+		"|TOKEN_HEREDOC",
+		"|TOKEN_APPENDOUT",
+		"|TOKEN_LIMITER",
+		"|TOKEN_OPENPAR",
+		"|TOKEN_CLOSEPAR",
+		"|TOKEN_WHITESPACE",
+		"|TOKEN_ENV",
+		"|TOKEN_WILDCARD",
+		"|TOKEN_COUNT",
+		"|WORD_FILEIN",
+		"|WORD_FILEOUT",
+		"|WORD_FILEOUT_APPEND",
+		"|WORD_BUILTIN",
+		"|WORD_ABSPATH",
+		"|WORD_CMD",
+		"|WORD_OPTION",
+		"|WORD_LIMITER",
+		"|WORD_STRING",
+		"|WORD_ERROR",
+		"|WORD_WTF",
 	};
     if (current->type >= 0 && current->type < 28) {
         return Token_Class[current->type];
@@ -92,9 +92,44 @@ void addRightChild(t_ast* current, t_ast* newNode) {
     current = newNode; // Cela n'est plus nécessaire ici, car current devrait déjà pointer vers newNode
 }
 
+t_ast	*handleOption(t_token **tokens, t_ast* current)
+{
+	t_ast*	newNode;
+
+	newNode = createNode((*tokens)->type, (*tokens)->value);
+	if (current && current->type == WORD_BUILTIN)
+	{
+		if (current->left)
+		{
+			t_ast* temp = current->left;
+			while (temp->left) temp = temp->left;
+			temp->left = newNode;
+			newNode->parent = temp;
+		}
+		else
+		{
+			current->left = newNode;
+			newNode->parent = current;
+		}
+	}
+	else
+	{
+		if (current)
+		{
+			current->left = newNode;
+			newNode->parent = current;
+			current = newNode;
+		}
+		else
+			current = newNode;
+	}
+	*tokens = (*tokens)->next;
+	//ajouter token next ?
+	return current;
+}
+
 t_ast	*handleOpenParenthesis(t_token **tokens, t_ast* current)
 {
-	//ajouter toke next ?
 	*tokens = (*tokens)->next;
 	t_ast* subTree = parseSubexpression(tokens);
 	if (current)
@@ -110,7 +145,6 @@ t_ast	*handleOpenParenthesis(t_token **tokens, t_ast* current)
 
 t_ast	*handleCloseParenthesis(t_token **tokens, t_ast* root)
 {
-	//rajouter token next ?
 	*tokens = (*tokens)->next;
 	return (root);
 }
@@ -121,7 +155,34 @@ t_ast	*handleAndOr(t_token **tokens, t_ast* root)
 
 	newNode = createNode((*tokens)->type, (*tokens)->value);
     newNode->left = root;
-    if (root) root->parent = newNode;
+    if (root)
+		root->parent = newNode;
+    root = newNode;
+	*tokens = (*tokens)->next;
+    return root;
+}
+
+t_ast	*handle_redirect(t_token **tokens, t_ast* current)
+{
+	t_ast	*newNode;
+
+	newNode = createNode((*tokens)->type, (*tokens)->value);
+    newNode->right = current;
+	newNode->parent = current->parent;
+    if (current)
+		current->parent = newNode;
+	*tokens = (*tokens)->next;
+    return newNode;
+}
+
+t_ast	*handle_pipe(t_token **tokens, t_ast* root)
+{
+	t_ast	*newNode;
+
+	newNode = createNode((*tokens)->type, (*tokens)->value);
+    newNode->left = root;
+    if (root)
+		root->parent = newNode;
     root = newNode;
 	*tokens = (*tokens)->next;
     return root;
@@ -144,43 +205,26 @@ t_ast	*handleBuiltinCmdQuotes(t_token **tokens, t_ast* current)
 	return current;
 }
 
-t_ast	*handleOption(t_token **tokens, t_ast* current)
+
+/* t_ast *handle_redirect_out(t_token **tokens,t_ast *root, t_ast *last_operator)
 {
-	t_ast*	newNode;
+	t_ast	*newNode;
 
 	newNode = createNode((*tokens)->type, (*tokens)->value);
-	if (current && current->type == WORD_BUILTIN)
+	if(last_operator == NULL)
 	{
-		if (current->right)
-		{
-			t_ast* temp = current->right;
-			while (temp->right) temp = temp->right;
-			temp->right = newNode;
-			newNode->parent = temp;
-		}
-		else
-		{
-			current->right = newNode;
-			newNode->parent = current;
-		}
+		root->parent = newNode;
+		newNode->left = root;
+		*tokens = (*tokens)->next;
+		return (newNode);
 	}
 	else
 	{
-		if (current)
-		{
-			current->right = newNode;
-			newNode->parent = current;
-			current = newNode;
-		}
-		else
-			current = newNode;
+		newNode->parent = last_operator;
+		last_operator->right = newNode;
 	}
-	*tokens = (*tokens)->next;
-	//ajouter token next ?
-	return current;
-}
-
-
+	return (last_operator);
+} */
 //definir root pour factoriser
 t_ast* parseExpression(t_token **tokens)
 {
@@ -191,7 +235,8 @@ t_ast* parseExpression(t_token **tokens)
 	current = NULL;
 	while (*tokens) //echo //test
 	{
-		printf("token = %s\n", (*tokens)->value);
+		/* if (current->parent->value)
+			printf("current parent main = %s\n", current->parent->value); */
 		// Traiter le jeton courant
 		if ((*tokens)->type == TOKEN_OPENPAR)
 		{
@@ -201,6 +246,18 @@ t_ast* parseExpression(t_token **tokens)
 		}
 		else if ((*tokens)->type == TOKEN_CLOSEPAR)
 			return handleCloseParenthesis(tokens, root);
+		else if ((*tokens)->type == WORD_FILEOUT || (*tokens)->type == WORD_FILEOUT_APPEND || (*tokens)->type == WORD_LIMITER|| (*tokens)->type == WORD_FILEIN)
+		{
+			//temp = current;
+			root = handleAndOr(tokens, root);
+			//printf("newNode = %s | noderight = %s \n",current->value,current->right->value);
+			current = root;
+		}
+		else if ((*tokens)->type == TOKEN_PIPE)
+		{
+			root = handle_pipe(tokens, root);
+			current = root;
+		}
 		else if ((*tokens)->type == TOKEN_AND || (*tokens)->type == TOKEN_OR)
 		{
 			root = handleAndOr(tokens, root);
@@ -209,30 +266,28 @@ t_ast* parseExpression(t_token **tokens)
 		else if ((*tokens)->type == WORD_BUILTIN || (*tokens)->type == WORD_CMD || (*tokens)->type == TOKEN_DQUOTES || (*tokens)->type == TOKEN_SQUOTES)
 		{
 			current = handleBuiltinCmdQuotes(tokens, current);
-			if (!root) {
+			if (!root) 
 				root = current;
-			}
 		}
 		else if ((*tokens)->type == WORD_OPTION)
 		{
 			current = handleOption(tokens, current);
-			if (!root) {
-				root = current;
-			}
+			if (!root)
+				root = current; //pas obligatoire normalement
 		}
-		else if ((*tokens)->type == TOKEN_WHITESPACE)
+		else if ((*tokens)->type == TOKEN_WHITESPACE || (*tokens)->type ==TOKEN_REDIRECTOUT|| (*tokens)->type ==TOKEN_REDIRECTIN|| (*tokens)->type ==TOKEN_HEREDOC)
             (*tokens) = (*tokens)->next;
         else
             return NULL;
 	}
-
-	return (root);
+	return (current);
 
 }
 t_ast	*parseSubexpression(t_token **tokens)
 {
 	return parseExpression(tokens);
 }
+// ( echo salut && echo yo ) && ( echo coucou && ( echo prout && ( echo okkkkkkkk ) ) ) && ( echo flop && echo bye )
 
 // Fonction pour obtenir le nom d'un type de token
 
@@ -258,7 +313,6 @@ t_ast	*parseSubexpression(t_token **tokens)
     return 0;
 } */
 
-// ( echo salut && echo yo ) && ( echo coucou && ( echo prout && ( echo okkkkkkkk ) ) ) && ( echo flop && echo bye )
 
 /* t_ast* parseExpression(t_token *token_list, int* index, int numTokens)
 {

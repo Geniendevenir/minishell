@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/22 20:58:35 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/23 13:53:17 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -262,6 +262,7 @@ void	init_t_word(t_word *word);
 void	free_env(t_env *envp);
 void	free_all(t_all *p);
 void	free_array(char **array);
+void	free_ast(t_ast *node);
 
 /*					 UTILS					*/
 

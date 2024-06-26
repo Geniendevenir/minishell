@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:24:04 by allan             #+#    #+#             */
-/*   Updated: 2024/06/23 13:09:00 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/23 14:07:28 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void parser(char *cmd_line, t_env *env) // a rajouter env quand expander fini
 	//ast(); // Tour de Controle de l'execution
 	//printf("AFTER EXPANDER:\n");
 	//token_print(&token_list);
+	free_ast(ast);
 	token_free(&token_list);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 14:30:25 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/23 13:04:19 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/23 21:28:28 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,6 +169,125 @@ t_ast	*handleOption(Token* tokens, int* index, t_ast* current)
 	return current;
 }
 
+t_ast* handleRedirection(Token* tokens, int* index, t_ast* current, int numTokens) {
+    s_type type = tokens[*index].type;
+    t_ast* newNode = createNode(type, tokens[*index].value);
+    (*index)++;
+    
+    if (*index < numTokens && (tokens[*index].type == WORD_FILEIN || tokens[*index].type == WORD_FILEOUT || tokens[*index].type == WORD_FILEOUT_APPEND)) {
+        t_ast* fileNode = createNode(tokens[*index].type, tokens[*index].value);
+        newNode->right = fileNode;
+        fileNode->parent = newNode;
+        (*index)++;
+    }
+
+    if (current) {
+        if (current->right) {
+            t_ast* temp = current->right;
+            while (temp->right) temp = temp->right;
+            temp->right = newNode;
+            newNode->parent = temp;
+        } else {
+            current->right = newNode;
+            newNode->parent = current;
+        }
+    } else {
+        current = newNode;
+    }
+    return current;
+}
+
+
+t_ast* handleRedirectOut(Token* tokens, int* index, t_ast* current,int numTokens) {
+    t_ast* redirectNode = createNode(TOKEN_REDIRECTOUT, tokens[*index].value);
+	int save_index = index;
+    (*index)++;
+    if (*index < numTokens && (tokens[*index].type == WORD_FILEOUT || tokens[*index].type == WORD_STRING)) {
+        t_ast* fileNode = createNode(tokens[*index].type, tokens[*index].value);
+        (*index)++;
+        redirectNode->right = fileNode;
+        fileNode->parent = redirectNode;
+
+        if (current) {
+            redirectNode->left = current;
+            if (current->parent) {
+                current->parent->right = redirectNode;
+                redirectNode->parent = current->parent;
+            }
+            current->parent = redirectNode;
+        }
+    }
+	while(save_index != 0 && tokens[save_index].type != TOKEN_AND || tokens[save_index].type != TOKEN_AND)
+	{
+		save_index--;
+	}
+    return redirectNode;
+}
+
+t_ast* handleRedirectIn(Token* tokens, int* index, t_ast* current,int numTokens) {
+    t_ast* redirectNode = createNode(TOKEN_REDIRECTIN, tokens[*index].value);
+    (*index)++;
+    if (*index < numTokens && (tokens[*index].type == WORD_FILEIN || tokens[*index].type == WORD_STRING)) {
+        t_ast* fileNode = createNode(tokens[*index].type, tokens[*index].value);
+        (*index)++;
+        redirectNode->left = fileNode;
+        fileNode->parent = redirectNode;
+
+        if (current) {
+            redirectNode->right = current;
+            if (current->parent) {
+                current->parent->right = redirectNode;
+                redirectNode->parent = current->parent;
+            }
+            current->parent = redirectNode;
+        }
+    }
+    return redirectNode;
+}
+
+t_ast* handleRedirectAppendOut(Token* tokens, int* index, t_ast* current,int numTokens) {
+    t_ast* redirectNode = createNode(TOKEN_APPENDOUT, tokens[*index].value);
+    (*index)++;
+    if (*index < numTokens && (tokens[*index].type == WORD_FILEOUT_APPEND || tokens[*index].type == WORD_STRING)) {
+        t_ast* fileNode = createNode(tokens[*index].type, tokens[*index].value);
+        (*index)++;
+        redirectNode->right = fileNode;
+        fileNode->parent = redirectNode;
+
+        if (current) {
+            redirectNode->left = current;
+            if (current->parent) {
+                current->parent->right = redirectNode;
+                redirectNode->parent = current->parent;
+            }
+            current->parent = redirectNode;
+        }
+    }
+    return redirectNode;
+}
+
+t_ast* handleHeredoc(Token* tokens, int* index, t_ast* current,int numTokens) {
+    t_ast* redirectNode = createNode(TOKEN_HEREDOC, tokens[*index].value);
+    (*index)++;
+    if (*index < numTokens && (tokens[*index].type == WORD_LIMITER || tokens[*index].type == WORD_STRING)) {
+        t_ast* fileNode = createNode(tokens[*index].type, tokens[*index].value);
+        (*index)++;
+        redirectNode->left = fileNode;
+        fileNode->parent = redirectNode;
+
+        if (current) {
+            redirectNode->right = current;
+            if (current->parent) {
+                current->parent->right = redirectNode;
+                redirectNode->parent = current->parent;
+            }
+            current->parent = redirectNode;
+        }
+    }
+    return redirectNode;
+}
+
+
 t_ast* parseExpression(Token* tokens, int* index, int numTokens) 
 {
 	t_ast* root;
@@ -206,6 +325,19 @@ t_ast* parseExpression(Token* tokens, int* index, int numTokens)
             if (!root)
 				root = current;
         }
+        else if (type == TOKEN_REDIRECTOUT) {
+            current = handleRedirectOut(tokens, index, current, numTokens);
+            if (!root) root = current;
+        } else if (type == TOKEN_REDIRECTIN) {
+            current = handleRedirectIn(tokens, index, current, numTokens);
+            if (!root) root = current;
+        } else if (type == TOKEN_APPENDOUT) {
+            current = handleRedirectAppendOut(tokens, index, current, numTokens);
+            if (!root) root = current;
+        } else if (type == TOKEN_HEREDOC) {
+            current = handleHeredoc(tokens, index, current, numTokens);
+            if (!root) root = current;
+        } 
 		else if (type == TOKEN_WHITESPACE)
             (*index)++;
         else
@@ -225,13 +357,13 @@ const char* getTokenTypeName(s_type type) {
         case NOT_DEFINE: return "NOT_DEFINE";
         case TOKEN_DQUOTES: return "DQUOTES";
         case TOKEN_SQUOTES: return "SQUOTES";
-        case TOKEN_AND: return "AND";
-        case TOKEN_OR: return "OR";
+        case TOKEN_AND: return "|AND";
+        case TOKEN_OR: return "|OR";
         case TOKEN_PIPE: return "PIPE";
-        case TOKEN_REDIRECTIN: return "REDIRECTIN";
-        case TOKEN_REDIRECTOUT: return "REDIRECTOUT";
-        case TOKEN_HEREDOC: return "HEREDOC";
-        case TOKEN_APPENDOUT: return "APPENDOUT";
+        case TOKEN_REDIRECTIN: return "|REDIRECTIN";
+        case TOKEN_REDIRECTOUT: return "|REDIRECTOUT";
+        case TOKEN_HEREDOC: return "|HEREDOC";
+        case TOKEN_APPENDOUT: return "|APPENDOUT";
         case TOKEN_LIMITER: return "LIMITER";
         case TOKEN_OPENPAR: return "OPENPAR";
         case TOKEN_CLOSEPAR: return "CLOSEPAR";
@@ -239,13 +371,13 @@ const char* getTokenTypeName(s_type type) {
         case TOKEN_ENV: return "ENV";
         case TOKEN_WILDCARD: return "WILDCARD";
         case TOKEN_COUNT: return "COUNT";
-        case WORD_FILEIN: return "FILEIN";
-        case WORD_FILEOUT: return "FILEOUT";
-        case WORD_FILEOUT_APPEND: return "FILEOUT_APPEND";
-        case WORD_BUILTIN: return "BUILTIN";
-        case WORD_ABSPATH: return "ABSPATH";
-        case WORD_CMD: return "CMD";
-        case WORD_OPTION: return "OPTION";
+        case WORD_FILEIN: return "|FILEIN";
+        case WORD_FILEOUT: return "|FILEOUT";
+        case WORD_FILEOUT_APPEND: return "|FILEOUT_APPEND";
+        case WORD_BUILTIN: return "|BUILTIN";
+        case WORD_ABSPATH: return "|ABSPATH";
+        case WORD_CMD: return "|CMD";
+        case WORD_OPTION: return "|OPTION";
         case WORD_LIMITER: return "LIMITER";
         case WORD_STRING: return "STRING";
         case WORD_ERROR: return "ERROR";
@@ -273,7 +405,47 @@ void printAST(t_ast* node, int level) {
     }
 }
 
-int main()
+void freeAST(t_ast *node) {
+    if (node == NULL) {
+        return;
+    }
+    
+    // Libérer les nœuds gauche et droit
+    freeAST(node->left);
+    freeAST(node->right);
+    
+    // Libérer la valeur du nœud
+    if (node->value) {
+        free(node->value);
+    }
+    
+    // Libérer le nœud lui-même
+    free(node);
+}
+
+int main() {
+    // Construction d'un AST complexe
+    Token tokens[] = {
+        {TOKEN_OPENPAR, "("}, {WORD_BUILTIN, "echo"}, {WORD_OPTION, "salut"}, {TOKEN_AND, "&&"}, {WORD_BUILTIN, "echo"}, {WORD_OPTION, "yo"}, {TOKEN_CLOSEPAR, ")"},
+		 {TOKEN_REDIRECTOUT, ">>"}, {WORD_FILEOUT, "fileoutput.txt"},
+        {TOKEN_AND, "&&"}, {TOKEN_OPENPAR, "("}, {WORD_BUILTIN, "echo"}, {WORD_OPTION, "coucou"}, {TOKEN_AND, "&&"}, 
+        {TOKEN_OPENPAR, "("}, {WORD_BUILTIN, "echo"}, {WORD_OPTION, "prout"}, {TOKEN_AND, "&&"}, {TOKEN_OPENPAR, "("}, 
+        {WORD_BUILTIN, "echo"}, {WORD_OPTION, "salut"}, {TOKEN_CLOSEPAR, ")"}, {TOKEN_CLOSEPAR, ")"}, {TOKEN_CLOSEPAR, ")"}, 
+        {TOKEN_AND, "&&"}, {TOKEN_OPENPAR, "("}, {WORD_BUILTIN, "echo"}, {WORD_OPTION, "flop"}, {TOKEN_AND, "&&"}, 
+        {WORD_BUILTIN, "echo"}, {WORD_OPTION, "bye"}, {TOKEN_CLOSEPAR, ")"}, {TOKEN_REDIRECTOUT, ">"}, {WORD_FILEOUT, "output.txt"}
+    };
+    int numTokens = sizeof(tokens) / sizeof(tokens[0]);
+    int index = 0;
+	 t_ast* ast = parseExpression(tokens, &index, numTokens);
+    printAST(ast, 0);
+
+    // Libération de l'AST
+    freeAST(ast);
+
+    return 0;
+}
+
+/* int main()
 {
     // Liste des tokens représentant une commande shell complexe
     Token tokens[] = {
@@ -293,7 +465,7 @@ int main()
     printAST(ast, 0);
 
     return 0;
-}
+} */
 
 // ( echo salut && echo yo ) && ( echo coucou && ( echo prout && ( echo salut ) ) ) && ( echo flop && echo bye )
 
