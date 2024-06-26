@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/26 16:02:24 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/26 19:58:18 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,16 +228,24 @@ void	print_envv(t_env **env);
 
 /*						AST					*/
 
-t_ast	*parseExpression(t_token **token_list);
-t_ast	*parseSubexpression(t_token **tokens);
-t_ast	*createNode(enum s_type type, char* value);
+t_ast	*parse_expression(t_token **token_list);
+t_ast	*parse_subexpression(t_token **tokens);
+t_ast	*create_node(enum s_type type, char* value);
 void	swap_child_left(t_ast* current, t_ast* newNode);
-t_ast	*handleOption(t_token **tokens, t_ast* current);
-t_ast	*handleOpenParenthesis(t_token **tokens, t_ast* current);
-t_ast	*handleCloseParenthesis(t_token **tokens, t_ast* root);
+t_ast	*handle_option(t_token **tokens, t_ast* current);
+t_ast	*handle_open_parenthesis(t_token **tokens, t_ast* current);
+void	handle_parenthesis_open(t_token **tokens, t_ast **current, t_ast **root);
+t_ast	*handle_close_parenthesis(t_token **tokens, t_ast* root);
 t_ast	*handle_priorities(t_token **tokens, t_ast* root);
-t_ast	*handleBuiltinCmdQuotes(t_token **tokens, t_ast* current);
+t_ast	*handle_builtin_and_cmd(t_token **tokens, t_ast* current);
 void	swap_child_right(t_ast* current, t_ast* newNode);
+bool	if_priorities(t_token **tokens);
+void	get_first_parent(t_ast **current);
+void	handle_parenthesis_open(t_token **tokens, t_ast **current, t_ast **root);
+void	handle_builtin_option(t_token **tokens, t_ast **current, t_ast **root);
+bool	if_cmd_option(t_token **tokens);
+void	part_handle_option(t_ast **current, t_ast **new_node, t_ast **temp);
+
 /*					SIGNALS					*/
 
 int			event(void);
@@ -274,7 +282,6 @@ void	free_array(char **array);
 void	free_ast(t_ast *node);
 
 /*					 UTILS					*/
-
 
 char	*ft_strndup(char *str, int n);
 int		ft_strcmp(char *s1, char *s2);
