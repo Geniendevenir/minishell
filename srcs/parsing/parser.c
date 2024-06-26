@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:24:04 by allan             #+#    #+#             */
-/*   Updated: 2024/06/23 14:07:28 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/26 18:38:56 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,13 @@ void parser(char *cmd_line, t_env *env) // a rajouter env quand expander fini
 		return ;
 	/* if (check_syntax(&token_list) == 1)
 		return ; */
-	printf("\n\n\nAFTER EXPANDER AND SYNTAX:\n");
-	token_print_amazing(&token_list);
+	//printf("\n\n\nAFTER EXPANDER AND SYNTAX:\n");
+	//token_print_amazing(&token_list);
 	init_t_word(&word);
 	if (define_word(&token_list, &word, env))
 		return ;
-	printf("\n\n\nAFTER define word:\n");
-	token_print_amazing(&token_list);
+	//printf("\n\n\nAFTER define word:\n");
+	//token_print_amazing(&token_list);
 	t_ast *ast = parseExpression(&token_list);
 	printAST(ast,0);
 	//syntax_check(); // Ultime check structure de l'input

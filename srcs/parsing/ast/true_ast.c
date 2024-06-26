@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 18:41:34 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/26 17:05:07 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/26 18:51:39 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,21 @@ bool if_priorities(t_token **tokens)
 		return (0);
 }
 
-t_ast	*get_first_parent(t_ast *current)
+void	get_first_parent(t_ast **current)
 {
-	while (current && current->parent)
-		current = current->parent;
-	return (current);
+	while (*current && (*current)->parent)
+		*current = (*current)->parent;
 }
 
-
+void	handle_parenthesis_open(t_token **tokens, t_ast **current, t_ast **root)
+{
+	if ((*tokens)->type == TOKEN_OPENPAR)
+		{
+			*current = handleOpenParenthesis(tokens, *current);
+			if (!*root)
+				*root = *current;
+		}
+}
 
 t_ast* parseExpression(t_token **tokens)
 {
@@ -41,11 +48,7 @@ t_ast* parseExpression(t_token **tokens)
 	while (*tokens)
 	{
 		if ((*tokens)->type == TOKEN_OPENPAR)
-		{
-			current = handleOpenParenthesis(tokens, current);
-			if (!root)
-				root = current;
-		}
+			handle_parenthesis_open(tokens, &current, &root);
 		else if ((*tokens)->type == TOKEN_CLOSEPAR)
 			return handleCloseParenthesis(tokens, root);
 		else if (if_priorities(tokens))
@@ -64,7 +67,7 @@ t_ast* parseExpression(t_token **tokens)
 		else
             (*tokens) = (*tokens)->next;
 	}
-	current = get_first_parent(current);
+	get_first_parent(&current);
 	return (current);
 }
 t_ast	*parseSubexpression(t_token **tokens)

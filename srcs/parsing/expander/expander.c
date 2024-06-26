@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 16:47:23 by allan             #+#    #+#             */
-/*   Updated: 2024/06/20 16:21:29 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/26 18:39:16 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,8 +115,8 @@ bool	expander(t_token **token_list, t_env *env)
 		error_lexer(1); //error malloc
 		return (1);
 	}
-	printf("\nAfter expand_env:\n");
-	token_print(token_list);
+	//printf("\nAfter expand_env:\n");
+	//token_print(token_list);
 	error = 1;
 	current = *token_list;
 	if (relink_token(token_list, current, &error) == 1)

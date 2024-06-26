@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 15:48:03 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/26 15:57:24 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/26 18:52:15 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ t_ast	*handleOption(t_token **tokens, t_ast* current)
 	return current;
 }
 
-t_ast	*handleOpenParenthesis(t_token **tokens, t_ast* current)
+t_ast	*handle_open_parenthesis(t_token **tokens, t_ast* current)
 {
 	*tokens = (*tokens)->next;
 	t_ast* subTree = parseSubexpression(tokens);
