@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/23 13:53:17 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/26 16:02:24 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,7 +228,16 @@ void	print_envv(t_env **env);
 
 /*						AST					*/
 
-t_ast* parseExpression(t_token **token_list);
+t_ast	*parseExpression(t_token **token_list);
+t_ast	*parseSubexpression(t_token **tokens);
+t_ast	*createNode(enum s_type type, char* value);
+void	swap_child_left(t_ast* current, t_ast* newNode);
+t_ast	*handleOption(t_token **tokens, t_ast* current);
+t_ast	*handleOpenParenthesis(t_token **tokens, t_ast* current);
+t_ast	*handleCloseParenthesis(t_token **tokens, t_ast* root);
+t_ast	*handle_priorities(t_token **tokens, t_ast* root);
+t_ast	*handleBuiltinCmdQuotes(t_token **tokens, t_ast* current);
+void	swap_child_right(t_ast* current, t_ast* newNode);
 /*					SIGNALS					*/
 
 int			event(void);

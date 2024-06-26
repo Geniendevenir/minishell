@@ -25,6 +25,8 @@ SRCS 				=   srcs/env.c\
 						srcs/signals.c\
 						srcs/utils.c\
 						srcs/parsing/ast/true_ast.c\
+						srcs/parsing/ast/ast_utils.c\
+						srcs/parsing/ast/ast_handle.c\
 						srcs/parsing/syntax/word.c\
 						srcs/parsing/syntax/check_word.c\
 						srcs/parsing/syntax/check_word_utils.c\

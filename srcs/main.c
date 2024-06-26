@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/23 12:47:03 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/26 15:38:09 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*minishell(t_all *p)
 		printf("exit\n");
 		return (free(p->line), free_all(p), rl_clear_history(), exit(0), NULL);
 	}
-	if (p->sig->sig_int == 0)
+	if (p->sig->sig_int == 0 && p->line[0] != '\0')
 	{
 		parser(p->line, p->env);
 		add_history(p->line);
