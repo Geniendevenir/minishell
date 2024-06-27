@@ -25,6 +25,8 @@ SRCS 				=   srcs/env.c\
 						srcs/signals.c\
 						srcs/utils.c\
 						srcs/execution/parcour_ast.c\
+						srcs/execution/handle_cmd_and_builtins.c\
+						srcs/execution/exec_builtins.c\
 						srcs/parsing/ast/ast.c\
 						srcs/parsing/ast/ast_utils.c\
 						srcs/parsing/ast/ast_utils_two.c\
