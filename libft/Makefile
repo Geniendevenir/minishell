@@ -33,6 +33,7 @@ LIBFT_DIR		=	$(SRC_DIR)ft_libft/ft_atoi.c \
 					$(SRC_DIR)ft_libft/ft_split.c \
 					$(SRC_DIR)ft_libft/ft_strchr.c \
 					$(SRC_DIR)ft_libft/ft_strdup.c \
+					$(SRC_DIR)ft_libft/ft_strichr.c \
 					$(SRC_DIR)ft_libft/ft_striteri.c \
 					$(SRC_DIR)ft_libft/ft_strjoin.c \
 					$(SRC_DIR)ft_libft/ft_strlcat.c \

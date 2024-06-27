@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 21:24:08 by allan             #+#    #+#             */
-/*   Updated: 2024/06/23 21:20:16 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/26 17:03:12 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,12 +119,12 @@ int find_wildcard(char *wildcard, t_token *current, int *error)
 {
 	DIR				*d;
     struct dirent	*dir;
-	t_wildcard	match;
+	t_wildcard		match;
 	bool			found;
 
     d = opendir(".");
     if (!d)
-        return (6); //check true error
+		return (6); //check true error
 	found = 0;
     while (1)
 	{
@@ -132,7 +132,7 @@ int find_wildcard(char *wildcard, t_token *current, int *error)
 		if (dir == NULL)
 			break ;
 		match_init(wildcard, dir->d_name, &match);
-        if (file_match(match))
+        if (file_match(match)) //CHECK IF ONLY CERTAIN TYPE ARE TO BE EXPANDED IF SO USE LSTAT
 		{
             *error = add_file(&current, dir->d_name, found);
 			if (*error == 1)

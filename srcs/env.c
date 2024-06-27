@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:25:36 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/02 14:35:57 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/27 18:58:30 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+//CHECK SI BESOIN DE GERER LE CAS: _=/usr/bin/env$
 
 t_env	*ft_envnew(char *key, char *value)
 {
@@ -62,7 +64,11 @@ t_env	*ft_envlast(t_env *lst)
 void	ft_env_add_back(t_env **lst, t_env *new)
 {
 	t_env	*tmp;
-
+	if (!new)
+	{
+		printf("test add_back NULL\n");
+		return ;
+	}
 	if (*lst)
 	{
 		tmp = ft_envlast(*lst);

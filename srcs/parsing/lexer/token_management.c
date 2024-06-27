@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:22:12 by allan             #+#    #+#             */
-/*   Updated: 2024/06/23 21:17:43 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/27 17:56:09 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ bool	token_addback(t_token **token_list, char *value, int option)
 	if (!token)
 	{
 		if (is_freeable(token->value, option) == 0)
-		free(value);
+			free(value);
 		return (1);
 	}
 	token_init(token);

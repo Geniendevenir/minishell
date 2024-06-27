@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:24:04 by allan             #+#    #+#             */
-/*   Updated: 2024/06/25 17:21:21 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/27 21:35:49 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,10 @@
 /*
 
 TO DO:
--Finir / Corriger AST
--Builtins
+-Finir / Corriger AST OK
+-Builtins 
 -Check Leak
+-Revoir Wildcard avec lstat
 -Error Management de TOUT le code: OK
 -Premier Tour de norminette
 -Execution
@@ -45,7 +46,7 @@ void parser(char *cmd_line, t_env *env) // a rajouter env quand expander fini
 	if (!token_list)
 		return ;
 	token_init(token_list);
-	if (lexer(cmd_line, &token_list) == 1)
+	if (lexer(cmd_line, &token_list) == 1) //RAJOUTER LE CAS #
 		return ;
 	//printf("AFTER LEXER:\n");
 	//token_print_amazing(&token_list);
@@ -64,5 +65,4 @@ void parser(char *cmd_line, t_env *env) // a rajouter env quand expander fini
 	printAST(ast, 0);
 	token_free(&token_list);
 }
-
 

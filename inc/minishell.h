@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/25 17:27:05 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/27 19:10:25 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,7 +193,7 @@ bool	is_freeable(char *value, int option);
 bool	is_wildcard(const char *cmd_line, int i);
 
 //error
-void	error_lexer(int error);
+void		error_lexer(int error);
 void		amazing_printing(t_token *current, int i);
 const char	*getToken_Class(t_token *current);
 
@@ -266,6 +266,7 @@ bool		define_word(t_token **token_list, t_word *boolean, t_env *env);
 /*					 ENV					*/
 
 t_env	*env_to_struct(char **env);
+void	ft_env_add_back(t_env **lst, t_env *new);
 
 /*					 INIT					*/
 t_all	*init_all(char **env);
@@ -288,7 +289,20 @@ void	print_error_token(t_token *current);
 void	print_error_token_special(char *value);
 void	print_error_cmd_not_found(t_token *current);
 
+/*					BUILTINS				*/
+//CD
+int		ft_cd(char *path);
+char	*relative_path(DIR	*d, char *path, int *error);
+char	*cd_match(char *cur_dir, char *try_dir, int *error);
+//EXPORT
+int		ft_export(char **new_env, t_env **env_list);
+int 	split_env(char *new_env, int len, t_env **env_list);
+t_env	*env_init(void);
+int		export_free(t_env **add_env, int option);
+int		valid_export(char *new_env);
 
+
+int		main(int argc, char **argv, char **env);
 
 /*						AST	TRY				*/
 
