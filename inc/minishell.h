@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/26 22:01:44 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/27 14:10:08 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,12 @@ typedef struct s_ast {
 	struct s_ast *right;
 	struct s_ast *parent;
 }				t_ast;
+
+//						EXECUTION                      //
+void traverse_ast(t_ast *root);
+
+//////////////////////////////////////////////////////////
+
 //check_lexer
 bool	check_quotes(char *cmd_line);
 bool	check_semicolon(char *cmd_line);

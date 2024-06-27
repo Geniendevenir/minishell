@@ -24,6 +24,7 @@ SRCS 				=   srcs/env.c\
 						srcs/print_utils.c \
 						srcs/signals.c\
 						srcs/utils.c\
+						srcs/execution/parcour_ast.c\
 						srcs/parsing/ast/ast.c\
 						srcs/parsing/ast/ast_utils.c\
 						srcs/parsing/ast/ast_utils_two.c\
