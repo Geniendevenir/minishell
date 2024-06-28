@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 12:53:21 by allan             #+#    #+#             */
-/*   Updated: 2024/06/27 21:32:31 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/28 14:09:58 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ int	ft_export(char **new_env, t_env **env_list)
 {
 	int		i;
 	int		len;
-
 
 	i = 0;
 	if (!new_env)
