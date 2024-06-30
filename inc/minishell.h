@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/27 19:10:25 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/30 15:43:57 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,12 +136,36 @@ typedef struct s_wildcard {
 }				t_wildcard;
 
 typedef struct s_ast {
+	int exit_state;
 	enum s_type type;
 	char		*value;
 	struct s_ast *left;
 	struct s_ast *right;
 	struct s_ast *parent;
 }				t_ast;
+
+typedef struct s_file
+{
+	int				fd;
+	enum s_type		type;
+	char			*data;
+	struct s_file	*next;
+}	t_file;
+
+//						EXECUTION                      //
+void traverse_ast(t_ast *root, t_env *env);
+int exec_parent_node(t_ast *current, t_env *env);
+int exec_operator(t_ast *current, t_env *env);
+int exec_and(t_ast *current, t_env *env);
+int exec_or(t_ast *current, t_env *env);
+int exec_cmd_or_builtin(t_ast *current, t_env *env);
+int exec_pipe(t_ast *current, t_env *env);
+int exec_redirect(t_ast *current);
+bool is_command_or_builtin_or_abspath(t_ast *current);
+bool is_redirect_folder(t_ast *current);
+
+//////////////////////////////////////////////////////////
+
 //check_lexer
 bool	check_quotes(char *cmd_line);
 bool	check_semicolon(char *cmd_line);
@@ -228,21 +252,24 @@ void	print_envv(t_env **env);
 
 /*						AST					*/
 
-t_ast* createNode(enum s_type type, char* value);
-t_ast* handleOpenParenthesis(t_token **tokens, t_ast* current);
-t_ast* handleCloseParenthesis(t_token **tokens, t_ast* root);
-t_ast* handleRedirect(t_token **tokens, t_ast* root);
-t_ast* handlePipe(t_token **tokens, t_ast* root);
-t_ast* handleAndOr(t_token **tokens, t_ast* root);
-t_ast* handleBuiltinCmdQuotes(t_token **tokens, t_ast* current);
-t_ast* handlePipe(t_token **tokens, t_ast* root);
-t_ast* handleRedirect(t_token **tokens, t_ast* root);
-t_ast* handleOption(t_token **tokens, t_ast* current);
-t_ast* parseExpression(t_token **tokens);
-t_ast* parseSubexpression(t_token **tokens);
-void printAST(t_ast* node, int level);
-
-const char* getAST_Class(t_ast *current);
+t_ast	*parse_expression(t_token **token_list);
+t_ast	*parse_subexpression(t_token **tokens);
+t_ast	*create_node(enum s_type type, char* value);
+void	swap_child_left(t_ast* current, t_ast* newNode);
+t_ast	*handle_option(t_token **tokens, t_ast* current);
+t_ast	*handle_open_parenthesis(t_token **tokens, t_ast* current);
+void	handle_parenthesis_open(t_token **tokens, t_ast **current, t_ast **root);
+t_ast	*handle_close_parenthesis(t_token **tokens, t_ast* root);
+t_ast	*handle_priorities(t_token **tokens, t_ast* root);
+t_ast	*handle_builtin_and_cmd(t_token **tokens, t_ast* current);
+void	swap_child_right(t_ast* current, t_ast* newNode);
+bool	if_priorities(t_token **tokens);
+void	get_first_parent(t_ast **current);
+void	handle_parenthesis_open(t_token **tokens, t_ast **current, t_ast **root);
+void	handle_builtin_option(t_token **tokens, t_ast **current, t_ast **root);
+bool	if_cmd_option(t_token **tokens);
+void	part_handle_option(t_ast **current, t_ast **new_node, t_ast **temp);
+void	free_token_and_next_in_ast(t_token **tokens, t_token **temp);
 
 /*					SIGNALS					*/
 
@@ -278,6 +305,7 @@ void	init_t_word(t_word *word);
 void	free_env(t_env *envp);
 void	free_all(t_all *p);
 void	free_array(char **array);
+void	free_ast(t_ast *node);
 
 /*					 UTILS					*/
 
@@ -288,6 +316,8 @@ void 	print_env(t_env *env);
 void	print_error_token(t_token *current);
 void	print_error_token_special(char *value);
 void	print_error_cmd_not_found(t_token *current);
+void	printAST(t_ast* node, int level);
+const char* getAST_Class(t_ast *current);
 
 /*					BUILTINS				*/
 //CD
@@ -300,6 +330,11 @@ int 	split_env(char *new_env, int len, t_env **env_list);
 t_env	*env_init(void);
 int		export_free(t_env **add_env, int option);
 int		valid_export(char *new_env);
+//EXIT
+int	ft_exit(char **commande, bool child);
+int	check_is_num(char *exit_status);
+int	check_size(long long int *exit_status);
+void check_is_child(char *commande, bool child, int error);
 
 
 int		main(int argc, char **argv, char **env);

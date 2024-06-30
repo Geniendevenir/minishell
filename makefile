@@ -45,9 +45,19 @@ SRCS 				=   srcs/env.c\
 						srcs/parsing/expander/expand_env.c\
 						srcs/parsing/expander/relink_token.c\
 						srcs/parsing/expander/expand_wildcard.c\
-						srcs/parsing/ast/ast_try.c\
 						srcs/builtins/ft_cd.c\
 						srcs/builtins/ft_export.c\
+						srcs/builtins/ft_exit.c\
+						srcs/execution/if_utils_exec.c\
+						srcs/execution/parcour_ast.c\
+						srcs/execution/exec_operator.c\
+						srcs/execution/exec_cmd_and_builtins.c\
+						srcs/execution/exec_builtins.c\
+						srcs/parsing/ast/ast.c\
+						srcs/parsing/ast/ast_utils.c\
+						srcs/parsing/ast/ast_utils_two.c\
+						srcs/parsing/ast/ast_handle.c\
+						srcs/parsing/ast/print_ast.c\
 
 # Apply the pattern substitution to each source file in SRC and produce a corresponding list of object files in the OBJ_DIR
 OBJ 				= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))

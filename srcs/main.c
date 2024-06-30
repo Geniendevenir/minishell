@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/27 19:00:26 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/30 15:38:32 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,35 @@ char	*minishell(t_all *p)
 //valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --suppressions=./.readline.supp ./minishell
 //ps -f --forest : see shell process tree
 
-int	main(int argc, char **argv, char **env) //rajouter char**env
+int	main(int argc, char **argv, char **env)
 {
+	t_all	*p;
+
+	(void)argc;
+	(void) **argv;
+	p = init_all(env);
+	if (!p || p == NULL)
+		return (EXIT_FAILURE);
+	while (p->line == NULL)
+	{
+		minishell(p);
+	}
+	return (EXIT_SUCCESS);
+}
+
+//TEST MAIN
+/*	TEST EXIT 
+	int exit_status;
+	
+	if (argc < 3)
+		return (1);
+	exit_status = ft_exit(argv + 2, 1);
+	printf("exit_status = %d\n", exit_status);
+	return (1); */
+
+	
+	/* TEST EXPORT
+	
 	t_env	*env_list;
 	int error;
 	
@@ -51,15 +78,13 @@ int	main(int argc, char **argv, char **env) //rajouter char**env
 	if (error == 1)
 	{
 		free_env(env_list);
-		//free(env_list);
 		return (1);
 	}
 	printf("NEW ENV\n\n");
 	print_env(env_list);
 	printf("return export = %d\n", error);
 	free_env(env_list);
-	//free(env_list);
-	return (0);
+	return (0); */
 	
 	/* TEST CD
 	
@@ -69,21 +94,3 @@ int	main(int argc, char **argv, char **env) //rajouter char**env
 	error = ft_cd(*(argv + 2));
 	printf("return cd = %d\n", error);
 	return (0); */
-	
-
-	
-	/*	TRUE MAIN
-	
-	 t_all	*p;
-
-	(void)argc;
-	(void) **argv;
-	p = init_all(env);
-	if (!p || p == NULL)
-		return (EXIT_FAILURE);
-	while (p->line == NULL)
-	{
-		minishell(p);
-	}
-	return (EXIT_SUCCESS); */
-}
