@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/27 14:10:08 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/28 16:23:20 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,7 @@ typedef struct s_wildcard {
 }				t_wildcard;
 
 typedef struct s_ast {
+	int exit_state;
 	enum s_type type;
 	char		*value;
 	struct s_ast *left;
@@ -143,8 +144,25 @@ typedef struct s_ast {
 	struct s_ast *parent;
 }				t_ast;
 
+typedef struct s_file
+{
+	int				fd;
+	enum s_type		type;
+	char			*data;
+	struct s_file	*next;
+}	t_file;
+
 //						EXECUTION                      //
-void traverse_ast(t_ast *root);
+void traverse_ast(t_ast *root, t_env *env);
+int exec_parent_node(t_ast *current, t_env *env);
+int exec_operator(t_ast *current, t_env *env);
+int exec_and(t_ast *current, t_env *env);
+int exec_or(t_ast *current, t_env *env);
+int exec_cmd_or_builtin(t_ast *current, t_env *env);
+int exec_pipe(t_ast *current, t_env *env);
+int exec_redirect(t_ast *current);
+bool is_command_or_builtin_or_abspath(t_ast *current);
+bool is_redirect_folder(t_ast *current);
 
 //////////////////////////////////////////////////////////
 

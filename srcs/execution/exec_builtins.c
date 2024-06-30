@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 19:15:54 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/27 19:16:30 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/28 13:03:48 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,3 +32,4 @@ int	path_comp_builtins(char **cmd)
 		return (7);
 	return (0);
 }
+

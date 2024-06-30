@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:24:04 by allan             #+#    #+#             */
-/*   Updated: 2024/06/27 14:12:53 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/28 15:53:55 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ void parser(char *cmd_line, t_env *env) // a rajouter env quand expander fini
 		return ; */
 	t_ast *ast = parse_expression(&token_list);
 	printAST(ast,0);
-	traverse_ast(ast);
+	//traverse_ast(ast, env);
 	//syntax_check(); // Ultime check structure de l'input
 	//ast(); // Tour de Controle de l'execution
 	//printf("AFTER EXPANDER:\n");

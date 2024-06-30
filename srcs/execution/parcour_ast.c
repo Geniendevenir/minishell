@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:05:39 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/27 19:16:59 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/28 15:56:20 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,36 @@ typedef struct s_limiter
 	struct s_limiter	*next;
 }		t_limiter;
 
-typedef struct s_table {
-	int			left_state;
-	int			right_state;
-	int			exit_state;
-	enum s_type	type_node;
-	char		*value;
-	char		**options;
-	
-}	t_table;
+typedef struct s_file
+{
+	int				fd;
+	int				type;
+	char			*data;
+	struct s_file	*next;
+}	t_file;
 
-void traverse_ast(t_ast *root)
+
+/* int exec_parent_node(t_ast *current, t_env *env)
+{
+	if (current->type == TOKEN_AND || current->type == TOKEN_OR)
+		return (exec_operator(current, env));
+	else if (is_command_or_builtin_or_abspath(current) == 1)
+		return (exec_cmd(current, env));
+	else if (current->type == TOKEN_PIPE)
+		return (exec_pipe(current, env));
+	else if (is_redirect_folder(current) == 1)
+		return (exec_redirect(current));
+	return (1);
+} */
+
+void traverse_ast(t_ast *root, t_env *env)
 {
 	t_ast *current;
 	t_ast *last_visited;
+	t_env *env2;
+
+	env2 = env;
+	free_env(env2);
 
 	current = root;
 	last_visited = NULL;
@@ -48,6 +64,7 @@ void traverse_ast(t_ast *root)
 		{
 			last_visited = current;
 			current = current->parent;
+			//exec_parent_node(current, env);
 			printf("Visited parent node with value: %s\n", current->value);
 		}
 		if (current->right && current->right != last_visited)
@@ -57,5 +74,6 @@ void traverse_ast(t_ast *root)
 		}
 		else
 			break; // Si on ne peut plus aller à droite, on a fini le parcours
+		
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 15:50:17 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/26 19:56:06 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/27 22:33:35 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ t_ast	*create_node(enum s_type type, char	*value)
 	node->value = ft_strdup(value);
 	if (!node->value)
 		return (NULL);
+	node->exit_state = 0;
 	node->left = NULL;
 	node->right = NULL;
 	node->parent = NULL;
