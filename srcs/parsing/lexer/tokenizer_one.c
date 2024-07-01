@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:26:32 by allan             #+#    #+#             */
-/*   Updated: 2024/06/15 17:11:03 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/01 14:40:59 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ bool	whitespace_token(const char *cmd_line, size_t *i, t_token **token_list)
 	if (token_addback(token_list, " ", 1) == 1)
 		return (1);
 	current = token_last(*token_list);
-	if (!current)
-		return (1);
 	current->len = 1;
 	current->state = STATE_WHITESPACE;
 	current->type = TOKEN_WHITESPACE;
@@ -36,8 +34,6 @@ bool inpar_token(size_t *i, t_token **token_list)
 	if (token_addback(token_list, "(", 1) == 1)
 		return (1);
 	current = token_last(*token_list);
-	if (!current)
-		return (1);//add error
 	current->len = 1;
 	current->state = STATE_OPERATOR;
 	current->type = TOKEN_OPENPAR;
@@ -52,8 +48,6 @@ bool outpar_token(size_t *i, t_token **token_list)
 	if (token_addback(token_list, ")", 1) == 1)
 		return (1);
 	current = token_last(*token_list);
-	if (!current)
-		return (1);
 	current->len = 1;
 	current->state = STATE_OPERATOR;
 	current->type = TOKEN_CLOSEPAR;
@@ -68,8 +62,6 @@ bool or_token(size_t *i, t_token **token_list)
 	if (token_addback(token_list, "||", 1) == 1)
 		return (1);
 	current = token_last(*token_list);
-	if (!current)
-		return (1);//add error
 	current->len = 2;
 	current->state = STATE_OPERATOR;
 	current->type = TOKEN_OR;
@@ -84,8 +76,6 @@ bool pipe_token(size_t *i, t_token **token_list)
 	if (token_addback(token_list, "|", 1) == 1)
 		return (1);
 	current = token_last(*token_list);
-	if (!current)
-		return (1);//add error
 	current->len = 1;
 	current->state = STATE_OPERATOR;
 	current->type = TOKEN_PIPE;

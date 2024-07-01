@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 22:28:07 by allan             #+#    #+#             */
-/*   Updated: 2024/06/23 18:07:26 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/01 14:42:22 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,6 @@ int	env_token(const char *cmd_line, size_t *i, t_token **token_list)
 			return (1);
 	}
 	current = token_last(*token_list);
-	/* if (!current)
-	{
-		free(token_value);
-		return (1);
-	} ? */
 	current->len = (j - *i) + 1;
 	current->state = STATE_WORD;
 	current->type = TOKEN_ENV;
@@ -59,11 +54,6 @@ bool	wildcard_token(const char *cmd_line, size_t *i, t_token **token_list)
 	if (token_addback(token_list, token_value, 0) == 1)
 		return (1);
 	current = token_last(*token_list);
-	/* if (!current)
-	{
-		free(token_value);
-		return (1);
-	} ? */
 	current->len = (j - *i);
 	current->state = STATE_WORD;
 	current->type = TOKEN_WILDCARD;
@@ -86,11 +76,6 @@ bool lexical_token(const char *cmd_line, size_t *i, t_token **token_list)
 	if (token_addback(token_list, token_value, 0) == 1)
 		return (1);
 	current = token_last(*token_list);
-	/* if (!current)
-	{
-		free(token_value);
-		return (1);
-	} ? */
 	current->len = (j - *i);
 	current->state = STATE_WORD;
 	current->type = TOKEN_WORD;

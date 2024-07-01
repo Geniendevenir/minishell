@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 14:38:47 by allan             #+#    #+#             */
-/*   Updated: 2024/07/01 14:28:15 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/01 15:01:25 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ bool lexer(char *cmd_line, t_token **token_list, int error)
 		token_free(token_list);
 		return (1);
 	}
+	i = 0;
 	while (i < ft_strlen(cmd_line))
 	{
 		error = tokenizer_one(cmd_line, &i, token_list);

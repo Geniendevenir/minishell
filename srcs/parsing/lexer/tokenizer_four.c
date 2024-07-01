@@ -6,14 +6,15 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 14:02:01 by allan             #+#    #+#             */
-/*   Updated: 2024/06/23 18:51:16 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/01 14:52:25 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "minishell.h"
 
-bool	dquotes_token(const char *cmd_line, size_t *i, t_token **token_list) //FIX le I
+//probleme: "'" ou '"'
+bool	dquotes_token(const char *cmd_line, size_t *i, t_token **token_list)
 {
 	t_index	index;
 
@@ -72,7 +73,7 @@ bool	dquotes_last_token(const char *cmd_line, t_index *index, t_token **token_li
 {
 	char	*token_value;
 	
-	if (index->j > *index->i && cmd_line[*index->i] != '"')
+	if (index->j > *index->i && cmd_line[*index->i] != '\"')
 	{
 		token_value = ft_substr(cmd_line, *index->i, (index->j - *index->i));
 		if (!token_value)
@@ -92,11 +93,6 @@ bool	dquote_add_token(char *token_value, t_token **token_list, bool option)
 	if (token_addback(token_list, token_value, 0) == 1)
 		return (1);
 	current = token_last(*token_list);
-	/* if (!current)
-	{
-		free(token_value);
-		return (1);
-	} ? */
 	current->len = len;
 	current->state = STATE_WORD;
 	if (option == 1)
@@ -126,11 +122,6 @@ bool squote_token(const char *cmd_line, size_t *i, t_token **token_list)
 	if (token_addback(token_list, token_value, 0) == 1)
 		return (1);
 	current = token_last(*token_list);
-	/* if (!current)
-	{
-		free(token_value);
-		return (1);
-	} ? */
 	current->len = (j - *i);
 	current->state = STATE_WORD;
 	current->type = TOKEN_SQUOTES;

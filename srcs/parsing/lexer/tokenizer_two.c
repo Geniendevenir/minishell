@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:26:32 by allan             #+#    #+#             */
-/*   Updated: 2024/06/15 14:07:02 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/01 14:41:49 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@ int and_token(const char *cmd_line, size_t *i, t_token **token_list)
 	if (token_addback(token_list, "&&", 1) == 1)
 		return (1);
 	current = token_last(*token_list);
-	if (!current)
-		return (1);//add error
 	current->len = 2;
 	current->state = STATE_OPERATOR;
 	current->type = TOKEN_AND;
@@ -37,8 +35,6 @@ bool heredoc_token(size_t *i, t_token **token_list)
 	if (token_addback(token_list, "<<", 1) == 1)
 		return (1);
 	current = token_last(*token_list);
-	if (!current)
-		return (1);//add error
 	current->len = 2;
 	current->state = STATE_OPERATOR;
 	current->type = TOKEN_HEREDOC;
@@ -52,8 +48,6 @@ bool inputre_token(size_t *i, t_token **token_list)
 	if (token_addback(token_list, "<", 1) == 1)
 		return (1);
 	current = token_last(*token_list);
-	if (!current)
-		return (1);//add error
 	current->len = 1;
 	current->state = STATE_OPERATOR;
 	current->type = TOKEN_REDIRECTIN;
@@ -68,8 +62,6 @@ bool outputapp_token(size_t *i, t_token **token_list)
 	if (token_addback(token_list, ">>", 1) == 1)
 		return (1);
 	current = token_last(*token_list);
-	if (!current)
-		return (1);//add error
 	current->len = 2;
 	current->state = STATE_OPERATOR;
 	current->type = TOKEN_APPENDOUT;
@@ -84,8 +76,6 @@ bool outputre_token(size_t *i, t_token **token_list)
 	if (token_addback(token_list, ">", 1) == 1)
 		return (1);
 	current = token_last(*token_list);
-	if (!current)
-		return (1);//add error
 	current->len = 1;
 	current->state = STATE_OPERATOR;
 	current->type = TOKEN_REDIRECTOUT;
