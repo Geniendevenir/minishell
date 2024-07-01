@@ -53,6 +53,7 @@ SRCS 				=   srcs/env.c\
 						srcs/execution/exec_operator.c\
 						srcs/execution/exec_cmd_and_builtins.c\
 						srcs/execution/exec_builtins.c\
+						srcs/execution/executer.c\
 						srcs/parsing/ast/ast.c\
 						srcs/parsing/ast/ast_utils.c\
 						srcs/parsing/ast/ast_utils_two.c\

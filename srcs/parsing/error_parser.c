@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 13:58:59 by allan             #+#    #+#             */
-/*   Updated: 2024/06/27 17:56:29 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/01 14:20:40 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ void	error_lexer(int error)
 		write(2, "bash: syntax error near unexpected token `$'\n", 45);
 	else if (error == 4)
 		write(2, "bash: syntax error near unexpected token `\"'\n", 46);
+	else if (error == 7)
+		write(2, "bash: syntax error near unexpected token `\''\n", 46);
 	else if (error == 5)
 		write(2, "bash: syntax error near unexpected token ';'\n", 45);
 	else if (error == 6)

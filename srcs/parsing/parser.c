@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:24:04 by allan             #+#    #+#             */
-/*   Updated: 2024/06/30 19:02:20 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/01 14:32:18 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,44 +75,42 @@ t_token	*duplicate_token_list(const t_token *head)
 	return (new_head);
 }
 
-void parser(char *cmd_line, t_env *env) // a rajouter env quand expander fini
+int parser(char *cmd_line, t_env *env, t_ast **ast) // a rajouter env quand expander fini
 {
 	t_token	*token_list;
 	t_word	word;
+	int		error;
 	//t_token *dup_list;
 	
+	error = 0;
 	if (!cmd_line)
-		return ;
+		return (1);
 	token_list = malloc(sizeof(t_token));
 	if (!token_list)
-		return ;
-	token_init(token_list);
-	if (lexer(cmd_line, &token_list) == 1)
-		return ;
+		return (1);
+	token_init(&token_list);
+	if (lexer(cmd_line, &token_list, error) == 1)
+		return (1);
 	//printf("AFTER LEXER:\n");
 	//token_print_amazing(&token_list);
 	if (expander(&token_list, env) == 1)
-		return ;
+		return (1);
 	/* if (check_syntax(&token_list) == 1)
-		return ; */
+		return (1); */
 	//printf("\n\n\nAFTER EXPANDER AND SYNTAX:\n");
 	//token_print_amazing(&token_list);
 	init_t_word(&word);
 	if (define_word(&token_list, &word, env))
-		return ;
+		return (1);
 	//printf("\n\n\nAFTER define word:\n");
 	//token_print_amazing(&token_list);
 	/* dup_list = duplicate_token_list(token_list);
 	if (!dup_list)
-		return ; */
-	t_ast *ast = parse_expression(&token_list);
-	printAST(ast,0);
-	//traverse_ast(ast, env);
-	//syntax_check(); // Ultime check structure de l'input
-	//ast(); // Tour de Controle de l'execution
+		return (1); */
+	*ast = parse_expression(&token_list);
 	//printf("AFTER EXPANDER:\n");
 	//token_print(&token_list);
-	free_ast(ast);
 	//token_free(&dup_list);
 	token_free(&token_list);
+	return (0);
 }

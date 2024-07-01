@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 19:17:38 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/30 19:06:02 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/30 22:09:20 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,11 @@ int exec_cmd_or_builtin(t_ast *current, t_all *env)
 
 	cmd = split_cmd(current);
 	if (current->type == WORD_BUILTIN)
-		return(exec_builtins(cmd, env));
+		//return(exec_builtins(cmd, env));
+		return (1);
 	else if (current->type == WORD_CMD || current->type == WORD_ABSPATH)
-		return(exec_cmd(cmd, env));
+		//return(exec_cmd(cmd, env));
+		return (1);
 	return (-1);
 	
 }

@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:23:10 by allan             #+#    #+#             */
-/*   Updated: 2024/06/08 11:20:54 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/01 14:18:02 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,10 @@ bool check_semicolon(char *cmd_line)
 	i = 0;
 	while (cmd_line[i])
 	{
+		if (cmd_line[i] == '\"')
+			i = skip_quotes(cmd_line, i, 0);
+		else if (cmd_line[i] == '\'')
+			i = skip_quotes(cmd_line, i, 1);
 		if (cmd_line[i] == ';')
 			return (1);
 		i++;
@@ -26,7 +30,7 @@ bool check_semicolon(char *cmd_line)
 	return (0);
 }
 
-bool check_quotes(char *cmd_line)
+int check_quotes(char *cmd_line)
 {
 	int i;
 	
@@ -47,7 +51,7 @@ bool check_quotes(char *cmd_line)
 			while (cmd_line[i] && cmd_line[i] != '\'')
 				i++;
 			if (!cmd_line[i])
-				return (1);
+				return (2);
 		}
 		i++;
 	}
@@ -66,4 +70,20 @@ bool	check_env_dquotes(const char *cmd_line, const int *i)
 		j++;
 	}
 	return (1);
+}
+
+int	skip_quotes(const char *cmd_line, int i, int option)
+{
+	i++;
+	if (option == 0)
+	{
+		while (cmd_line[i] && cmd_line[i] != '\"')
+			i++;
+	}
+	else if (option == 1)
+	{
+		while (cmd_line[i] && cmd_line[i] != '\'')
+			i++;
+	}
+	return (i);
 }

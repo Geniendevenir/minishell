@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 22:57:28 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/03 22:57:41 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/30 21:27:09 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ t_all	*init_all(char **env)
 	p->sig = init_signal(0);
 	if (!p->sig)
 		return (free(p), NULL);
+	p->ast = NULL;
 	p->line = NULL;
 	return (p);
 }

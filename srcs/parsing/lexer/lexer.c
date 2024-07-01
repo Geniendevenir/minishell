@@ -6,27 +6,27 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 14:38:47 by allan             #+#    #+#             */
-/*   Updated: 2024/06/16 21:01:14 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/01 14:28:15 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool lexer(char *cmd_line, t_token **token_list)
+bool lexer(char *cmd_line, t_token **token_list, int error)
 {
 	size_t	i;
-	int		error;
-	
+
 	if (check_quotes(cmd_line) || check_semicolon(cmd_line))
 	{
-		if (check_quotes(cmd_line))
-			error_lexer(4);
+		if (check_quotes(cmd_line) == 1)
+			error_lexer(ERROR_DQUOTES);
+		else if (check_quotes(cmd_line) == 2)
+			error_lexer(ERROR_SQUOTES);
 		else if (check_semicolon(cmd_line))
-			error_lexer(5);
+			error_lexer(ERROR_SEMICOLON);
 		token_free(token_list);
 		return (1);
 	}
-	i = 0;
 	while (i < ft_strlen(cmd_line))
 	{
 		error = tokenizer_one(cmd_line, &i, token_list);
@@ -43,7 +43,7 @@ bool lexer(char *cmd_line, t_token **token_list)
 int	tokenizer_one(const char *cmd_line, size_t *i, t_token **token_list)
 {
 	int	error;
-	
+
 	error = 0;
 	if (is_whitespace(cmd_line[*i]))
 		error = whitespace_token(cmd_line, i, token_list);
@@ -66,7 +66,7 @@ int	tokenizer_one(const char *cmd_line, size_t *i, t_token **token_list)
 int	tokenizer_two(const char *cmd_line, size_t *i, t_token **token_list)
 {
 	int	error;
-	
+
 	error = 0;
 	if (cmd_line[*i] == '&')
 			error = and_token(cmd_line, i, token_list);

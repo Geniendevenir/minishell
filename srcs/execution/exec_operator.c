@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 13:22:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/30 19:14:08 by allan            ###   ########.fr       */
+/*   Updated: 2024/06/30 22:21:42 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ int	exec_operator(t_ast *current, t_env *env)
 int exec_and(t_ast *current, t_env *env)
 {
 	if (current->left->exit_state == 0)
-		return(exec_parent_node(current->right, env));
+		//return(exec_parent_node(current->right, env));
+		return (1);
 	else
 		return (current->left->exit_state);
 }
@@ -38,5 +39,6 @@ int exec_or(t_ast *current, t_env *env)
 	if (current->left->exit_state == 0)
 		return (current->left->exit_state);
 	else
-		return (exec_parent_node(current->right, env));
+		//return (exec_parent_node(current->right, env));
+		return (1);
 }

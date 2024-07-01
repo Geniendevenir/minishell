@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:05:39 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/30 15:43:47 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/01 13:27:01 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,10 @@ void traverse_ast(t_ast *root, t_env *env)
 {
 	t_ast *current;
 	t_ast *last_visited;
-	t_env *env2;
+	/* t_env *env2;
 
 	env2 = env;
-	free_env(env2);
+	free_env(env2); */
 
 	current = root;
 	last_visited = NULL;
@@ -62,10 +62,10 @@ void traverse_ast(t_ast *root, t_env *env)
 		}
 		while (current->parent && (current->right == NULL || current->right == last_visited))
 		{
-			last_visited = current;
 			current = current->parent;
 			//exec_parent_node(current, env);
 			printf("Visited parent node with value: %s\n", current->value);
+			//last_visited = current;
 		}
 		if (current->right && current->right != last_visited)
 		{

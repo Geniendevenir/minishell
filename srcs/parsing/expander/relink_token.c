@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 23:11:11 by allan             #+#    #+#             */
-/*   Updated: 2024/06/23 21:07:12 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/01 14:33:20 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int		relink_token(t_token **token_list, t_token *current, int *error)
 	new_list = malloc(sizeof(t_token));
 	if (!new_list)
 		return (1);
-	token_init(new_list);
+	token_init(&new_list);
 	while (current)
 	{
 		*error = 1;

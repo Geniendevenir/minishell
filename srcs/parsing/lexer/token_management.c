@@ -6,20 +6,19 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:22:12 by allan             #+#    #+#             */
-/*   Updated: 2024/06/27 17:56:09 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/01 14:32:40 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool token_init(t_token *token_list)
+void token_init(t_token **token_list)
 {
-	token_list->state = STATE_START;
-	token_list->type = NOT_DEFINE;
-	token_list->value = NULL;
-	token_list->len = 0;
-	token_list->next = NULL;
-	return (0);
+	(*token_list)->state = STATE_START;
+	(*token_list)->type = NOT_DEFINE;
+	(*token_list)->value = NULL;
+	(*token_list)->len = 0;
+	(*token_list)->next = NULL;
 }
 
 t_token *token_last(t_token *token_list)
@@ -51,7 +50,7 @@ bool	token_addback(t_token **token_list, char *value, int option)
 			free(value);
 		return (1);
 	}
-	token_init(token);
+	token_init(&token);
 	token->value = ft_strdup(value);
 	if (is_freeable(token->value, option) == 0)
 		free(value);
@@ -81,7 +80,7 @@ bool	token_addnext(t_token **current, char *value)
 	token = malloc(sizeof(t_token));
 	if (!token)
 		return (1);
-	token_init(token);
+	token_init(&token);
 	token->value = ft_strdup(value);
 	if (!token->value)
 	{

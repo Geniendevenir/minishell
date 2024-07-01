@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/30 15:43:57 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/01 14:31:14 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,40 +39,13 @@
 # include "../libft/inc/ft_printf.h"
 # include "../libft/inc/get_next_line.h"
 
-typedef struct s_env
-{
-	char			*key;
-	char			*value;
-	int				code;
-	struct s_env	*next;
-}	t_env;
-
-typedef struct s_sig
-{
-	int		sig_quit;
-	int		sig_int;
-	int		p_status;
-	int		cmd_stat;
-}	t_sig;
-
-typedef struct s_all
-{
-	t_env	*env;
-	char	*line;
-	t_sig	*sig;
-}	t_all;
-
-typedef struct s_word
-{
-	int redi_in;
-	int redi_out;
-	int here_doc;
-	int append;
-	int operator;
-	int cmd;
-} t_word;
-
-extern t_sig	g_sig;
+#define ERROR_MALLOC 1
+#define ERROR_AND 2
+#define ERROR_ENV 3
+#define ERROR_DQUOTES 4
+#define ERROR_SQUOTES 7
+#define ERROR_SEMICOLON 5
+#define ERROR_FILE 6
 
 /*					 LEXER					*/
 
@@ -152,13 +125,52 @@ typedef struct s_file
 	struct s_file	*next;
 }	t_file;
 
+
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	int				code;
+	struct s_env	*next;
+}	t_env;
+
+typedef struct s_sig
+{
+	int		sig_quit;
+	int		sig_int;
+	int		p_status;
+	int		cmd_stat;
+}	t_sig;
+
+typedef struct s_all
+{
+	t_env	*env;
+	t_ast	*ast;
+	char	*line;
+	t_sig	*sig;
+}	t_all;
+
+typedef struct s_word
+{
+	int redi_in;
+	int redi_out;
+	int here_doc;
+	int append;
+	int operator;
+	int cmd;
+} t_word;
+
+extern t_sig	g_sig;
+
 //						EXECUTION                      //
+int	executer(t_ast **ast, t_env *env);
+
 void traverse_ast(t_ast *root, t_env *env);
 int exec_parent_node(t_ast *current, t_env *env);
 int exec_operator(t_ast *current, t_env *env);
 int exec_and(t_ast *current, t_env *env);
 int exec_or(t_ast *current, t_env *env);
-int exec_cmd_or_builtin(t_ast *current, t_env *env);
+int exec_cmd_or_builtin(t_ast *current, t_all *env);
 int exec_pipe(t_ast *current, t_env *env);
 int exec_redirect(t_ast *current);
 bool is_command_or_builtin_or_abspath(t_ast *current);
@@ -166,13 +178,17 @@ bool is_redirect_folder(t_ast *current);
 
 //////////////////////////////////////////////////////////
 
+//				PARSER
+
+int		parser(char *cmd_line, t_env *env, t_ast **ast);
+
 //check_lexer
-bool	check_quotes(char *cmd_line);
+int		check_quotes(char *cmd_line);
 bool	check_semicolon(char *cmd_line);
+int		skip_quotes(const char *cmd_line, int i, int option);
 
 //lexer
-void	parser(char *cmd_line, t_env *env);
-bool	lexer(char *cmd_line, t_token **token_list);
+bool lexer(char *cmd_line, t_token **token_list, int error);
 int		tokenizer_one(const char *cmd_line, size_t *i, t_token **token_list);
 int		tokenizer_two(const char *cmd_line, size_t *i, t_token **token_list);
 int		tokenizer_three(const char *cmd_line, size_t *i, t_token **token_list);
@@ -181,7 +197,7 @@ int		tokenizer_four(const char *cmd_line, size_t *i, t_token **token_list);
 //token_management
 void	token_print(t_token **token_list);
 void	token_print_amazing(t_token **token_list);
-bool 	token_init(t_token *token_list);
+void 	token_init(t_token **token_list);
 t_token *token_last(t_token *token_list);
 bool	token_addback(t_token **token_list, char *value, int option);
 bool	token_addnext(t_token **current, char *value);
