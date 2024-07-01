@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:05:39 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/28 15:56:20 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/30 21:27:51 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@ typedef struct s_limiter
 	struct s_limiter	*next;
 }		t_limiter;
 
-typedef struct s_file
+/* typedef struct s_file
 {
 	int				fd;
 	int				type;
 	char			*data;
 	struct s_file	*next;
 }	t_file;
-
+ */
 
 /* int exec_parent_node(t_ast *current, t_env *env)
 {

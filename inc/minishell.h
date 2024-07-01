@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/28 16:23:20 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/01 15:42:28 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -262,8 +262,11 @@ t_ast	*handle_open_parenthesis(t_token **tokens, t_ast* current);
 void	handle_parenthesis_open(t_token **tokens, t_ast **current, t_ast **root);
 t_ast	*handle_close_parenthesis(t_token **tokens, t_ast* root);
 t_ast	*handle_priorities(t_token **tokens, t_ast* root);
-t_ast	*handle_builtin_and_cmd(t_token **tokens, t_ast* current);
-void	swap_child_right(t_ast* current, t_ast* newNode);
+t_ast	*handle_builtin_and_cmd(t_token **tokens, t_ast	*current);
+void	handle_redirect_or_pipe(t_token **tokens, t_ast **current, t_ast **root, t_ast	*save_operator);
+void	swap_child_left_with_else(t_ast	*current, t_ast	*new_node);
+void	swap_child_right_with_else(t_ast	*current, t_ast	*new_node);
+void	swap_child_right(t_ast* current, t_ast *new_node);
 bool	if_priorities(t_token **tokens);
 void	get_first_parent(t_ast **current);
 void	handle_parenthesis_open(t_token **tokens, t_ast **current, t_ast **root);
@@ -271,6 +274,7 @@ void	handle_builtin_option(t_token **tokens, t_ast **current, t_ast **root);
 bool	if_cmd_option(t_token **tokens);
 void	part_handle_option(t_ast **current, t_ast **new_node, t_ast **temp);
 void	free_token_and_next_in_ast(t_token **tokens, t_token **temp);
+bool	if_is_redirect_and_pipe(t_token **tok);
 
 /*					SIGNALS					*/
 
