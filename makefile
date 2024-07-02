@@ -59,6 +59,7 @@ SRCS 				=   srcs/env.c\
 						srcs/parsing/ast/ast_utils_two.c\
 						srcs/parsing/ast/ast_handle.c\
 						srcs/parsing/ast/print_ast.c\
+						srcs/hate_the_norm.c\
 
 # Apply the pattern substitution to each source file in SRC and produce a corresponding list of object files in the OBJ_DIR
 OBJ 				= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))

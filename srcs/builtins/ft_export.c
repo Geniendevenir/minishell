@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 12:53:21 by allan             #+#    #+#             */
-/*   Updated: 2024/06/28 14:09:58 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/02 14:51:34 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ typedef struct s_env
 
 //printf("test1\n");
 
-int	ft_export(char **new_env, t_env **env_list)
+int	ft_export(char **new_env, t_env **env_list) //CHECK SYNTAX POUR VALUE (ex test=& > Error)
 {
 	int		i;
 	int		len;

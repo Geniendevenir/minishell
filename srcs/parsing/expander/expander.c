@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 16:47:23 by allan             #+#    #+#             */
-/*   Updated: 2024/06/25 16:56:16 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/01 19:53:37 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,9 +103,10 @@
 	CASE 2: On trouve pas l'env 
 */
 
-bool	expander(t_token **token_list, t_env *env)
+
+//CHECK ERROR ENTRE RELINK ET WILDCARD
+bool	expander(t_token **token_list, t_env *env, int error)
 {
-	int error;
 	t_token	*current;
 
 	if (!env)
@@ -116,23 +117,21 @@ bool	expander(t_token **token_list, t_env *env)
 		token_free(token_list);
 		return (1);
 	}
-	//printf("\nAfter expand_env:\n");
-	//token_print(token_list);
 	error = 1;
 	current = *token_list;
-	if (relink_token(token_list, current, &error) == 1)
+	if (relink_token(token_list, current, error) == 1)
 	{
 		error_lexer(1);
 		token_free(token_list);
 		return (1);
 	}
-	if (expand_wildcard(token_list, &error) == 1) //Then expand Wild Card
+	if (expand_wildcard(token_list, &error) == 1)
 	{
-		error_lexer(error); //error malloc
+		error_lexer(error);
 		token_free(token_list);
 		return (1);
 	}
 	return (0);
 }
 
-//printf("test1\n");
+

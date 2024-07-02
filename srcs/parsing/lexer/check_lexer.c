@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:23:10 by allan             #+#    #+#             */
-/*   Updated: 2024/07/01 14:18:02 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/01 16:53:30 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ bool check_semicolon(char *cmd_line)
 int check_quotes(char *cmd_line)
 {
 	int i;
-	
+
 	i = 0;
 	while(cmd_line[i])
 	{

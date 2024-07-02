@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 12:53:13 by allan             #+#    #+#             */
-/*   Updated: 2024/06/28 23:25:47 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/01 17:12:56 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,29 +42,23 @@ int	ft_exit(char **commande, bool child)
 	
 	if (!commande || !*commande)
 	{
-		printf("test1\n");
 		check_is_child(commande[0], child, 0);
 		return (0);
 	}
-	printf("cmd[0] = %s\n", commande[0]);
 	if (check_is_num(commande[0]) == 1)
 	{
-		printf("test2\n");
 		check_is_child(commande[0], child, 1);
 		//$? == 2
 		return (2); //Est ce que ce return equivaut a la valeur de $?
 	}
 	exit_status = ft_atoi(commande[0]);
-	printf("atoi cmd[0] = %lld\n", exit_status);
 	if (check_size(&exit_status) == 1)
 	{
-		printf("test3\n");
 		check_is_child(commande[0], child, 1);
 		return (2);
 	}
 	if (commande[1] != NULL)
 	{
-		printf("test4\n");
 		check_is_child(NULL, child, 2);
 		return (2);
 	}

@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 21:24:08 by allan             #+#    #+#             */
-/*   Updated: 2024/06/26 17:03:12 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/01 19:54:27 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int	expand_wildcard(t_token **token_list, int *error)
 {
 	t_token *current;
 	char	*wildcard;
-	
+
 	wildcard = NULL;
 	*error = 1;
 	current = *token_list;
@@ -132,14 +132,11 @@ int find_wildcard(char *wildcard, t_token *current, int *error)
 		if (dir == NULL)
 			break ;
 		match_init(wildcard, dir->d_name, &match);
-        if (file_match(match)) //CHECK IF ONLY CERTAIN TYPE ARE TO BE EXPANDED IF SO USE LSTAT
+        if (file_match(match))
 		{
             *error = add_file(&current, dir->d_name, found);
 			if (*error == 1)
-			{
-				closedir(d);
-				return (1);
-			}
+				return (wildcard_return(&d));
 			found = 1;
 		}
     }

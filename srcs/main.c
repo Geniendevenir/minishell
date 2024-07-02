@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/30 22:17:03 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/02 12:50:38 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,13 @@ char	*minishell(t_all *p)
 	}
 	if (p->sig->sig_int == 0)
 	{
-		if (parser(p->line, p->env, &p->ast) == 0)
+		parser(p->line, p->env, &p->ast);
+		/* if (parser(p->line, p->env, &p->ast) == 0)
 		{
 			printAST(p->ast,0);
 			executer(&p->ast, p->env);
 			free_ast(p->ast);
-		}
+		} */
 		add_history(p->line);
 	}
 	p->sig->sig_int = 0;

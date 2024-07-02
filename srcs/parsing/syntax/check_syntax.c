@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_syntax.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 16:42:50 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/16 17:14:35 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/02 15:22:10 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,8 +104,7 @@ bool check_operator_at_the_end(t_token **token_list)
 		if (current->next == NULL)
 			break;
 		else
-			current = current->next;
-			
+			current = current->next;	
 	}
 	if (is_operator == 1)
 	{
@@ -121,20 +120,13 @@ bool check_if_first_operator(t_token **token_list)
 	t_token	*current;
 
 	current = *token_list;
-	while ((current) && current->type == TOKEN_WHITESPACE)
-	{
-		current = current ->next;
-	}
 	if (current->type == TOKEN_AND || current->type == TOKEN_OR || current->type == TOKEN_PIPE)
 	{
 		print_error_token(current);
 		return (1);
 	}
-	else
-		return (0);
+	return (0);
 }
-
-
 
 bool check_syntax(t_token **token_list)
 {
@@ -155,4 +147,3 @@ bool check_syntax(t_token **token_list)
 	}
 	return (0);
 }
-

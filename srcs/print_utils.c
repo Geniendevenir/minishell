@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:41:06 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/25 16:46:55 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/02 14:46:06 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	print_error_token(t_token *current)
 		write(2, "bash: syntax error near unexpected token `)'\n", 45);
 	else
 	{
-		write(2, "bash: syntax error near unexpected token `", 42);
+		write(2, "bash: syntax error near unexpected token '", 42);
 		write(2, current->value, ft_strlen(current->value));
 		write(2, "'\n", 2);
 	}

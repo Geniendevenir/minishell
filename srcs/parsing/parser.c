@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:24:04 by allan             #+#    #+#             */
-/*   Updated: 2024/07/01 14:48:00 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/02 15:19:41 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,25 +92,27 @@ int parser(char *cmd_line, t_env *env, t_ast **ast) // a rajouter env quand expa
 	if (lexer(cmd_line, &token_list, error) == 1)
 		return (1);
 	printf("AFTER LEXER:\n");
-	token_print_amazing(&token_list);
-	if (expander(&token_list, env) == 1)
-		return (1);
-	/* if (check_syntax(&token_list) == 1)
-		return (1); */
-	//printf("\n\n\nAFTER EXPANDER AND SYNTAX:\n");
+	token_print(&token_list);
 	//token_print_amazing(&token_list);
-	init_t_word(&word);
-	if (define_word(&token_list, &word, env))
+	if (expander(&token_list, env, error) == 1)
 		return (1);
+	printf("\n\n\nAFTER EXPANDER:\n");
+	token_print(&token_list);
+	if (check_syntax(&token_list) == 1)
+		return (1);
+	//token_print_amazing(&token_list);
+	/* init_t_word(&word);
+	if (define_word(&token_list, &word, env))
+		return (1); */
 	//printf("\n\n\nAFTER define word:\n");
 	//token_print_amazing(&token_list);
-	/* dup_list = duplicate_token_list(token_list);
-	if (!dup_list)
-		return (1); */
-	*ast = parse_expression(&token_list);
+	//*ast = parse_expression(&token_list);
 	//printf("AFTER EXPANDER:\n");
 	//token_print(&token_list);
 	//token_free(&dup_list);
 	token_free(&token_list);
 	return (0);
 }
+	/* dup_list = duplicate_token_list(token_list);
+	if (!dup_list)
+		return (1); */

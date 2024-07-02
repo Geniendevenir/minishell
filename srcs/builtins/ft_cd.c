@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 12:53:28 by allan             #+#    #+#             */
-/*   Updated: 2024/06/27 11:31:58 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/01 17:14:08 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,13 @@ int	ft_cd(char *path)
     	d = opendir(".");
     	if (!d)
 		{
-			perror("opendir error\n");	
+			perror("opendir error\n");	 //CHANGE ERROR NO PERROR
 			return (1); //add error
 		}
 		new_dir = relative_path(d, path, &error);
     	closedir(d);
 		if (error != 0)
 			return (1);
-		printf("new_dir = %s\n", new_dir);
 		error = chdir(new_dir);
 		free(new_dir);
 	}
@@ -83,12 +82,12 @@ char	*relative_path(DIR	*d, char *path, int *error)
 		{
 			if (lstat(try_dir->d_name, &file_stat) != 0)
 			{
-				perror("lstat error\n");
+				perror("lstat error\n");// CHANGE ERROR NO PERROR
 				return (NULL);
 			}
 			if (S_ISDIR(file_stat.st_mode) == 0)
 			{
-				perror("bash: cd: file_name: Not a directory\n");
+				perror("bash: cd: file_name: Not a directory\n"); //CHANGE ERROR NO PERROR
 				return (NULL);
 			}
 			new_dir = cd_match(cur_dir, try_dir->d_name, error);

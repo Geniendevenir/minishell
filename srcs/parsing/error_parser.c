@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 13:58:59 by allan             #+#    #+#             */
-/*   Updated: 2024/07/01 14:20:40 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/01 20:01:25 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,5 +83,5 @@ void	error_lexer(int error)
 	else if (error == 5)
 		write(2, "bash: syntax error near unexpected token ';'\n", 45);
 	else if (error == 6)
-		write(2, "Couldnt open directory\n", 24); //check true error (find wildcard function)
+		write(2, "Error: Could not open directory '.'\n", 37); //check true error (find wildcard function)
 }

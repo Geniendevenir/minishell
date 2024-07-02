@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:22:12 by allan             #+#    #+#             */
-/*   Updated: 2024/07/01 14:32:40 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/01 17:01:14 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,28 +35,35 @@ t_token *token_last(t_token *token_list)
 bool	token_addback(t_token **token_list, char *value, int option)
 {
 	t_token *token;
-	t_token	*last_token;
 	
-	/* if (!token_list) //check si possible de supprimer
+	if (!token_list)
 	{
-		if (is_freeable(token->value, option) == 0)
-		free(value);
+		if (is_freeable(value, option) == 0)
+			free(value);
 		return (1);
-	} ?? */
+	}
 	token = malloc(sizeof(t_token));
 	if (!token)
 	{
-		if (is_freeable(token->value, option) == 0)
+		if (is_freeable(value, option) == 0)
 			free(value);
 		return (1);
 	}
 	token_init(&token);
 	token->value = ft_strdup(value);
-	if (is_freeable(token->value, option) == 0)
+	if (is_freeable(value, option) == 0)
 		free(value);
 	if (!token->value)
 		return (1);
 	token->next = NULL;
+	token_addback_two(token_list, token);
+	return (0);
+}
+
+void	token_addback_two(t_token **token_list, t_token *token)
+{
+	t_token	*last_token;
+
 	if ((*token_list)->value == NULL)
 	{
 		last_token = *token_list;
@@ -68,14 +75,13 @@ bool	token_addback(t_token **token_list, char *value, int option)
 		last_token = token_last(*token_list);
 		last_token->next = token;
 	}
-	return (0);
 }
 
 bool	token_addnext(t_token **current, char *value)
 {
 	t_token *token;
 
-	if (!current) //check si possible de supprimer
+	if (!current)
 		return (1);
 	token = malloc(sizeof(t_token));
 	if (!token)
@@ -92,13 +98,13 @@ bool	token_addnext(t_token **current, char *value)
 	return (0);
 }
 
-void	token_free(t_token **token_list)
+int	token_free(t_token **token_list)
 {
 	t_token	*current;
 	t_token	*tmp;
 
 	if (!token_list)
-		return ;
+		return (1);
 	current = *token_list;
 	while (current)
 	{
@@ -109,6 +115,7 @@ void	token_free(t_token **token_list)
 		current = tmp;
 	}
 	*token_list = NULL;
+	return (1);
 }
 
 void	token_print(t_token **token_list)
@@ -126,6 +133,7 @@ void	token_print(t_token **token_list)
 	}
 	printf("NULL\n\n\n");
 }
+
 void	token_print_amazing(t_token **token_list)
 {
 	t_token	*current;
@@ -195,5 +203,4 @@ const char* getToken_Class(t_token *current)
     } else {
         return "NULL";
     }
-	
 }

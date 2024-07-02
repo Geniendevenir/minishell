@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/01 14:31:14 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/01 19:54:17 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,8 +200,9 @@ void	token_print_amazing(t_token **token_list);
 void 	token_init(t_token **token_list);
 t_token *token_last(t_token *token_list);
 bool	token_addback(t_token **token_list, char *value, int option);
+void	token_addback_two(t_token **token_list, t_token *token);
 bool	token_addnext(t_token **current, char *value);
-void	token_free(t_token **token_list);
+int		token_free(t_token **token_list);
 
 //tokenizer
 bool	whitespace_token(const char *cmd_line, size_t *i, t_token **token_list);
@@ -222,7 +223,7 @@ bool	dquotes_token(const char *cmd_line, size_t *i, t_token **token_list);
 bool	dquote_add_token(char *token_value, t_token **token_list, bool option);
 bool	dquotes_last_token(const char *cmd_line, t_index *index, t_token **token_list);
 bool	env_dquotes(const char *cmd_line, t_index *index, t_token **token_list);
-
+size_t	index_foward(size_t *j);
 
 //utils
 bool	is_whitespace(char c);
@@ -239,7 +240,7 @@ const char	*getToken_Class(t_token *current);
 
 
 /*								EXPANDER						*/
-bool	expander(t_token **token_list, t_env *env);
+bool	expander(t_token **token_list, t_env *env, int error);
 //expand env
 int		expand_env(t_token **token_list, t_env **env);
 bool	find_first_env(t_token **current, t_env **env);
@@ -249,7 +250,7 @@ bool	replace_token(t_token *token,  char *new_value);
 void	remove_all_env(t_token **token_list);
 
 //relink
-int		relink_token(t_token **token_list, t_token *current, int *error);
+int		relink_token(t_token **token_list, t_token *current, int error);
 t_token	*relink_word(t_token *current, t_token **new_list, int *error);
 bool	relink_operator(t_token *current, t_token **new_list);
 bool	add_word(t_token **new_list, char *word, bool option);
@@ -261,6 +262,7 @@ int		find_wildcard(char *wildcard, t_token *current, int *error);
 void	match_init(char *wildcard, char *file_name, t_wildcard *match);
 bool	file_match(t_wildcard match);
 bool	add_file(t_token **current, char *file_name, bool found);
+bool	wildcard_return(DIR **d);
 
 void	print_envv(t_env **env);
 
