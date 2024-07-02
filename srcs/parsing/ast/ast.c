@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 18:41:34 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/01 16:35:33 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/02 16:38:52 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,21 @@ void	free_token_and_next_in_ast(t_token **tokens, t_token **temp)
 	free((*temp));
 }
 
+void	get_first_parent(t_ast **current)
+{
+	while (*current && (*current)->parent)
+		*current = (*current)->parent;
+}
+
 t_ast	*parse_expression(t_token **tokens)
 {
 	t_ast	*root;
 	t_ast	*current;
 	t_ast   *save_operator;
+	t_ast	*save_pipe;
 	t_token	*temp;
 
+	save_pipe = NULL;
 	save_operator = NULL;
 	root = NULL;
 	current = NULL;
@@ -35,23 +43,22 @@ t_ast	*parse_expression(t_token **tokens)
 		if ((*tokens)->type == TOKEN_OPENPAR)
 			handle_parenthesis_open(tokens, &current, &root);
 		else if ((*tokens)->type == TOKEN_CLOSEPAR)
-			return (handle_close_parenthesis(tokens, root));
-		else if (if_priorities(tokens))
+			return (close_parenthesis(tokens, root));
+		else if (if_token_and_or(tokens))
+			handle_and_or_root_priority(tokens, &root, &current, &save_operator);
+		else if ((*tokens)->type == TOKEN_PIPE)
 		{
-			root = handle_priorities(tokens, root);
-			printf("address of last save_operator2 = %p | root = %p | current = %p\n", save_operator, root, current);
-			current = root;
-			printf("address of last save_operator2 = %p | root = %p | current = %p\n", save_operator, root, current);
-			save_operator = current;
-			printf("address of last save_operator2 = %p | root = %p | current = %p\n", save_operator, root, current);
+			handle_pipe(tokens, &current, &root, &save_operator, &save_pipe);
 		}
-		else if (if_is_redirect_and_pipe(tokens))
+		else if (if_is_redirect(tokens))
 		{
-			printf("address of in redirect pipe save_operator = %p\n", save_operator);
-			handle_redirect_or_pipe(tokens, &current, &root, save_operator);
+			printf("address of in redirect save_operator = %p\n", save_operator);
+			handle_redirect(tokens, &current, &root, &save_operator, &save_pipe);
+			if(current && root && save_operator)
+				printf("current->value = %s | save_operator address = %p | root->value = %s\n", current->value, save_operator, root->value);
 		}
-		else if (if_cmd_option(tokens))
-			handle_builtin_option(tokens, &current, &root);
+		else if (if_cmd_or_option(tokens))
+			handle_builtin_cmd_or_option(tokens, &current, &root);
 		else
 			free_token_and_next_in_ast(tokens, &temp);
 	}

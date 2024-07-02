@@ -30,9 +30,12 @@ SRCS 				=   srcs/env.c\
 						srcs/execution/exec_cmd_and_builtins.c\
 						srcs/execution/exec_builtins.c\
 						srcs/parsing/ast/ast.c\
-						srcs/parsing/ast/ast_utils.c\
-						srcs/parsing/ast/ast_utils_two.c\
-						srcs/parsing/ast/ast_handle.c\
+						srcs/parsing/ast/ast_handle_builtin_and_cmd.c\
+						srcs/parsing/ast/ast_swap_child.c\
+						srcs/parsing/ast/ast_handle_and_or.c\
+						srcs/parsing/ast/ast_handle_pipe.c\
+						srcs/parsing/ast/ast_handle_redirect.c\
+						srcs/parsing/ast/ast_handle_parenthesis.c\
 						srcs/parsing/ast/print_ast.c\
 						srcs/parsing/syntax/word.c\
 						srcs/parsing/syntax/check_word.c\

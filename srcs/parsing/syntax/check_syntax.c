@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 16:42:50 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/16 17:14:35 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/02 15:21:26 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,6 @@ bool check_operator_at_the_end(t_token **token_list)
 			break;
 		else
 			current = current->next;
-			
 	}
 	if (is_operator == 1)
 	{

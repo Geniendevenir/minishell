@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 15:50:17 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/01 15:46:35 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/01 20:03:10 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,19 +72,3 @@ void	swap_child_right_with_else(t_ast	*current, t_ast	*new_node)
 		current = new_node;
 }
 
-void	part_handle_option(t_ast **current, t_ast **new_node, t_ast **temp)
-{
-	if ((*current)->left)
-	{
-		(*temp) = (*current)->left;
-		while ((*temp)->left)
-			(*temp) = (*temp)->left;
-		(*temp)->left = (*new_node);
-		(*new_node)->parent = *temp;
-	}
-	else
-	{
-		(*current)->left = (*new_node);
-		(*new_node)->parent = (*current);
-	}
-}
