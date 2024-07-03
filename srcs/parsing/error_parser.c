@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 13:58:59 by allan             #+#    #+#             */
-/*   Updated: 2024/07/03 11:56:17 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/03 18:09:34 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	error_lexer(int error)
 		write(2, "Error: Could not open directory '.'\n", 37); //check true error (find wildcard function)
 }
 
-void	error_syntax(t_token *current, int error)
+bool	error_syntax(t_token *current, int error)
 {
 	if (error == 1)
 	{
@@ -100,6 +100,7 @@ void	error_syntax(t_token *current, int error)
 		write(2, "bash: syntax error near unexpected token ')'\n", 45);
 	if (error == 4)
 		write(2, "bash: no '&&' or '||' token found in between parenthesis\n", 57);
+	return (1);
 	//if (current->type == 12 && current->next->type == 13)
 	/* if (error == 2)
 		write(2, "bash: syntax error near unexpected token `)'\n", 45); */

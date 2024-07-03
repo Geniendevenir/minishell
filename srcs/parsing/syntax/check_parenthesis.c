@@ -3,60 +3,119 @@
 /*                                                        :::      ::::::::   */
 /*   check_parenthesis.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 13:31:07 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/22 19:08:57 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/03 18:40:55 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* bool check_parenthesis_number(t_token *token_list)
+bool	check_parenthesis(t_token *current, t_syntax syntax, int *skip)
 {
-	int count;
-	t_token *current;
+	*skip += 1;
+	if (is_operator(current))
+	{
+		if (current->next)
+			return(check_parenthesis(current->next, 
+				(t_syntax){ .openpar = syntax.openpar, .operator = 1}, skip));
+	}
+	else if (current->type == TOKEN_CLOSEPAR)
+	{
+		if (is_parenthesis_error(current, syntax, 1) == 1)
+			return(closepar_error(current, syntax, skip));
+		syntax.openpar--;
+	}
+	else if (current->type == TOKEN_OPENPAR)
+	{
+		if (is_parenthesis_error(current, syntax, 2) == 1)
+			return (openpar_error(current, syntax, skip));
+		syntax.openpar++;
+	}
+	else if (current->next)
+		return (check_parenthesis(current->next, syntax, skip));
+	if (!current->next && syntax.openpar != 0)
+		return (error_syntax(current, 1));
+	return (0);
+}
 
-	current = token_list;
-	count = 0;
+bool	closepar_error(t_token *current, t_syntax syntax, int *skip)
+{
+	if (syntax.openpar <= 0 || syntax.operator == 0 
+		|| (syntax.openpar - 1 > 0 && !current->next))
+	{
+		if (syntax.openpar <= 0)
+			error_syntax(current, 1);
+		else if (syntax.openpar - 1 > 0 && !current->next)
+			error_syntax(current, 2);
+		else if (syntax.operator == 0)
+			error_syntax(current, 4);
+		return (1);
+	}
+	else if (current->next)
+	{
+		syntax.openpar -= 1;
+		return (check_parenthesis(current->next, syntax, skip));
+	}
+	return (0);
+}
+
+bool	openpar_error(t_token *current, t_syntax syntax, int *skip)
+{
+	if (check_current_parenthesis(current, 2) == 1)
+		return (1);
+	else if (current->next)
+	{
+		syntax.openpar += 1;
+		syntax.operator = 0;
+		return (check_parenthesis(current->next, syntax, skip));
+	}
+	return (0);
+}
+
+bool	is_parenthesis_error(t_token *current, t_syntax syntax, int option)
+{
+	if (option == 1)
+	{
+		if (syntax.openpar <= 0 || syntax.operator == 0 
+				|| (syntax.openpar - 1 > 0 && !current->next))
+				return (1);
+		else if (current->next)
+			return (1);
+	}
+	else if (option == 2)
+	{
+		if (check_current_parenthesis(current, 1) == 1 || current->next)
+			return (1);
+	}
+	return (0);
+}
+
+bool	check_current_parenthesis(t_token *current, int option)
+{
+	bool	operator;
+	int		skip_par;
+	
+	operator = 0;
+	skip_par = -1;
 	while (current)
 	{
-		if (current->type = TOKEN_OPENPAR)
+		if (is_operator(current) && skip_par == 0)
+			operator = 1;
+		if (current->type == TOKEN_OPENPAR)
+			skip_par++;
+		if (current->type == TOKEN_CLOSEPAR)
 		{
-			count++;
-		}
-		else if (current->type = TOKEN_CLOSEPAR)
-		{
-			count--;
+			if (operator == 0 && skip_par == 0)
+			{
+				if (option == 1)
+					error_syntax(current, 4);
+				return (1);
+			}
+			skip_par--;
 		}
 		current = current->next;
 	}
-	if (count != 0)
-		return (1);
-	else
-		return (0);
-} */
-
-/* bool check_parenthesis(t_token *token_list)
-{
-	
-	int nb_cmd = 0;
-	int operator = 0;
-	t_token *current;
-
-	current = token_list;
-	while (current && current->type != TOKEN_CLOSEPAR)
-	{
-		if (current->next && current->type == TOKEN_OPENPAR)
-		{
-			current = current->next;
-			return (check_parenthesis(current));
-		}
-		else if (current->type == WORD_CMD)
-		{
-			nb_cmd++;
-		}
-		
-		current = current->next;
-	}
-} */
+	return (0);
+}
