@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 20:38:03 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/03 13:44:24 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/03 14:12:21 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,16 @@ void	while_in_handle_pipe(t_ast **current, t_ast **new_node, t_ast *save_operato
 	while (*current && (*current)->right)
 		(*current) = (*current)->right;
 }
+
+void	if_no_save_operator(t_ast **current, t_ast **new_node, t_ast **save_operator, t_ast **save_pipe)
+{
+	(*new_node)->left = (*save_operator)->right;
+	(*save_operator)->right = *new_node;
+	(*new_node)->parent = *save_operator;
+	*current = *new_node;
+	*save_pipe = *new_node;
+}
+
 /*handle_pipe: add a PIPE node in the ast tree,
 PIPE has the second priority compared to the ROOT
 EXAMPLE:
@@ -55,7 +65,6 @@ otherwise we have to put save_pipe.
 -An OPERATOR before PIPE:
 we have to put on the left of the last OPERATOR
 
-	
 */
 void	handle_pipe(t_token **tokens, t_ast **current, t_ast **root, t_ast **save_operator, t_ast **save_pipe)
 {
@@ -65,41 +74,23 @@ void	handle_pipe(t_token **tokens, t_ast **current, t_ast **root, t_ast **save_o
 	new_node = create_node((*tokens)->type, (*tokens)->value);
 	if (!new_node)
 		return ;
-	printf("IN PIPE :\n");
 	if (!*save_operator)
 	{
-			printf("in if not operator :");
-			if(*save_pipe)
+			if (*save_pipe)
 			{
 				new_node->left = *save_pipe;
-				if(*root &&(*root)->type != TOKEN_AND && (*root)->type != TOKEN_OR)
+				if (*root &&(*root)->type != TOKEN_AND && (*root)->type != TOKEN_OR)
 					*root = new_node;
-				printf("in save_pipe  new_node->left = %s\n", new_node->left->value);
 			}
 			else
 			{	
 				new_node->left = *root;
 				*root = new_node;
-				printf("in else root new_node->left = %s\n", new_node->left->value);
 			}
-			//*save_operator = new_node;
 			*current = new_node;
 			*save_pipe = new_node;
-			printf("save_pipe address in PIPE = %p | current address = %p\n", save_pipe, current);
 	}
 	else
-	{
-		//(*root)->left = new_node;
-		//printf("root->value %s | save_operator = %s", (*root)->value, (*save_operator)->value);
-		new_node->left = (*save_operator)->right;
-		(*save_operator)->right = new_node;
-		new_node->parent = *save_operator;
-		//*save_operator = new_node;
-		*current = new_node;
-		//*save_operator = *current;
-		*save_pipe = new_node;
-		printf("IN ELSE save_pipe address in PIPE = %p\n", save_pipe);
-	}
-	printf("\n");
+		if_no_save_operator(current, &new_node, save_operator, save_pipe);
 	free_token_and_next_in_ast(tokens, &temp);
 }
