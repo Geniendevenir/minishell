@@ -1,57 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ast_handle.c                                       :+:      :+:    :+:   */
+/*   ast_handle_builtin_and_cmd.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/26 15:48:03 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/26 22:07:30 by Matprod          ###   ########.fr       */
+/*   Created: 2024/07/01 19:57:09 by Matprod           #+#    #+#             */
+/*   Updated: 2024/07/01 20:03:19 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_ast	*handle_open_parenthesis(t_token **tokens, t_ast	*current)
+bool	if_cmd_or_option(t_token **tokens)
 {
-	t_ast	*sub_tree;
-	t_token	*temp;
+	if ((*tokens)->type == WORD_BUILTIN || (*tokens)->type == WORD_CMD
+		|| (*tokens)->type == WORD_ABSPATH || (*tokens)->type == WORD_OPTION)
+		return (1);
+	else
+		return (0);
+}
 
-	free_token_and_next_in_ast(tokens, &temp);
-	sub_tree = parse_subexpression(tokens);
-	if (current)
+void	part_handle_option(t_ast **current, t_ast **new_node, t_ast **temp)
+{
+	if ((*current)->left)
 	{
-		current->right = sub_tree;
-		sub_tree->parent = current;
-		current = sub_tree;
+		(*temp) = (*current)->left;
+		while ((*temp)->left)
+			(*temp) = (*temp)->left;
+		(*temp)->left = (*new_node);
+		(*new_node)->parent = *temp;
 	}
 	else
-		current = sub_tree;
-	return (current);
-}
-
-t_ast	*handle_close_parenthesis(t_token **tokens, t_ast	*root)
-{
-	t_token	*temp;
-
-	free_token_and_next_in_ast(tokens, &temp);
-	return (root);
-}
-
-t_ast	*handle_priorities(t_token **tokens, t_ast	*root)
-{
-	t_ast	*new_node;
-	t_token	*temp;
-
-	new_node = create_node((*tokens)->type, (*tokens)->value);
-	if (!new_node)
-		return (NULL);
-	new_node->left = root;
-	if (root)
-		root->parent = new_node;
-	root = new_node;
-	free_token_and_next_in_ast(tokens, &temp);
-	return (root);
+	{
+		(*current)->left = (*new_node);
+		(*new_node)->parent = (*current);
+	}
 }
 
 t_ast	*handle_builtin_and_cmd(t_token **tokens, t_ast	*current)
@@ -91,3 +75,17 @@ t_ast	*handle_option(t_token **tokens, t_ast *current)
 	free_token_and_next_in_ast(tokens, &tmp);
 	return (current);
 }
+
+void	handle_builtin_cmd_or_option(t_token **tokens, t_ast **current, t_ast **root)
+{
+	if ((*tokens)->type == WORD_BUILTIN || (*tokens)->type == WORD_CMD
+		|| (*tokens)->type == WORD_ABSPATH)
+	{
+		*current = handle_builtin_and_cmd(tokens, *current);
+		if (!*root)
+			*root = *current;
+	}
+	else if ((*tokens)->type == WORD_OPTION)
+		*current = handle_option(tokens, *current);
+}
+

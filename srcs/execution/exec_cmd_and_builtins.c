@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd_and_builtins.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 19:17:38 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/30 22:09:20 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/02 19:05:14 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ char	**split_cmd(t_ast *current)
 	return (cmd);
 }
 
-int exec_cmd_or_builtin(t_ast *current, t_all *env)
+/* int exec_cmd_or_builtin(t_ast *current, t_all *env)
 {
 	char	**cmd; //sera a free plus tard;
 
@@ -73,4 +73,4 @@ int exec_cmd_or_builtin(t_ast *current, t_all *env)
 		return (1);
 	return (-1);
 	
-}
+} */ 

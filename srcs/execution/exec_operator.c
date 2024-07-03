@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exec_operator.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 13:22:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/30 22:21:42 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/02 19:02:39 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	exec_operator(t_ast *current, t_env *env)
+/* int	exec_operator(t_ast *current, t_env *env)
 {
 	if (current->type == TOKEN_AND)
 	{
@@ -41,4 +41,4 @@ int exec_or(t_ast *current, t_env *env)
 	else
 		//return (exec_parent_node(current->right, env));
 		return (1);
-}
+} */

@@ -45,6 +45,14 @@ SRCS 				=   srcs/env.c\
 						srcs/parsing/expander/expand_env.c\
 						srcs/parsing/expander/relink_token.c\
 						srcs/parsing/expander/expand_wildcard.c\
+						srcs/parsing/ast/ast.c\
+						srcs/parsing/ast/ast_handle_builtin_and_cmd.c\
+						srcs/parsing/ast/ast_swap_child.c\
+						srcs/parsing/ast/ast_handle_and_or.c\
+						srcs/parsing/ast/ast_handle_pipe.c\
+						srcs/parsing/ast/ast_handle_redirect.c\
+						srcs/parsing/ast/ast_handle_parenthesis.c\
+						srcs/parsing/ast/print_ast.c\
 						srcs/builtins/ft_cd.c\
 						srcs/builtins/ft_export.c\
 						srcs/builtins/ft_exit.c\
@@ -54,11 +62,6 @@ SRCS 				=   srcs/env.c\
 						srcs/execution/exec_cmd_and_builtins.c\
 						srcs/execution/exec_builtins.c\
 						srcs/execution/executer.c\
-						srcs/parsing/ast/ast.c\
-						srcs/parsing/ast/ast_utils.c\
-						srcs/parsing/ast/ast_utils_two.c\
-						srcs/parsing/ast/ast_handle.c\
-						srcs/parsing/ast/print_ast.c\
 						srcs/hate_the_norm.c\
 
 # Apply the pattern substitution to each source file in SRC and produce a corresponding list of object files in the OBJ_DIR

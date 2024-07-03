@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/01 19:54:17 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/02 18:40:38 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -272,23 +272,30 @@ void	print_envv(t_env **env);
 
 t_ast	*parse_expression(t_token **token_list);
 t_ast	*parse_subexpression(t_token **tokens);
-t_ast	*create_node(enum s_type type, char* value);
-void	swap_child_left(t_ast* current, t_ast* newNode);
 t_ast	*handle_option(t_token **tokens, t_ast* current);
-t_ast	*handle_open_parenthesis(t_token **tokens, t_ast* current);
+t_ast	*open_parenthesis(t_token **tokens, t_ast* current);
+t_ast	*close_parenthesis(t_token **tokens, t_ast* root);
+t_ast	*handle_builtin_and_cmd(t_token **tokens, t_ast	*current);
+t_ast	*create_node(enum s_type type, char* value);
+void	handle_and_or_root_priority(t_token **tokens, t_ast	**root,
+	t_ast **current, t_ast **save_operator);
+void	handle_pipe(t_token **tokens, t_ast **current, t_ast **root,
+ t_ast **save_operator, t_ast **save_pipe);
 void	handle_parenthesis_open(t_token **tokens, t_ast **current, t_ast **root);
-t_ast	*handle_close_parenthesis(t_token **tokens, t_ast* root);
-t_ast	*handle_priorities(t_token **tokens, t_ast* root);
-t_ast	*handle_builtin_and_cmd(t_token **tokens, t_ast* current);
-void	swap_child_right(t_ast* current, t_ast* newNode);
-bool	if_priorities(t_token **tokens);
-void	get_first_parent(t_ast **current);
+void	handle_redirect(t_token **tokens, t_ast **current, t_ast **root,
+ t_ast	**save_operator, t_ast **save_pipe);
 void	handle_parenthesis_open(t_token **tokens, t_ast **current, t_ast **root);
-void	handle_builtin_option(t_token **tokens, t_ast **current, t_ast **root);
-bool	if_cmd_option(t_token **tokens);
+void	handle_builtin_cmd_or_option(t_token **tokens, t_ast **current, t_ast **root);
+void	swap_child_left(t_ast	*current, t_ast	*new_node);
+void	swap_child_right(t_ast	*current, t_ast	*new_node);
+void	swap_child_left_with_else(t_ast	*current, t_ast	*new_node);
+void	swap_child_right_with_else(t_ast	*current, t_ast	*new_node);
 void	part_handle_option(t_ast **current, t_ast **new_node, t_ast **temp);
 void	free_token_and_next_in_ast(t_token **tokens, t_token **temp);
-
+void	get_first_parent(t_ast **current);
+bool	if_token_and_or(t_token **tokens);
+bool	if_cmd_or_option(t_token **tokens);
+bool	if_is_redirect(t_token **tok);
 /*					SIGNALS					*/
 
 int			event(void);
