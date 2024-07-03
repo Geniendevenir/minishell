@@ -6,24 +6,24 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 20:38:03 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/03 14:12:21 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/03 18:32:56 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	if_is_pipe(t_token **tok)
+bool	is_pipe(t_token **tok)
 {
-	//(*tok)->type == TOKEN_PIPE || 
 	if ((*tok)->type == TOKEN_PIPE)
 		return (1);
 	else
 		return (0);
 }
 
-void	while_in_handle_pipe(t_ast **current, t_ast **new_node, t_ast *save_operator)
+void	while_in_handle_pipe(t_ast **current, t_ast **new_node,
+	t_ast *save_operator)
 {
-	while ((save_operator != (*current)) &&((*current)->parent && *current))
+	while ((save_operator != (*current)) && ((*current)->parent && *current))
 		*current = (*current)->parent;
 	(*new_node)->left = (*current)->right;
 	(*new_node)->parent = *current;
@@ -32,7 +32,8 @@ void	while_in_handle_pipe(t_ast **current, t_ast **new_node, t_ast *save_operato
 		(*current) = (*current)->right;
 }
 
-void	if_no_save_operator(t_ast **current, t_ast **new_node, t_ast **save_operator, t_ast **save_pipe)
+void	if_no_last_operator(t_ast **current, t_ast **new_node,
+	t_ast **save_operator, t_ast **save_pipe)
 {
 	(*new_node)->left = (*save_operator)->right;
 	(*save_operator)->right = *new_node;
@@ -66,7 +67,8 @@ otherwise we have to put save_pipe.
 we have to put on the left of the last OPERATOR
 
 */
-void	handle_pipe(t_token **tokens, t_ast **current, t_ast **root, t_ast **save_operator, t_ast **save_pipe)
+void	handle_pipe(t_token **tokens, t_ast **current,
+	t_ast **root, t_ast **last_operator, t_ast **last_pipe)
 {
 	t_ast	*new_node;
 	t_token	*temp;
@@ -74,11 +76,11 @@ void	handle_pipe(t_token **tokens, t_ast **current, t_ast **root, t_ast **save_o
 	new_node = create_node((*tokens)->type, (*tokens)->value);
 	if (!new_node)
 		return ;
-	if (!*save_operator)
+	if (!*last_operator)
 	{
-			if (*save_pipe)
+			if (*last_pipe)
 			{
-				new_node->left = *save_pipe;
+				new_node->left = *last_pipe;
 				if (*root &&(*root)->type != TOKEN_AND && (*root)->type != TOKEN_OR)
 					*root = new_node;
 			}
@@ -88,9 +90,9 @@ void	handle_pipe(t_token **tokens, t_ast **current, t_ast **root, t_ast **save_o
 				*root = new_node;
 			}
 			*current = new_node;
-			*save_pipe = new_node;
+			*last_pipe = new_node;
 	}
 	else
-		if_no_save_operator(current, &new_node, save_operator, save_pipe);
+		if_no_last_operator(current, &new_node, last_operator, last_pipe);
 	free_token_and_next_in_ast(tokens, &temp);
 }

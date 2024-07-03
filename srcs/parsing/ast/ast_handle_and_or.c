@@ -6,13 +6,13 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 19:52:14 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/02 12:40:19 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/03 18:31:41 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	if_token_and_or(t_token **tok)
+bool	is_ope(t_token **tok)
 {
 	if ((*tok)->type == TOKEN_AND || (*tok)->type == TOKEN_OR)
 		return (1);
@@ -30,7 +30,7 @@ void	handle_and_or_root_priority(t_token **tokens, t_ast	**root,
 	if (!new_node)
 		return ;
 	new_node->left = *root;
-	if (root)
+	if (root)// TRES SUSPECT CAAAAAAAAAAAAAAAA
 		(*root)->parent = new_node;
 	*root = new_node;
 	*current = *root;

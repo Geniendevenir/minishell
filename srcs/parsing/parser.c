@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:24:04 by allan             #+#    #+#             */
-/*   Updated: 2024/07/02 19:42:35 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/03 14:48:02 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,8 @@ int parser(char *cmd_line, t_env *env, t_ast **ast) // a rajouter env quand expa
 		return (1);
 	//printf("\n\n\nAFTER EXPANDER:\n");
 	//token_print(&token_list);
-	if (check_syntax(&token_list) == 1)
-		return (1);
+	/* if (check_syntax(&token_list) == 1)
+		return (1); */
 	//token_print_amazing(&token_list);
 	init_t_word(&word);
 	if (define_word(&token_list, &word, env))
@@ -111,6 +111,7 @@ int parser(char *cmd_line, t_env *env, t_ast **ast) // a rajouter env quand expa
 	//printf("AFTER EXPANDER:\n");
 	//token_print(&token_list);
 	//token_free(&dup_list);
+	//free_ast(*ast);
 	token_free(&token_list);
 	return (0);
 }

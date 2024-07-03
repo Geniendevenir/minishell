@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/02 12:50:38 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/03 14:46:21 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ char	*minishell(t_all *p)
 		{
 			printAST(p->ast,0);
 			executer(&p->ast, p->env);
-			free_ast(p->ast);
 		} */
+		free_ast(p->ast);
 		add_history(p->line);
 	}
 	p->sig->sig_int = 0;

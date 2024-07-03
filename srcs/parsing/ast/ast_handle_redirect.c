@@ -6,13 +6,13 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 15:48:03 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/03 14:25:37 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/03 18:41:43 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	if_is_redirect(t_token **tok)
+bool	is_redirect(t_token **tok)
 {
 	if ((*tok)->type == WORD_FILEIN
 		|| (*tok)->type == WORD_LIMITER || (*tok)->type == WORD_FILEOUT
@@ -62,9 +62,7 @@ void	handle_redirect(t_token **tokens, t_ast **current, t_ast **root, t_ast **sa
 	else
 	{
 		if (*save_operator || *save_pipe)
-		{
 			while_in_handle_redirect(current, &new_node, *save_operator,*save_pipe);
-		}
 		else
 		{
 			new_node->left = *root;
