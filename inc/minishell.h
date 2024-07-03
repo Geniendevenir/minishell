@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/03 12:25:02 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/03 14:22:24 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -310,7 +310,8 @@ bool		define_word(t_token **token_list, t_word *boolean, t_env *env);
 bool		is_operator(t_token *c);
 int			double_operator(t_token *current);
 bool		check_syntax(t_token *current);
-bool		check_parenthesis(t_token *current, int openpar, bool operator);
+bool		check_parenthesis(t_token *current, int openpar, bool operator, int *skip);
+bool		check_current_parenthesis(t_token *current);
 void		error_syntax(t_token *current, int error);
 
 /*					 ENV					*/

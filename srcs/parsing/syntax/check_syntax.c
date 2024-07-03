@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 16:42:50 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/03 13:31:05 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/03 14:33:24 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,14 +73,20 @@ bool check_syntax(t_token *current)
 {
 	if (!current)
 		return (0);
+	int	skip;
+	
+	skip = 0;
 	while (current)
 	{
-		//printf("%s\n", current->value);
+		if (skip == 0)
+			printf("%s\n", current->value);
 		if (double_operator(current) == 1)
 				return (1);
-		if (current->type == TOKEN_OPENPAR || current->type == TOKEN_CLOSEPAR)
+		if (skip > 0)
+			skip--;
+		if (skip == 0 && (current->type == TOKEN_OPENPAR || current->type == TOKEN_CLOSEPAR))
 		{
-			if (check_parenthesis(current, 0, 0) == 1)
+			if (check_parenthesis(current, 0, 0, &skip) == 1)
 				return (1);
 		}
 		current = current->next;
@@ -88,12 +94,43 @@ bool check_syntax(t_token *current)
 	return (0);
 }
 
-bool	check_parenthesis(t_token *current, int openpar, bool operator)
+bool	check_current_parenthesis(t_token *current)
+{
+	bool	operator;
+	int		skip_par;
+	
+	operator = 0;
+	skip_par = -1;
+	while (current)
+	{
+		if (is_operator(current) && skip_par == 0)
+			operator = 1;
+		if (current->type == TOKEN_OPENPAR)
+			skip_par++;
+		if (current->type == TOKEN_CLOSEPAR)
+		{
+			if (operator == 0 && skip_par == 0)
+			{
+				error_syntax(current, 4);
+				return (1);
+			}
+			skip_par--;
+		}
+		current = current->next;
+	}
+	return (0);
+}
+
+
+// regler: test ((&&))
+bool	check_parenthesis(t_token *current, int openpar, bool operator, int *skip)
 {
 	printf("%s\n", current->value);
+	*skip += 1;
 	if (is_operator(current))
 	{
-		return(check_parenthesis(current->next, openpar, 1));
+		if (current->next)
+			return(check_parenthesis(current->next, openpar, 1, skip));
 	}
 	else if (current->type == TOKEN_CLOSEPAR)
 	{
@@ -109,28 +146,31 @@ bool	check_parenthesis(t_token *current, int openpar, bool operator)
 		}
 		else if (current->next)
 		{
-			return (check_parenthesis(current->next, openpar - 1, operator));
+			return (check_parenthesis(current->next, openpar - 1, operator, skip));
 		}
 		openpar--;
 	}
 	else if (current->type == TOKEN_OPENPAR)
 	{
+		if (check_current_parenthesis(current) == 1)
+			return (1);
 		if (current->next)
 		{
-			return (check_parenthesis(current->next, openpar + 1, 0));
+			return (check_parenthesis(current->next, openpar + 1, 0, skip));
 		}
 		openpar++;
 	}
 	else if (current->next)
 	{
-		return (check_parenthesis(current->next, openpar, operator));
+		return (check_parenthesis(current->next, openpar, operator, skip));
 	}
-	else if (!current->next && openpar != 0)
+	if (!current->next && openpar != 0)
 	{
-		if (openpar > 0)
+		error_syntax(current, 1);
+		/* if (openpar > 0)
 			error_syntax(current, 2);
 		else if (openpar < 0)
-			error_syntax(current, 3);
+			error_syntax(current, 3); */
 		return (1);
 	}
 	return (0);
