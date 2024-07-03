@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 15:48:03 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/03 13:28:47 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/03 13:56:43 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,19 @@ void	while_in_handle_redirect(t_ast **current, t_ast **new_node, t_ast *save_ope
 		(*new_node)->left = (*current)->right;
 		(*new_node)->parent = *current;
 		(*current)->right = (*new_node);
+		while (*current && (*current)->right)
+			(*current) = (*current)->right;
 	}
-	else
+	else if (save_operator)
 	{	printf("save_pipe address if no pipe = %p\n", save_pipe);
 		while ((save_operator) != (*current) &&((*current)->parent && *current))
 			*current = (*current)->parent;
 		(*new_node)->left = (*current)->right;
 		(*new_node)->parent = *current;
 		(*current)->right = (*new_node);
+		while (*current && (*current)->right)
+			(*current) = (*current)->right;
 	}
-	while (*current && (*current)->right)
-		(*current) = (*current)->right;
 }
 
 void	handle_redirect(t_token **tokens, t_ast **current, t_ast **root, t_ast **save_operator, t_ast **save_pipe)
@@ -57,20 +59,24 @@ void	handle_redirect(t_token **tokens, t_ast **current, t_ast **root, t_ast **sa
 		return ;
 	if (!*root)
 	{
+		printf("if no root \n");
 		*current = new_node;
 		*root = *current;
 	}
 	else
 	{
-		if (!*save_operator)
+		if (*save_operator || save_pipe)
 		{
+			while_in_handle_redirect(current, &new_node, *save_operator,*save_pipe);
+		}
+		else
+		{
+			printf("if no operator and no pipe\n");
 			new_node->left = *root;
 			if (*root)
 				(*root)->parent = new_node;
 			*root = new_node;
 		}
-		else
-			while_in_handle_redirect(current, &new_node, *save_operator,*save_pipe);
 	}
 	//new_node = *save_operator;
 	printf("\n");
