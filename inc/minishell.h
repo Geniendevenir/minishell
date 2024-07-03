@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/03 14:22:24 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/03 17:21:18 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,17 @@
 
 /*					 LEXER					*/
 
-typedef struct s_index {
+typedef struct s_index
+{
 	size_t	*i;
 	size_t	j;
 }				t_index;
+
+typedef struct s_syntax
+{
+	int		openpar;
+	bool	operator;
+}				t_syntax;
 
 enum s_state{
 	STATE_START,
@@ -93,7 +100,8 @@ enum s_type{
 	WORD_WTF, //dans le cas ou j'ai oublie un cas
 };
 
-typedef struct s_token {
+typedef struct s_token
+{
 	enum s_type type;
 	enum s_state state;
 	char *value;
@@ -124,7 +132,6 @@ typedef struct s_file
 	char			*data;
 	struct s_file	*next;
 }	t_file;
-
 
 typedef struct s_env
 {
@@ -310,7 +317,7 @@ bool		define_word(t_token **token_list, t_word *boolean, t_env *env);
 bool		is_operator(t_token *c);
 int			double_operator(t_token *current);
 bool		check_syntax(t_token *current);
-bool		check_parenthesis(t_token *current, int openpar, bool operator, int *skip);
+bool		check_parenthesis(t_token *current, t_syntax syntax, int *skip);
 bool		check_current_parenthesis(t_token *current);
 void		error_syntax(t_token *current, int error);
 

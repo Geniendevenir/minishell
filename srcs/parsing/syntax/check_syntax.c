@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 16:42:50 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/03 14:33:24 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/03 17:28:02 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,9 @@ enum s_type{
 	28 WORD_WTF, //dans le cas ou j'ai oublie un cas
 };
 
+1 - Concatener
+2 - 
+
 */
 
 bool	is_operator(t_token *c)
@@ -56,7 +59,7 @@ bool	is_operator(t_token *c)
 	return (0);
 }
 
-int	double_operator(t_token *current)
+int		double_operator(t_token *current)
 {
 	if (current->next)
 	{
@@ -69,24 +72,25 @@ int	double_operator(t_token *current)
 	return (0);
 }
 
-bool check_syntax(t_token *current)
+bool 	check_syntax(t_token *current)
 {
 	if (!current)
 		return (0);
-	int	skip;
+	int			skip;
+	t_syntax	syntax;
 	
 	skip = 0;
+	syntax.openpar = 0;
+	syntax.operator = 0;
 	while (current)
 	{
-		if (skip == 0)
-			printf("%s\n", current->value);
 		if (double_operator(current) == 1)
 				return (1);
 		if (skip > 0)
 			skip--;
 		if (skip == 0 && (current->type == TOKEN_OPENPAR || current->type == TOKEN_CLOSEPAR))
 		{
-			if (check_parenthesis(current, 0, 0, &skip) == 1)
+			if (check_parenthesis(current, syntax, &skip) == 1)
 				return (1);
 		}
 		current = current->next;
@@ -123,32 +127,36 @@ bool	check_current_parenthesis(t_token *current)
 
 
 // regler: test ((&&))
-bool	check_parenthesis(t_token *current, int openpar, bool operator, int *skip)
+//chck_parenthesis(current, )
+bool	check_parenthesis(t_token *current, t_syntax syntax, int *skip)
 {
-	printf("%s\n", current->value);
 	*skip += 1;
 	if (is_operator(current))
 	{
 		if (current->next)
-			return(check_parenthesis(current->next, openpar, 1, skip));
+		{
+			syntax.operator = 1;
+			return(check_parenthesis(current->next, syntax, skip));
+		}
 	}
 	else if (current->type == TOKEN_CLOSEPAR)
 	{
-		if (openpar <= 0 || operator == 0 || (openpar - 1 > 0 && !current->next))
+		if (syntax.openpar <= 0 || syntax.operator == 0 || (syntax.openpar - 1 > 0 && !current->next))
 		{
-			if (openpar <= 0)
+			if (syntax.openpar <= 0)
 				error_syntax(current, 1);
-			else if (openpar - 1 > 0 && !current->next)
+			else if (syntax.openpar - 1 > 0 && !current->next)
 				error_syntax(current, 2);
-			else if (operator == 0)
+			else if (syntax.operator == 0)
 				error_syntax(current, 4);
 			return (1);
 		}
 		else if (current->next)
 		{
-			return (check_parenthesis(current->next, openpar - 1, operator, skip));
+			syntax.openpar -= 1;
+			return (check_parenthesis(current->next, syntax, skip));
 		}
-		openpar--;
+		syntax.openpar--;
 	}
 	else if (current->type == TOKEN_OPENPAR)
 	{
@@ -156,61 +164,23 @@ bool	check_parenthesis(t_token *current, int openpar, bool operator, int *skip)
 			return (1);
 		if (current->next)
 		{
-			return (check_parenthesis(current->next, openpar + 1, 0, skip));
+			syntax.openpar += 1;
+			syntax.operator = 0;
+			return (check_parenthesis(current->next, syntax, skip));
 		}
-		openpar++;
+		syntax.openpar++;
 	}
 	else if (current->next)
-	{
-		return (check_parenthesis(current->next, openpar, operator, skip));
-	}
-	if (!current->next && openpar != 0)
+		return (check_parenthesis(current->next, syntax, skip));
+	if (!current->next && syntax.openpar != 0)
 	{
 		error_syntax(current, 1);
-		/* if (openpar > 0)
-			error_syntax(current, 2);
-		else if (openpar < 0)
-			error_syntax(current, 3); */
 		return (1);
 	}
 	return (0);
 }
 
-//echo test && ( echo hello && ( echo world ) );
-//				1				2			1 0
-
-
-/* bool check_syntax(t_token **token_list)
+/* bool	redirect_error_syntax(t_token *current, t_syntax syntax, int *skip)
 {
-	t_token *current;
-	int result;
-	int openpar;
-
-	current = *token_list;
-	if (is_operator(current) == 1)
-	{
-		error_syntax(current, 1);
-		return (1);
-	}
-	while (current)
-	{
-		if (double_operator(current) == 1)
-			return (1);
-		if (current->type == TOKEN_CLOSEPAR && openpar == 0)
-		{
-			error_syntax(current->next, 1);
-			return (1);
-		}
-		if (current->type == TOKEN_OPENPAR)
-		{
-			check_parenthesis();
-		}
-		
-	}
-	if (is_operator(current) == 1)
-	{
-		error_syntax(current, 1);
-		return (1);
-	}
-	return (0);
+	
 } */
