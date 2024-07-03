@@ -6,11 +6,11 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/03 14:46:21 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/03 19:22:05 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./minishell.h"
+#include "minishell.h"
 
 t_sig	g_sig;
 

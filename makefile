@@ -52,6 +52,7 @@ SRCS 				=   srcs/env.c\
 						srcs/parsing/ast/ast_handle_pipe.c\
 						srcs/parsing/ast/ast_handle_redirect.c\
 						srcs/parsing/ast/ast_handle_parenthesis.c\
+						srcs/parsing/ast/ast_test.c\
 						srcs/parsing/ast/print_ast.c\
 						srcs/builtins/ft_cd.c\
 						srcs/builtins/ft_export.c\

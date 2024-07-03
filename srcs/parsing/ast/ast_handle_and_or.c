@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 19:52:14 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/03 18:31:41 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/03 19:32:12 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@ bool	is_ope(t_token **tok)
 		return (0);
 }
 
-void	handle_and_or_root_priority(t_token **tokens, t_ast	**root,
-	t_ast **current, t_ast **save_operator)
+void	handle_and_or_root_priority(t_token **tokens, t_ast_ptr **list)
 {
 	t_ast	*new_node;
 	t_token	*temp;
@@ -29,11 +28,11 @@ void	handle_and_or_root_priority(t_token **tokens, t_ast	**root,
 	new_node = create_node((*tokens)->type, (*tokens)->value);
 	if (!new_node)
 		return ;
-	new_node->left = *root;
-	if (root)// TRES SUSPECT CAAAAAAAAAAAAAAAA
-		(*root)->parent = new_node;
-	*root = new_node;
-	*current = *root;
-	*save_operator = *current;
+	new_node->left = (*list)->root;
+	if ((*list)->root)// TRES SUSPECT CAAAAAAAAAAAAAAAA if (root) pas *root
+		((*list)->root)->parent = new_node;
+	(*list)->root = new_node;
+	(*list)->current = (*list)->root;
+	(*list)->last_ope = (*list)->current;
 	free_token_and_next_in_ast(tokens, &temp);
 }

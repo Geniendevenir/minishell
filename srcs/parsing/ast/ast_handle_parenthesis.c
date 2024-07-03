@@ -6,19 +6,19 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 19:49:19 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/03 18:31:15 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/03 19:27:12 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_parenthesis_open(t_token **tokens, t_ast **current, t_ast **root)
+void	handle_parenthesis_open(t_token **tokens, t_ast_ptr **list)
 {
 	if ((*tokens)->type == TOKEN_OPENPAR)
 	{
-		*current = open_parenthesis(tokens, *current);
-		if (!*root)
-			*root = *current;
+		(*list)->current = open_parenthesis(tokens, (*list)->current);
+		if (!(*list)->root)
+			(*list)->root = (*list)->current;
 	}
 }
 

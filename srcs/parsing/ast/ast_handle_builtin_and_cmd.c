@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 19:57:09 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/03 18:32:04 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/03 19:44:32 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,16 +76,16 @@ t_ast	*handle_option(t_token **tokens, t_ast *current)
 	return (current);
 }
 
-void	handle_builtin_cmd_or_option(t_token **tokens, t_ast **current, t_ast **root)
+void	handle_builtin_cmd_or_option(t_token **tokens, t_ast_ptr **list)
 {
 	if ((*tokens)->type == WORD_BUILTIN || (*tokens)->type == WORD_CMD
 		|| (*tokens)->type == WORD_ABSPATH)
 	{
-		*current = handle_builtin_and_cmd(tokens, *current);
-		if (!*root)
-			*root = *current;
+		(*list)->current = handle_builtin_and_cmd(tokens, (*list)->current);
+		if (!(*list)->root)
+			(*list)->root = (*list)->current;
 	}
 	else if ((*tokens)->type == WORD_OPTION)
-		*current = handle_option(tokens, *current);
+		(*list)->current = handle_option(tokens, (*list)->current);
 }
 

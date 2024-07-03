@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 20:38:03 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/03 18:32:56 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/03 19:48:51 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,26 +20,13 @@ bool	is_pipe(t_token **tok)
 		return (0);
 }
 
-void	while_in_handle_pipe(t_ast **current, t_ast **new_node,
-	t_ast *save_operator)
+void	if_no_last_operator(t_ast **new_node, t_ast_ptr **list)
 {
-	while ((save_operator != (*current)) && ((*current)->parent && *current))
-		*current = (*current)->parent;
-	(*new_node)->left = (*current)->right;
-	(*new_node)->parent = *current;
-	(*current)->right = (*new_node);
-	while (*current && (*current)->right)
-		(*current) = (*current)->right;
-}
-
-void	if_no_last_operator(t_ast **current, t_ast **new_node,
-	t_ast **save_operator, t_ast **save_pipe)
-{
-	(*new_node)->left = (*save_operator)->right;
-	(*save_operator)->right = *new_node;
-	(*new_node)->parent = *save_operator;
-	*current = *new_node;
-	*save_pipe = *new_node;
+	(*new_node)->left = (*list)->last_ope->right;
+	(*list)->last_ope->right = *new_node;
+	(*new_node)->parent = (*list)->last_ope;
+	(*list)->current = *new_node;
+	(*list)->last_pipe = *new_node;
 }
 
 /*handle_pipe: add a PIPE node in the ast tree,
@@ -67,8 +54,7 @@ otherwise we have to put save_pipe.
 we have to put on the left of the last OPERATOR
 
 */
-void	handle_pipe(t_token **tokens, t_ast **current,
-	t_ast **root, t_ast **last_operator, t_ast **last_pipe)
+void	handle_pipe(t_token **tokens, t_ast_ptr **list)
 {
 	t_ast	*new_node;
 	t_token	*temp;
@@ -76,23 +62,23 @@ void	handle_pipe(t_token **tokens, t_ast **current,
 	new_node = create_node((*tokens)->type, (*tokens)->value);
 	if (!new_node)
 		return ;
-	if (!*last_operator)
+	if (!(*list)->last_ope)
 	{
-			if (*last_pipe)
+			if ((*list)->last_pipe)
 			{
-				new_node->left = *last_pipe;
-				if (*root &&(*root)->type != TOKEN_AND && (*root)->type != TOKEN_OR)
-					*root = new_node;
+				new_node->left = (*list)->last_pipe;
+				if ((*list)->root &&((*list)->root)->type != TOKEN_AND && ((*list)->root)->type != TOKEN_OR)
+					(*list)->root = new_node;
 			}
 			else
 			{	
-				new_node->left = *root;
-				*root = new_node;
+				new_node->left = (*list)->root;
+				(*list)->root = new_node;
 			}
-			*current = new_node;
-			*last_pipe = new_node;
+			(*list)->current = new_node;
+			(*list)->last_pipe = new_node;
 	}
 	else
-		if_no_last_operator(current, &new_node, last_operator, last_pipe);
+		if_no_last_operator(&new_node, list);
 	free_token_and_next_in_ast(tokens, &temp);
 }

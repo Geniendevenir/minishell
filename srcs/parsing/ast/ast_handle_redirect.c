@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 15:48:03 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/03 18:41:43 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/03 19:49:06 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,31 +22,31 @@ bool	is_redirect(t_token **tok)
 		return (0);
 }
 
-void	while_in_handle_redirect(t_ast **current, t_ast **new_node, t_ast *save_operator, t_ast *save_pipe)
+void	while_in_handle_redirect(t_ast_ptr **list, t_ast **new_node, t_ast *last_ope, t_ast *last_pipe)
 {
-	if (save_pipe)
+	if (last_pipe)
 	{
-		while ((save_pipe) != (*current) &&((*current)->parent && *current))
-			*current = (*current)->parent;
-		(*new_node)->left = (*current)->right;
-		(*new_node)->parent = *current;
-		(*current)->right = (*new_node);
-		while (*current && (*current)->right)
-			(*current) = (*current)->right;
+		while ((last_pipe) != (*list)->current &&((*list)->current->parent && (*list)->current ))
+			(*list)->current  = (*list)->current->parent;
+		(*new_node)->left = (*list)->current->right;
+		(*new_node)->parent = (*list)->current ;
+		(*list)->current->right = (*new_node);
+		while ((*list)->current  && (*list)->current->right)
+			(*list)->current = (*list)->current->right;
 	}
-	else if (save_operator)
+	else if (last_ope)
 	{
-		while ((save_operator) != (*current) &&((*current)->parent && *current))
-			*current = (*current)->parent;
-		(*new_node)->left = (*current)->right;
-		(*new_node)->parent = *current;
-		(*current)->right = (*new_node);
-		while (*current && (*current)->right)
-			(*current) = (*current)->right;
+		while ((last_ope) != (*list)->current &&((*list)->current->parent && (*list)->current ))
+			(*list)->current  = (*list)->current->parent;
+		(*new_node)->left = (*list)->current->right;
+		(*new_node)->parent = (*list)->current ;
+		(*list)->current->right = (*new_node);
+		while ((*list)->current  && (*list)->current->right)
+			(*list)->current = (*list)->current->right;
 	}
 }
 
-void	handle_redirect(t_token **tokens, t_ast **current, t_ast **root, t_ast **save_operator, t_ast **save_pipe)
+void	handle_redirect(t_token **tokens, t_ast_ptr **list)
 {
 	t_ast	*new_node;
 	t_token	*temp;
@@ -54,22 +54,22 @@ void	handle_redirect(t_token **tokens, t_ast **current, t_ast **root, t_ast **sa
 	new_node = create_node((*tokens)->type, (*tokens)->value);
 	if (!new_node)
 		return ;
-	if (!*root)
+	if (!(*list)->root)
 	{
-		*current = new_node;
-		*root = *current;
+		(*list)->current = new_node;
+		(*list)->root = (*list)->current;
 	}
 	else
 	{
-		if (*save_operator || *save_pipe)
-			while_in_handle_redirect(current, &new_node, *save_operator,*save_pipe);
+		if ((*list)->last_ope || (*list)->last_pipe)
+			while_in_handle_redirect(list, &new_node, (*list)->last_ope,(*list)->last_pipe);
 		else
 		{
-			new_node->left = *root;
-			if (*root)
-				(*root)->parent = new_node;
-			*current = new_node;
-			*root = *current;
+			new_node->left = (*list)->root;
+			if ((*list)->root)
+				((*list)->root)->parent = new_node;
+			(*list)->current = new_node;
+			(*list)->root = (*list)->current;
 		}
 	}
 	free_token_and_next_in_ast(tokens, &temp);
