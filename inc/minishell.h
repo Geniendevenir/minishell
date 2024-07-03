@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/01 19:54:17 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/03 12:25:02 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -293,13 +293,12 @@ void	free_token_and_next_in_ast(t_token **tokens, t_token **temp);
 
 int			event(void);
 int			create_signal(void);
-/*					CHECK					*/
+
+/*					SYNTAX AND WORD					*/
 
 int			check_word_part_cmd(char *word, t_word *boolean, t_env *env);
 int			check_word_part_append(t_word *boolean);
 int			check_word_part_rediout(t_word *boolean);
-bool		check_double_syntax(t_token **token_list);
-bool		check_syntax(t_token **token_list);
 int			check_cmd_exist(char *word, t_env *env);
 int			check_builtin(char *word);
 int			check_file(char *word);
@@ -307,6 +306,12 @@ int			check_absolute_path_cmd(char *word);
 int			check_word_part(char *word, t_word *boolean, t_env *env);
 enum s_type	check_word(char *word, t_word *boolean, t_env *env);
 bool		define_word(t_token **token_list, t_word *boolean, t_env *env);
+
+bool		is_operator(t_token *c);
+int			double_operator(t_token *current);
+bool		check_syntax(t_token *current);
+bool		check_parenthesis(t_token *current, int openpar, bool operator);
+void		error_syntax(t_token *current, int error);
 
 /*					 ENV					*/
 

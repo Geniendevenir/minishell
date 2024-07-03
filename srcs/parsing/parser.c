@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:24:04 by allan             #+#    #+#             */
-/*   Updated: 2024/07/02 15:19:41 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/03 12:24:33 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ t_token	*duplicate_token_list(const t_token *head)
 int parser(char *cmd_line, t_env *env, t_ast **ast) // a rajouter env quand expander fini
 {
 	t_token	*token_list;
-	t_word	word;
+	//t_word	word;
 	int		error;
 	//t_token *dup_list;
 	
@@ -98,8 +98,11 @@ int parser(char *cmd_line, t_env *env, t_ast **ast) // a rajouter env quand expa
 		return (1);
 	printf("\n\n\nAFTER EXPANDER:\n");
 	token_print(&token_list);
-	if (check_syntax(&token_list) == 1)
+	if (check_syntax(token_list) == 1)
+	{
+		token_free(&token_list);
 		return (1);
+	}
 	//token_print_amazing(&token_list);
 	/* init_t_word(&word);
 	if (define_word(&token_list, &word, env))

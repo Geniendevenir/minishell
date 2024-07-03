@@ -6,144 +6,171 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 16:42:50 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/02 15:22:10 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/03 13:31:05 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	if_in_check_double_syntax(t_token *c, int number)
+/*
+
+enum s_type{
+	0 NOT_DEFINE,
+	1 TOKEN_WORD,
+	2 TOKEN_DQUOTES,
+	3 TOKEN_SQUOTES,
+	4 TOKEN_AND,
+	5 TOKEN_OR,
+	6 TOKEN_PIPE,
+	7 TOKEN_REDIRECTIN,
+	8 TOKEN_REDIRECTOUT,
+	9 TOKEN_HEREDOC,
+	10 TOKEN_APPENDOUT,
+	11 TOKEN_LIMITER,
+	12 TOKEN_OPENPAR,
+	13 TOKEN_CLOSEPAR,
+	14 TOKEN_WHITESPACE,
+	15 TOKEN_ENV,
+	16 TOKEN_WILDCARD,
+	17 TOKEN_COUNT,
+	18 WORD_FILEIN,
+	19 WORD_FILEOUT,
+	20 WORD_FILEOUT_APPEND,
+	21 WORD_BUILTIN,
+	22 WORD_ABSPATH,
+	23 WORD_CMD,
+	24 WORD_OPTION, // option / argument d'une commande
+	25 WORD_LIMITER,
+	26 WORD_STRING,
+	27 WORD_ERROR, //ERREUR (le WORD n'est pas classifie)
+	28 WORD_WTF, //dans le cas ou j'ai oublie un cas
+};
+
+*/
+
+bool	is_operator(t_token *c)
 {
-	if (number == 1)
-	{
-		if (c->type == 1 || c->type == 14 ||
-		c->type == 2 || c->type == 3 || c->type == 12 || c->type == 13)
+	if (c->type == 4 || c->type == 5 || c->type == 6 || c->type == 7
+		|| c->type == 8 || c->type == 9 || c->type == 10)
 			return (1);
-		else
-			return (0);
-	}
-	else if (number == 2)
-	{
-		if (c->type == 4 || c->type == 5 || c->type == 6 || c->type == 7 ||
-		c->type == 8 || c->type == 9 || c->type == 10)
-			return (1);
-		else
-			return (0);
-	}
-	return (1);
+	return (0);
 }
 
-int	while_of_check_double_syntax(t_token *current, int is_operator)
+int	double_operator(t_token *current)
 {
-	while (current && (if_in_check_double_syntax(current, 1)))
+	if (current->next)
 	{
-		if ((current && current->next) && (current->type == 12 && current->next->type == 13))
-			return (2);
-		current = current->next;
+		if (is_operator(current) && is_operator(current->next))
+		{
+			error_syntax(current->next, 1);
+			return (1);
+		}
 	}
-	if (current == NULL || current->next == NULL)
+	return (0);
+}
+
+bool check_syntax(t_token *current)
+{
+	if (!current)
 		return (0);
-	current = current->next;
-	while (current && is_operator == 1)
-	{
-		if (current && if_in_check_double_syntax(current, 2))
-		{
-			print_error_token(current);
-			return (1);
-		}
-		else if(current && current->type == TOKEN_WHITESPACE)
-			current = current ->next;
-		else if(current)
-		{
-			is_operator = 0;
-			current = current->next;
-		}
-	}
-	return (0);
-}
-
-bool	check_double_syntax(t_token **token_list)
-{
-	t_token	*current;
-	int is_operator;
-
-	is_operator = 1;
-	current = *token_list;
-	while(current && current->next)
-	{
-		if (while_of_check_double_syntax(current, is_operator) == 1)
-		{
-			return (1);
-		}
-		else if (while_of_check_double_syntax(current, is_operator) == 2)
-		{
-			print_error_token(current);
-			return (1);
-		}
-		else
-			return (0);
-	}
-	return (0);
-}
-
-bool check_operator_at_the_end(t_token **token_list)
-{
-	t_token	*current;
-	int is_operator;
-
-	is_operator = 0;
-	current = *token_list;
 	while (current)
 	{
-		if (current && if_in_check_double_syntax(current, 2))
-			is_operator = 1;
-		else if(current && current->type == TOKEN_WHITESPACE)
-			;
-		else if (current && if_in_check_double_syntax(current, 1))
-			is_operator = 0;
-		if (current->next == NULL)
-			break;
-		else
-			current = current->next;	
+		//printf("%s\n", current->value);
+		if (double_operator(current) == 1)
+				return (1);
+		if (current->type == TOKEN_OPENPAR || current->type == TOKEN_CLOSEPAR)
+		{
+			if (check_parenthesis(current, 0, 0) == 1)
+				return (1);
+		}
+		current = current->next;
 	}
-	if (is_operator == 1)
-	{
-		print_error_token_special(current->value);
-		return (1);
-	}
-	else
-		return (0);
+	return (0);
 }
 
-bool check_if_first_operator(t_token **token_list)
+bool	check_parenthesis(t_token *current, int openpar, bool operator)
 {
-	t_token	*current;
+	printf("%s\n", current->value);
+	if (is_operator(current))
+	{
+		return(check_parenthesis(current->next, openpar, 1));
+	}
+	else if (current->type == TOKEN_CLOSEPAR)
+	{
+		if (openpar <= 0 || operator == 0 || (openpar - 1 > 0 && !current->next))
+		{
+			if (openpar <= 0)
+				error_syntax(current, 1);
+			else if (openpar - 1 > 0 && !current->next)
+				error_syntax(current, 2);
+			else if (operator == 0)
+				error_syntax(current, 4);
+			return (1);
+		}
+		else if (current->next)
+		{
+			return (check_parenthesis(current->next, openpar - 1, operator));
+		}
+		openpar--;
+	}
+	else if (current->type == TOKEN_OPENPAR)
+	{
+		if (current->next)
+		{
+			return (check_parenthesis(current->next, openpar + 1, 0));
+		}
+		openpar++;
+	}
+	else if (current->next)
+	{
+		return (check_parenthesis(current->next, openpar, operator));
+	}
+	else if (!current->next && openpar != 0)
+	{
+		if (openpar > 0)
+			error_syntax(current, 2);
+		else if (openpar < 0)
+			error_syntax(current, 3);
+		return (1);
+	}
+	return (0);
+}
+
+//echo test && ( echo hello && ( echo world ) );
+//				1				2			1 0
+
+
+/* bool check_syntax(t_token **token_list)
+{
+	t_token *current;
+	int result;
+	int openpar;
 
 	current = *token_list;
-	if (current->type == TOKEN_AND || current->type == TOKEN_OR || current->type == TOKEN_PIPE)
+	if (is_operator(current) == 1)
 	{
-		print_error_token(current);
+		error_syntax(current, 1);
+		return (1);
+	}
+	while (current)
+	{
+		if (double_operator(current) == 1)
+			return (1);
+		if (current->type == TOKEN_CLOSEPAR && openpar == 0)
+		{
+			error_syntax(current->next, 1);
+			return (1);
+		}
+		if (current->type == TOKEN_OPENPAR)
+		{
+			check_parenthesis();
+		}
+		
+	}
+	if (is_operator(current) == 1)
+	{
+		error_syntax(current, 1);
 		return (1);
 	}
 	return (0);
-}
-
-bool check_syntax(t_token **token_list)
-{
-	if (check_if_first_operator(token_list) == 1)
-	{
-		token_free(token_list);
-		return (1);
-	}
-	if (check_double_syntax(token_list) == 1)
-	{
-		token_free(token_list);
-		return (1);
-	}
-	if (check_operator_at_the_end(token_list) == 1)
-	{
-		token_free(token_list);
-		return (1);
-	}
-	return (0);
-}
+} */
