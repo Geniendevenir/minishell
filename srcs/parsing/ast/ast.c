@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 18:41:34 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/03 19:48:24 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/03 21:09:44 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ void	ope_pipe_redirect(t_token **tokens, t_ast_ptr **list)
 t_ast	*parse_expression(t_token **tokens)
 {
 	t_ast_ptr *list;
+	t_ast	*current;
 	t_token	*temp;
 
 	init_pointer_ast(&list);
@@ -72,7 +73,9 @@ t_ast	*parse_expression(t_token **tokens)
 			free_token_and_next_in_ast(tokens, &temp);
 	}
 	get_first_parent(&list);
-	return (list->current);
+	current = list->current;
+	free(list);
+	return (current);
 }
 
 t_ast	*parse_subexpression(t_token **tokens)
