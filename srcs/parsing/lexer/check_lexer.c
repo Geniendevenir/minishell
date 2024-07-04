@@ -6,13 +6,13 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:23:10 by allan             #+#    #+#             */
-/*   Updated: 2024/07/01 16:53:30 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/04 13:01:59 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool check_semicolon(char *cmd_line)
+int check_semicolon(char *cmd_line)
 {
 	int	i;
 
@@ -24,7 +24,11 @@ bool check_semicolon(char *cmd_line)
 		else if (cmd_line[i] == '\'')
 			i = skip_quotes(cmd_line, i, 1);
 		if (cmd_line[i] == ';')
+		{
+			if (cmd_line[i + 1] == ';')
+				return (2);
 			return (1);
+		}
 		i++;
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 14:38:47 by allan             #+#    #+#             */
-/*   Updated: 2024/07/01 15:01:25 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/04 19:06:26 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,10 @@ bool lexer(char *cmd_line, t_token **token_list, int error)
 			error_lexer(ERROR_DQUOTES);
 		else if (check_quotes(cmd_line) == 2)
 			error_lexer(ERROR_SQUOTES);
-		else if (check_semicolon(cmd_line))
+		else if (check_semicolon(cmd_line) == 1)
 			error_lexer(ERROR_SEMICOLON);
+		else if (check_semicolon(cmd_line) == 2)
+			error_lexer(ERROR_DUOSEMICOLON);
 		token_free(token_list);
 		return (1);
 	}
@@ -98,9 +100,16 @@ int	tokenizer_three(const char *cmd_line, size_t *i, t_token **token_list)
 	error = 0;
 	if (cmd_line[*i] == '$')
 	{
-		if (cmd_line[*i + 1] == '?')
+		if (cmd_line[*i + 1] == '?') //A CHECK
 		{
 			error = token_addback(token_list, "?", 1);
+			env_special_token(token_list, 1);
+			(*i)++;
+		}
+		else if (is_env(cmd_line[*i + 1]) == 1)
+		{
+			error = token_addback(token_list, "$", 1);
+			env_special_token(token_list, 2);
 			(*i)++;
 		}
 		else

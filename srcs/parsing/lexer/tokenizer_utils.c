@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 10:19:15 by allan             #+#    #+#             */
-/*   Updated: 2024/07/01 16:53:05 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/04 18:52:11 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ bool	is_freeable(char *value, int option)
 			|| !ft_strcmp(value, "&&") || !ft_strcmp(value, "<<"))
 			return (1);
 		if (!ft_strcmp(value, ">>") || !ft_strcmp(value, ">")
-			|| !ft_strcmp(value, "?"))
+			|| !ft_strcmp(value, "?") || !ft_strcmp(value, "$"))
 			return (1);
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/03 18:39:24 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/04 19:05:26 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,14 @@
 # include "../libft/inc/ft_printf.h"
 # include "../libft/inc/get_next_line.h"
 
+//DONT CHANGE THE NUMBER
 #define ERROR_MALLOC 1
 #define ERROR_AND 2
 #define ERROR_ENV 3
 #define ERROR_DQUOTES 4
 #define ERROR_SQUOTES 7
 #define ERROR_SEMICOLON 5
+#define ERROR_DUOSEMICOLON 8
 #define ERROR_FILE 6
 
 /*					 LEXER					*/
@@ -191,7 +193,7 @@ int		parser(char *cmd_line, t_env *env, t_ast **ast);
 
 //check_lexer
 int		check_quotes(char *cmd_line);
-bool	check_semicolon(char *cmd_line);
+int		check_semicolon(char *cmd_line);
 int		skip_quotes(const char *cmd_line, int i, int option);
 
 //lexer
@@ -225,6 +227,7 @@ bool	outputapp_token(size_t *i, t_token **token_list);
 bool	outputre_token(size_t *i, t_token **token_list);
 bool	lexical_token(const char *cmd_line, size_t *i, t_token **token_list);
 int		env_token(const char *cmd_line, size_t *i, t_token **token_list);
+void	env_special_token(t_token **token_list, int option);
 bool	wildcard_token(const char *cmd_line, size_t *i, t_token **token_list);
 bool	dquotes_token(const char *cmd_line, size_t *i, t_token **token_list);
 bool	dquote_add_token(char *token_value, t_token **token_list, bool option);
@@ -314,8 +317,9 @@ int			check_word_part(char *word, t_word *boolean, t_env *env);
 enum s_type	check_word(char *word, t_word *boolean, t_env *env);
 bool		define_word(t_token **token_list, t_word *boolean, t_env *env);
 
-bool		is_operator(t_token *c);
-int			double_operator(t_token *current);
+bool		is_operator(t_token *c, int option);
+int			double_operator(t_token *c);
+int			check_first_token(t_token *c);
 bool		check_syntax(t_token *current);
 bool		error_syntax(t_token *current, int error);
 

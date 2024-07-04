@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:24:04 by allan             #+#    #+#             */
-/*   Updated: 2024/07/03 12:24:33 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/04 12:49:01 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,10 @@ t_token	*duplicate_token_list(const t_token *head)
 	return (new_head);
 }
 
-int parser(char *cmd_line, t_env *env, t_ast **ast) // a rajouter env quand expander fini
+int parser(char *cmd_line, t_env *env, t_ast **ast)
 {
 	t_token	*token_list;
-	//t_word	word;
+	t_word	word;
 	int		error;
 	//t_token *dup_list;
 	
@@ -104,9 +104,9 @@ int parser(char *cmd_line, t_env *env, t_ast **ast) // a rajouter env quand expa
 		return (1);
 	}
 	//token_print_amazing(&token_list);
-	/* init_t_word(&word);
+	init_t_word(&word);
 	if (define_word(&token_list, &word, env))
-		return (1); */
+		return (1);
 	//printf("\n\n\nAFTER define word:\n");
 	//token_print_amazing(&token_list);
 	//*ast = parse_expression(&token_list);
@@ -116,6 +116,3 @@ int parser(char *cmd_line, t_env *env, t_ast **ast) // a rajouter env quand expa
 	token_free(&token_list);
 	return (0);
 }
-	/* dup_list = duplicate_token_list(token_list);
-	if (!dup_list)
-		return (1); */
