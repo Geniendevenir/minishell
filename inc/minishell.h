@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/04 19:05:26 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/05 15:06:09 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,76 +172,76 @@ typedef struct s_word
 extern t_sig	g_sig;
 
 //						EXECUTION                      //
-int	executer(t_ast **ast, t_env *env);
+int			executer(t_ast **ast, t_env *env);
 
-void traverse_ast(t_ast *root, t_env *env);
-int exec_parent_node(t_ast *current, t_env *env);
-int exec_operator(t_ast *current, t_env *env);
-int exec_and(t_ast *current, t_env *env);
-int exec_or(t_ast *current, t_env *env);
-int exec_cmd_or_builtin(t_ast *current, t_all *env);
-int exec_pipe(t_ast *current, t_env *env);
-int exec_redirect(t_ast *current);
-bool is_command_or_builtin_or_abspath(t_ast *current);
-bool is_redirect_folder(t_ast *current);
+void		traverse_ast(t_ast *root, t_env *env);
+int			exec_parent_node(t_ast *current, t_env *env);
+int			exec_operator(t_ast *current, t_env *env);
+int			exec_and(t_ast *current, t_env *env);
+int			exec_or(t_ast *current, t_env *env);
+int			exec_cmd_or_builtin(t_ast *current, t_all *env);
+int			exec_pipe(t_ast *current, t_env *env);
+int			exec_redirect(t_ast *current);
+bool		is_command_or_builtin_or_abspath(t_ast *current);
+bool		is_redirect_folder(t_ast *current);
 
 //////////////////////////////////////////////////////////
 
 //				PARSER
 
-int		parser(char *cmd_line, t_env *env, t_ast **ast);
+int			parser(char *cmd_line, t_env *env, t_ast **ast);
 
 //check_lexer
-int		check_quotes(char *cmd_line);
-int		check_semicolon(char *cmd_line);
-int		skip_quotes(const char *cmd_line, int i, int option);
+int			check_quotes(char *cmd_line);
+int			check_semicolon(char *cmd_line);
+int			skip_quotes(const char *cmd_line, int i, int option);
 
 //lexer
-bool lexer(char *cmd_line, t_token **token_list, int error);
-int		tokenizer_one(const char *cmd_line, size_t *i, t_token **token_list);
-int		tokenizer_two(const char *cmd_line, size_t *i, t_token **token_list);
-int		tokenizer_three(const char *cmd_line, size_t *i, t_token **token_list);
-int		tokenizer_four(const char *cmd_line, size_t *i, t_token **token_list);
+bool 		lexer(char *cmd_line, t_token **token_list, int error);
+int			tokenizer_one(const char *cmd_line, size_t *i, t_token **token_list);
+int			tokenizer_two(const char *cmd_line, size_t *i, t_token **token_list);
+int			tokenizer_three(const char *cmd_line, size_t *i, t_token **token_list);
+int			tokenizer_four(const char *cmd_line, size_t *i, t_token **token_list);
 
 //token_management
-void	token_print(t_token **token_list);
-void	token_print_amazing(t_token **token_list);
-void 	token_init(t_token **token_list);
-t_token *token_last(t_token *token_list);
-bool	token_addback(t_token **token_list, char *value, int option);
-void	token_addback_two(t_token **token_list, t_token *token);
-bool	token_addnext(t_token **current, char *value);
-int		token_free(t_token **token_list);
+void		token_print(t_token **token_list);
+void		token_print_amazing(t_token **token_list);
+void 		token_init(t_token **token_list);
+t_token 	*token_last(t_token *token_list);
+bool		token_addback(t_token **token_list, char *value, int option);
+void		token_addback_two(t_token **token_list, t_token *token);
+bool		token_addnext(t_token **current, char *value);
+int			token_free(t_token **token_list);
 
 //tokenizer
-bool	whitespace_token(const char *cmd_line, size_t *i, t_token **token_list);
-bool	squote_token(const char *cmd_line, size_t *i, t_token **token_list);
-bool	inpar_token(size_t *i, t_token **token_list);
-bool	outpar_token(size_t *i, t_token **token_list);
-bool	or_token(size_t *i, t_token **token_list);
-bool	pipe_token(size_t *i, t_token **token_list);
-int		and_token(const char *cmd_line, size_t *i, t_token **token_list);
-bool	heredoc_token(size_t *i, t_token **token_list);
-bool	inputre_token(size_t *i, t_token **token_list);
-bool	outputapp_token(size_t *i, t_token **token_list);
-bool	outputre_token(size_t *i, t_token **token_list);
-bool	lexical_token(const char *cmd_line, size_t *i, t_token **token_list);
-int		env_token(const char *cmd_line, size_t *i, t_token **token_list);
-void	env_special_token(t_token **token_list, int option);
-bool	wildcard_token(const char *cmd_line, size_t *i, t_token **token_list);
-bool	dquotes_token(const char *cmd_line, size_t *i, t_token **token_list);
-bool	dquote_add_token(char *token_value, t_token **token_list, bool option);
-bool	dquotes_last_token(const char *cmd_line, t_index *index, t_token **token_list);
-bool	env_dquotes(const char *cmd_line, t_index *index, t_token **token_list);
-size_t	index_foward(size_t *j);
+bool		whitespace_token(const char *cmd_line, size_t *i, t_token **token_list);
+bool		squote_token(const char *cmd_line, size_t *i, t_token **token_list);
+bool		inpar_token(size_t *i, t_token **token_list);
+bool		outpar_token(size_t *i, t_token **token_list);
+bool		or_token(size_t *i, t_token **token_list);
+bool		pipe_token(size_t *i, t_token **token_list);
+int			and_token(const char *cmd_line, size_t *i, t_token **token_list);
+bool		heredoc_token(size_t *i, t_token **token_list);
+bool		inputre_token(size_t *i, t_token **token_list);
+bool		outputapp_token(size_t *i, t_token **token_list);
+bool		outputre_token(size_t *i, t_token **token_list);
+bool		lexical_token(const char *cmd_line, size_t *i, t_token **token_list);
+int			env_token(const char *cmd_line, size_t *i, t_token **token_list);
+void		env_special_token(t_token **token_list, int option);
+bool		wildcard_token(const char *cmd_line, size_t *i, t_token **token_list);
+bool		dquotes_token(const char *cmd_line, size_t *i, t_token **token_list);
+bool		dquote_add_token(char *token_value, t_token **token_list, bool option);
+bool		dquotes_last_token(const char *cmd_line, t_index *index, t_token **token_list);
+bool		env_dquotes(const char *cmd_line, t_index *index, t_token **token_list);
+size_t		index_foward(size_t *j);
 
 //utils
-bool	is_whitespace(char c);
-bool	is_word(char c);
-bool	is_env(char c);
-bool	is_valid_env(char c);
-bool	is_freeable(char *value, int option);
-bool	is_wildcard(const char *cmd_line, int i);
+bool		is_whitespace(char c);
+bool		is_word(char c);
+bool		is_env(char c);
+bool		is_valid_env(char c);
+bool		is_freeable(char *value, int option);
+bool		is_wildcard(const char *cmd_line, int i);
 
 //error
 void		error_lexer(int error);
@@ -250,59 +250,59 @@ const char	*getToken_Class(t_token *current);
 
 
 /*								EXPANDER						*/
-bool	expander(t_token **token_list, t_env *env, int error);
+bool		expander(t_token **token_list, t_env *env, int error);
 //expand env
-int		expand_env(t_token **token_list, t_env **env);
-bool	find_first_env(t_token **current, t_env **env);
-bool	find_next_env(t_token **current, t_env **env);
-void	remove_token(t_token **current, bool option);
-bool	replace_token(t_token *token,  char *new_value);
-void	remove_all_env(t_token **token_list);
+int			expand_env(t_token **token_list, t_env **env);
+bool		find_first_env(t_token **current, t_env **env);
+bool		find_next_env(t_token **current, t_env **env);
+void		remove_token(t_token **current, bool option);
+bool		replace_token(t_token *token,  char *new_value);
+void		remove_all_env(t_token **token_list);
 
 //relink
-int		relink_token(t_token **token_list, t_token *current, int error);
-t_token	*relink_word(t_token *current, t_token **new_list, int *error);
-bool	relink_operator(t_token *current, t_token **new_list);
-bool	add_word(t_token **new_list, char *word, bool option);
-void	relink_word_init(char **word, char **new_word, bool *wildcard);
+int			relink_token(t_token **token_list, t_token *current, int error);
+t_token		*relink_word(t_token *current, t_token **new_list, int *error);
+bool		relink_operator(t_token *current, t_token **new_list);
+bool		add_word(t_token **new_list, char *word, bool option);
+void		relink_word_init(char **word, char **new_word, bool *wildcard);
 
 //wildcard
-int		expand_wildcard(t_token **token_list, int *error);
-int		find_wildcard(char *wildcard, t_token *current, int *error);
-void	match_init(char *wildcard, char *file_name, t_wildcard *match);
-bool	file_match(t_wildcard match);
-bool	add_file(t_token **current, char *file_name, bool found);
-bool	wildcard_return(DIR **d);
-
-void	print_envv(t_env **env);
+int			expand_wildcard(t_token **token_list, int *error);
+int			find_wildcard(char *wildcard, t_token *current, int *error);
+void		match_init(char *wildcard, char *file_name, t_wildcard *match);
+bool		file_match(t_wildcard match);
+bool		add_file(t_token **current, char *file_name, bool found);
+bool		wildcard_return(DIR **d);
+	
+void		print_envv(t_env **env);
 
 //////////////////////////////////////////////////////////
 
 /*						AST					*/
 
-t_ast	*parse_expression(t_token **token_list);
-t_ast	*parse_subexpression(t_token **tokens);
-t_ast	*create_node(enum s_type type, char* value);
-void	swap_child_left(t_ast* current, t_ast* newNode);
-t_ast	*handle_option(t_token **tokens, t_ast* current);
-t_ast	*handle_open_parenthesis(t_token **tokens, t_ast* current);
-void	handle_parenthesis_open(t_token **tokens, t_ast **current, t_ast **root);
-t_ast	*handle_close_parenthesis(t_token **tokens, t_ast* root);
-t_ast	*handle_priorities(t_token **tokens, t_ast* root);
-t_ast	*handle_builtin_and_cmd(t_token **tokens, t_ast* current);
-void	swap_child_right(t_ast* current, t_ast* newNode);
-bool	if_priorities(t_token **tokens);
-void	get_first_parent(t_ast **current);
-void	handle_parenthesis_open(t_token **tokens, t_ast **current, t_ast **root);
-void	handle_builtin_option(t_token **tokens, t_ast **current, t_ast **root);
-bool	if_cmd_option(t_token **tokens);
-void	part_handle_option(t_ast **current, t_ast **new_node, t_ast **temp);
-void	free_token_and_next_in_ast(t_token **tokens, t_token **temp);
+t_ast		*parse_expression(t_token **token_list);
+t_ast		*parse_subexpression(t_token **tokens);
+t_ast		*create_node(enum s_type type, char* value);
+void		swap_child_left(t_ast* current, t_ast* newNode);
+t_ast		*handle_option(t_token **tokens, t_ast* current);
+t_ast		*handle_open_parenthesis(t_token **tokens, t_ast* current);
+void		handle_parenthesis_open(t_token **tokens, t_ast **current, t_ast **root);
+t_ast		*handle_close_parenthesis(t_token **tokens, t_ast* root);
+t_ast		*handle_priorities(t_token **tokens, t_ast* root);
+t_ast		*handle_builtin_and_cmd(t_token **tokens, t_ast* current);
+void		swap_child_right(t_ast* current, t_ast* newNode);
+bool		if_priorities(t_token **tokens);
+void		get_first_parent(t_ast **current);
+void		handle_parenthesis_open(t_token **tokens, t_ast **current, t_ast **root);
+void		handle_builtin_option(t_token **tokens, t_ast **current, t_ast **root);
+bool		if_cmd_option(t_token **tokens);
+void		part_handle_option(t_ast **current, t_ast **new_node, t_ast **temp);
+void		free_token_and_next_in_ast(t_token **tokens, t_token **temp);
 
 /*					SIGNALS					*/
 
 int			event(void);
-int			create_signal(void);
+int			create_signal(int *exit_status);
 
 /*					SYNTAX AND WORD					*/
 
@@ -331,52 +331,58 @@ bool		check_current_parenthesis(t_token *current, int option);
 
 /*					 ENV					*/
 
-t_env	*env_to_struct(char **env);
-void	ft_env_add_back(t_env **lst, t_env *new);
 
 /*					 INIT					*/
-t_all	*init_all(char **env);
-t_sig	*init_signal(int nb);
-void	init_t_word(t_word *word);
+t_all		*init_all(char **env, int *exit_status);
+t_sig		*init_signal(int nb, int *exit_status);
+void		init_t_word(t_word *word);
 
 /*					 FREE					*/
 
-void	free_env(t_env *envp);
-void	free_all(t_all *p);
-void	free_array(char **array);
-void	free_ast(t_ast *node);
+void		free_env(t_env *envp);
+void		free_all(t_all *p);
+void		free_array(char **array);
+void		free_ast(t_ast *node);
 
 /*					 UTILS					*/
 
 
-char	*ft_strndup(char *str, int n);
-int		ft_strcmp(char *s1, char *s2);
-void 	print_env(t_env *env);
-void	print_error_token(t_token *current);
-void	print_error_token_special(char *value);
-void	print_error_cmd_not_found(t_token *current);
-void	printAST(t_ast* node, int level);
+char		*ft_strndup(char *str, int n);
+int			ft_strcmp(char *s1, char *s2);
+void 		print_env(t_env *env);
+void		print_error_token(t_token *current);
+void		print_error_token_special(char *value);
+void		print_error_cmd_not_found(t_token *current);
+void		printAST(t_ast* node, int level);
 const char* getAST_Class(t_ast *current);
 
 /*					BUILTINS				*/
+//ENV
+t_env		*env_to_struct(char **env);
+void		ft_env_add_back(t_env **lst, t_env *new);
+//PWD
+int			ft_pwd(char *option);
 //CD
-int		ft_cd(char *path);
-char	*relative_path(DIR	*d, char *path, int *error);
-char	*cd_match(char *cur_dir, char *try_dir, int *error);
+int			ft_cd(char *path);
+char		*relative_path(DIR	*d, char *path, int *error);
+char		*cd_match(char *cur_dir, char *try_dir, int *error);
 //EXPORT
-int		ft_export(char **new_env, t_env **env_list);
-int 	split_env(char *new_env, int len, t_env **env_list);
-t_env	*env_init(void);
-int		export_free(t_env **add_env, int option);
-int		valid_export(char *new_env);
+int			ft_export(char **new_env, t_env **env_list);
+int 		split_env(char *new_env, int len, t_env **env_list);
+t_env		*env_init(void);
+int			export_free(t_env **add_env, int option);
+int			valid_export(char *new_env);
 //EXIT
-int	ft_exit(char **commande, bool child);
-int	check_is_num(char *exit_status);
-int	check_size(long long int *exit_status);
-void check_is_child(char *commande, bool child, int error);
+int			ft_exit(char **commande, bool child);
+int			check_is_num(char *exit_status);
+int			check_size(long long int *exit_status);
+void 		check_is_child(char *commande, bool child, int error);
+//ECHO
+bool		check_echo(char *str);
+//static int	conditions_echo(char *cmd);
+int			ft_echo(char **cmd);
 
-
-int		main(int argc, char **argv, char **env);
+int			main(int argc, char **argv, char **env);
 
 /*						AST	TRY				*/
 

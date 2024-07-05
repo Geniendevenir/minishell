@@ -17,8 +17,7 @@ READLINE			= -lreadline
 MINI_SHELL_DIR		=	$(SRC_DIR)
 
 # Concatenate all source files
-SRCS 				=   srcs/env.c\
-						srcs/free.c\
+SRCS 				=	srcs/free.c\
 						srcs/main.c \
 						srcs/init.c\
 						srcs/print_utils.c \
@@ -45,9 +44,12 @@ SRCS 				=   srcs/env.c\
 						srcs/parsing/expander/expand_env.c\
 						srcs/parsing/expander/relink_token.c\
 						srcs/parsing/expander/expand_wildcard.c\
+						srcs/builtins/ft_env.c\
+						srcs/builtins/ft_pwd.c\
 						srcs/builtins/ft_cd.c\
 						srcs/builtins/ft_export.c\
 						srcs/builtins/ft_exit.c\
+						srcs/builtins/ft_echo.c\
 						srcs/execution/if_utils_exec.c\
 						srcs/execution/parcour_ast.c\
 						srcs/execution/exec_operator.c\

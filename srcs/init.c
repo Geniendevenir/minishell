@@ -6,13 +6,13 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 22:57:28 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/01 17:14:50 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/05 15:05:30 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-t_all	*init_all(char **env)
+t_all	*init_all(char **env, int *exit_status)
 {
 	t_all *p;
 	
@@ -22,7 +22,7 @@ t_all	*init_all(char **env)
 	p->env = env_to_struct(env);
 	if (!p->env)
 		return (free(p), NULL);
-	p->sig = init_signal(0);
+	p->sig = init_signal(0, exit_status);
 	if (!p->sig)
 		return (free(p), NULL);
 	p->ast = NULL;
@@ -30,11 +30,11 @@ t_all	*init_all(char **env)
 	return (p);
 }
 
-t_sig	*init_signal(int nb)
+t_sig	*init_signal(int nb, int *exit_status)
 {
     t_sig *sig;
 
-	if (create_signal() == -1)
+	if (create_signal(exit_status) == -1)
 		return (NULL);
 	sig = malloc(sizeof(t_sig));
 	if (!sig)

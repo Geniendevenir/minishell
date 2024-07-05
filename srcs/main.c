@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/02 12:50:38 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/05 15:12:52 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,21 @@
 
 t_sig	g_sig;
 
-char	*minishell(t_all *p)
+char	*minishell(t_all *p, int *exit_status)
 {
 	rl_event_hook = event;
 	p->line = readline("\033[1;032mMinishell> \033[m");
 	if (p->line == NULL)
 	{
 		printf("exit\n");
+		*exit_status = 0; //CHECK
 		return (free(p->line), free_all(p), rl_clear_history(), exit(0), NULL);
 	}
 	if (p->sig->sig_int == 0)
 	{
-		parser(p->line, p->env, &p->ast);
-		/* if (parser(p->line, p->env, &p->ast) == 0)
+		*exit_status = parser(p->line, p->env, &p->ast);
+		/* 
+			if (exit_status == 0)
 		{
 			printAST(p->ast,0);
 			executer(&p->ast, p->env);
@@ -46,20 +48,46 @@ char	*minishell(t_all *p)
 int	main(int argc, char **argv, char **env)
 {
 	t_all	*p;
-
+	int		exit_status;
+	
+	exit_status = 0;
 	(void)argc;
 	(void) **argv;
-	p = init_all(env);
+	p = init_all(env, &exit_status);
 	if (!p || p == NULL)
 		return (EXIT_FAILURE);
 	while (p->line == NULL)
 	{
-		minishell(p);
+		minishell(p, &exit_status);
 	}
-	return (EXIT_SUCCESS);
+	return (exit_status);
 }
 
 //TEST MAIN
+
+/* 		TRUE MAIN
+
+t_all	*p;
+(void)argc;
+(void) **argv;
+p = init_all(env);
+if (!p || p == NULL)
+	return (EXIT_FAILURE);
+while (p->line == NULL)
+{
+	minishell(p);
+}
+return (EXIT_SUCCESS); */
+
+/* 	TEST PWD
+	int exit_status;
+	
+	if (argc < 2)
+		return (1);
+	exit_status = ft_pwd(argv[2]);
+	printf("exit_status = %d\n", exit_status);
+	return (1); */
+	
 /*	TEST EXIT 
 	int exit_status;
 	
@@ -100,3 +128,14 @@ int	main(int argc, char **argv, char **env)
 	error = ft_cd(*(argv + 2));
 	printf("return cd = %d\n", error);
 	return (0); */
+	
+	/* TEST ECHO 
+	
+	int exit_status;
+	
+	if (argc < 2)
+		return (1);
+	exit_status = ft_echo(argv + 2); //commence a la premiere option
+	printf("exit_status = %d\n", exit_status);
+	return (0);
+ */

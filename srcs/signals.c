@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 11:10:17 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/01 17:15:02 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/05 15:04:50 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,11 @@ void sighandler(int signal)
 	return ;
 }
 
-int create_signal(void)
+int create_signal(int *exit_status)
 {
 	struct termios old_termios;
 	struct termios new_termios;
-	struct sigaction a;	
+	struct sigaction a;
 	if (tcgetattr(0, &old_termios) != 0)
 		return (-1);
 	new_termios = old_termios;
@@ -49,6 +49,9 @@ int create_signal(void)
 	a.sa_handler = SIG_IGN;
 	sigemptyset(&a.sa_mask);
 	if (sigaction(SIGTSTP, &a, NULL) != 0 || sigaction(SIGQUIT, &a, NULL) != 0)
+	{
+		*exit_status = 127;
 		return (-1);
+	}
 	return (0);
 }
