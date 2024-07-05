@@ -6,21 +6,22 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 15:50:17 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/05 16:56:35 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/05 17:25:02 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_ast	*create_node(enum s_type type, char	*value, int subshell)
+t_ast	*create_node(t_token *token, int subshell)
 {
 	t_ast	*node;
 
 	node = (t_ast *)malloc(sizeof(t_ast));
 	if (!node)
 		return (NULL);
-	node->type = type;
-	node->value = ft_strdup(value);
+	node->type = token->type;
+	node->state = token->state;
+	node->value = ft_strdup(token->value);
 	if (!node->value)
 		return (NULL);
 	node->subshell = subshell;

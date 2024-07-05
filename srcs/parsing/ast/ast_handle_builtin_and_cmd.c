@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 19:57:09 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/05 17:12:54 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/05 17:26:35 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ t_ast	*handle_builtin_and_cmd(t_token **tokens, t_ast	*current, int sub_shell)
 	t_ast	*new_node;
 	t_token	*temp;
 
-	new_node = create_node((*tokens)->type, (*tokens)->value, sub_shell);
+	new_node = create_node(*tokens, sub_shell);
 	if (current)
 	{
 		current->right = new_node;
@@ -62,7 +62,7 @@ t_ast	*handle_option(t_token **tokens, t_ast *current, int sub_shell)
 	t_ast	*temp;
 	t_token	*tmp;
 
-	new_node = create_node((*tokens)->type, (*tokens)->value, sub_shell);
+	new_node = create_node(*tokens, sub_shell);
 	if (current && current->type == WORD_BUILTIN)
 		part_handle_option(&current, &new_node, &temp);
 	else

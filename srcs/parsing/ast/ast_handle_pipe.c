@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 20:38:03 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/05 17:06:13 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/05 17:27:52 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	handle_pipe(t_token **tokens, t_ast_ptr **list, int sub_shell)
 	t_ast	*new_node;
 	t_token	*temp;
 
-	new_node = create_node((*tokens)->type, (*tokens)->value, sub_shell);
+	new_node = create_node(*tokens, sub_shell);
 	if (!new_node)
 		return ;
 	if (!(*list)->last_ope)
