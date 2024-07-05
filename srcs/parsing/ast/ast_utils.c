@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 19:12:00 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/05 17:36:07 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/05 23:03:10 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void	init_pointer_ast(t_ast_ptr **list)
 		return ;
 	(*list)->last_pipe = NULL;
 	(*list)->last_ope = NULL;
+	(*list)->last_cmd = NULL;
 	(*list)->root = NULL;
 	(*list)->current = NULL;
 }

@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 14:48:05 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/15 19:27:46 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/05 22:29:05 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,10 +94,7 @@ enum s_type	check_word(char *word, t_word *boolean, t_env *env)
 	if (boolean->redi_in == 1)
 	{
 		boolean->redi_in = 0;
-		if (check_file(word) == 1)
-			return (WORD_FILEIN);
-		else
-			return (WORD_ERROR);
+		return (WORD_FILEIN);
 	}
 	else if (boolean->redi_out == 1)
 		return (check_word_part_rediout(boolean));
@@ -109,11 +106,11 @@ enum s_type	check_word(char *word, t_word *boolean, t_env *env)
 		boolean->cmd = 0;
 		return (WORD_LIMITER);
 	}
-	else if (boolean->cmd == 1 && boolean->operator == 0)
+	else if (boolean->cmd == 1)
 		return (WORD_OPTION);
 	else if ((boolean->redi_in == 0) && (boolean->redi_out == 0)
 		&& (boolean->cmd == 0))
-		return (check_word_part_cmd(word, boolean, env));
+		return (check_word_part_cmd(word, boolean));
 	return (WORD_WTF);
 }
 

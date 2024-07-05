@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:24:04 by allan             #+#    #+#             */
-/*   Updated: 2024/07/05 18:23:23 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/05 22:27:25 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,14 +93,14 @@ int parser(char *cmd_line, t_env *env, t_ast **ast)
 	token_init(&token_list);
 	if (lexer(cmd_line, &token_list, error) == 1)
 		return (1);
-	printf("AFTER LEXER:\n");
+	/* printf("AFTER LEXER:\n");
 	token_print(&token_list);
-	token_print_amazing(&token_list);
+	token_print_amazing(&token_list); */
 	if (expander(&token_list, env, error) == 1)
 		return (1);
-	printf("\n\n\nAFTER EXPANDER:\n");
+	/* printf("\n\n\nAFTER EXPANDER:\n");
 	token_print(&token_list);
-	token_print_amazing(&token_list);
+	token_print_amazing(&token_list); */
 	/* if (check_syntax(token_list) == 1)
 	{
 		token_free(&token_list);
@@ -110,11 +110,11 @@ int parser(char *cmd_line, t_env *env, t_ast **ast)
 	init_t_word(&word);
 	if (define_word(&token_list, &word, env))
 		return (1);
-	//printf("\n\n\nAFTER define word:\n");
-	//token_print_amazing(&token_list);
-	/* sub_shell = 0;
+	printf("\n\n\nAFTER define word:\n");
+	token_print_amazing(&token_list);
+	sub_shell = 0;
 	*ast = parse_expression(&token_list, sub_shell);
-	printAST(*ast, 0); */
+	printAST(*ast, 0);
 	//printf("AFTER EXPANDER:\n");
 	//token_print(&token_list);
 	//token_free(&dup_list);

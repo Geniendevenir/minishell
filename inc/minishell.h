@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/05 17:46:06 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/05 23:54:16 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,7 @@ typedef struct s_ast_ptr
 	t_ast	*current;
 	t_ast	*last_ope;
 	t_ast	*last_pipe;
+	t_ast	*last_cmd;
 }	t_ast_ptr;
 
 typedef struct s_file
@@ -199,7 +200,6 @@ bool		is_redirect_folder(t_ast *current);
 //////////////////////////////////////////////////////////
 
 //				PARSER
-
 int			parser(char *cmd_line, t_env *env, t_ast **ast);
 
 //check_lexer
@@ -293,9 +293,9 @@ void		print_envv(t_env **env);
 
 t_ast		*parse_expression(t_token **token_list, int sub_shell);
 t_ast		*parse_subexpression(t_token **tokens, int sub_shell);
-t_ast		*handle_option(t_token **tokens, t_ast* current, int sub_shell);
+t_ast	*handle_option(t_token **tokens, t_ast_ptr **list, int sub_shell);
 t_ast		*close_parenthesis(t_token **tokens, t_ast* root);
-t_ast		*handle_builtin_and_cmd(t_token **tokens, t_ast	*current, int sub_shell);
+t_ast	*handle_builtin_and_cmd(t_token **tokens, t_ast_ptr	**list, int sub_shell);
 t_ast		*create_node(t_token *token, int subshell);
 void		handle_parenthesis_open(t_token **tokens, t_ast_ptr **list, int sub_shell);
 void		ope_pipe_redirect(t_token **tokens, t_ast_ptr **list, int sub_shell);
@@ -309,7 +309,7 @@ void		swap_child_left(t_ast	*current, t_ast	*new_node);
 void		swap_child_right(t_ast	*current, t_ast	*new_node);
 void		swap_child_left_with_else(t_ast	*current, t_ast	*new_node);
 void		swap_child_right_with_else(t_ast	*current, t_ast	*new_node);
-void		part_handle_option(t_ast **current, t_ast **new_node, t_ast **temp);
+void		part_handle_option(t_ast_ptr **list, t_ast **new_node, t_ast **temp);
 void		while_in_handle_pipe(t_ast **current, t_ast **new_node, t_ast *save_operator);
 void		if_last_ope_exist(t_ast **new_node, t_ast_ptr **list);
 void		if_no_save_operator(t_ast **current, t_ast **new_node,
@@ -329,7 +329,7 @@ int			create_signal(int *exit_status);
 
 /*					SYNTAX AND WORD					*/
 
-int			check_word_part_cmd(char *word, t_word *boolean, t_env *env);
+int			check_word_part_cmd(char *word, t_word *boolean);
 int			check_word_part_append(t_word *boolean);
 int			check_word_part_rediout(t_word *boolean);
 int			check_cmd_exist(char *word, t_env *env);
