@@ -5,24 +5,26 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/26 15:50:17 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/27 22:33:35 by Matprod          ###   ########.fr       */
+/*   Created: 2024/07/04 19:12:00 by Matprod           #+#    #+#             */
+/*   Updated: 2024/07/05 17:36:07 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_ast	*create_node(enum s_type type, char	*value)
+t_ast	*create_node(t_token *token, int subshell)
 {
 	t_ast	*node;
 
 	node = (t_ast *)malloc(sizeof(t_ast));
 	if (!node)
 		return (NULL);
-	node->type = type;
-	node->value = ft_strdup(value);
+	node->type = token->type;
+	node->state = token->state;
+	node->value = ft_strdup(token->value);
 	if (!node->value)
 		return (NULL);
+	node->subshell = subshell;
 	node->exit_state = 0;
 	node->left = NULL;
 	node->right = NULL;
@@ -30,37 +32,27 @@ t_ast	*create_node(enum s_type type, char	*value)
 	return (node);
 }
 
-void	swap_child_left(t_ast	*current, t_ast	*newNode)
+void	free_token_and_next_in_ast(t_token **tokens, t_token **temp)
 {
-	if (current == NULL || newNode == NULL)
-		return ;
-	current->left = newNode;
-	newNode->parent = current;
-	current = newNode;
+	*temp = *tokens;
+	*tokens = (*tokens)->next;
+	free((*temp)->value);
+	free((*temp));
 }
 
-void	swap_child_right(t_ast	*current, t_ast	*newNode)
+void	get_first_parent(t_ast_ptr **list)
 {
-	if (current == NULL || newNode == NULL)
-		return ;
-	current->left = newNode;
-	newNode->parent = current;
-	current = newNode;
+	while ((*list)->current->parent)
+		(*list)->current = (*list)->current->parent;
 }
 
-void	part_handle_option(t_ast **current, t_ast **new_node, t_ast **temp)
+void	init_pointer_ast(t_ast_ptr **list)
 {
-	if ((*current)->left)
-	{
-		(*temp) = (*current)->left;
-		while ((*temp)->left)
-			(*temp) = (*temp)->left;
-		(*temp)->left = (*new_node);
-		(*new_node)->parent = *temp;
-	}
-	else
-	{
-		(*current)->left = (*new_node);
-		(*new_node)->parent = (*current);
-	}
+	*list = malloc(sizeof(t_ast_ptr));
+	if (!*list)
+		return ;
+	(*list)->last_pipe = NULL;
+	(*list)->last_ope = NULL;
+	(*list)->root = NULL;
+	(*list)->current = NULL;
 }

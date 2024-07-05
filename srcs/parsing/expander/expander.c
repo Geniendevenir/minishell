@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 16:47:23 by allan             #+#    #+#             */
-/*   Updated: 2024/07/05 17:19:45 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/05 18:00:22 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,6 @@ bool	expander(t_token **token_list, t_env *env, int error)
 		token_free(token_list);
 		return (1);
 	}
-	token_print(token_list);
 	error = 1;
 	current = *token_list;
 	if (relink_token(token_list, current, error) == 1)
@@ -126,14 +125,12 @@ bool	expander(t_token **token_list, t_env *env, int error)
 		token_free(token_list);
 		return (1);
 	}
-	token_print(token_list);
 	if (expand_wildcard(token_list, &error) == 1)
 	{
 		error_lexer(error);
 		token_free(token_list);
 		return (1);
 	}
-	token_print(token_list);
 	return (0);
 }
 
