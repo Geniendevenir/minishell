@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 19:57:09 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/03 19:44:32 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/05 17:12:54 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,12 @@ void	part_handle_option(t_ast **current, t_ast **new_node, t_ast **temp)
 	}
 }
 
-t_ast	*handle_builtin_and_cmd(t_token **tokens, t_ast	*current)
+t_ast	*handle_builtin_and_cmd(t_token **tokens, t_ast	*current, int sub_shell)
 {
 	t_ast	*new_node;
 	t_token	*temp;
 
-	new_node = create_node((*tokens)->type, (*tokens)->value);
+	new_node = create_node((*tokens)->type, (*tokens)->value, sub_shell);
 	if (current)
 	{
 		current->right = new_node;
@@ -56,13 +56,13 @@ t_ast	*handle_builtin_and_cmd(t_token **tokens, t_ast	*current)
 	return (current);
 }
 
-t_ast	*handle_option(t_token **tokens, t_ast *current)
+t_ast	*handle_option(t_token **tokens, t_ast *current, int sub_shell)
 {
 	t_ast	*new_node;
 	t_ast	*temp;
 	t_token	*tmp;
 
-	new_node = create_node((*tokens)->type, (*tokens)->value);
+	new_node = create_node((*tokens)->type, (*tokens)->value, sub_shell);
 	if (current && current->type == WORD_BUILTIN)
 		part_handle_option(&current, &new_node, &temp);
 	else
@@ -76,16 +76,17 @@ t_ast	*handle_option(t_token **tokens, t_ast *current)
 	return (current);
 }
 
-void	handle_builtin_cmd_or_option(t_token **tokens, t_ast_ptr **list)
+void	handle_builtin_cmd_or_option(t_token **tokens, t_ast_ptr **list,
+	int sub_shell)
 {
 	if ((*tokens)->type == WORD_BUILTIN || (*tokens)->type == WORD_CMD
 		|| (*tokens)->type == WORD_ABSPATH)
 	{
-		(*list)->current = handle_builtin_and_cmd(tokens, (*list)->current);
+		(*list)->current = handle_builtin_and_cmd(tokens, (*list)->current,
+				sub_shell);
 		if (!(*list)->root)
 			(*list)->root = (*list)->current;
 	}
 	else if ((*tokens)->type == WORD_OPTION)
-		(*list)->current = handle_option(tokens, (*list)->current);
+		(*list)->current = handle_option(tokens, (*list)->current, sub_shell);
 }
-

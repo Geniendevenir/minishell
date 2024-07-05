@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 19:52:14 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/04 19:17:28 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/05 17:04:29 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,13 @@ bool	is_ope(t_token **tok)
 }
 
 /* TRES SUSPECT CAAAAAAAAAAAAAAAA if (root) pas *root */
-void	handle_and_or_root_priority(t_token **tokens, t_ast_ptr **list)
+void	handle_and_or_root_priority(t_token **tokens, t_ast_ptr **list,
+	int sub_shell)
 {
 	t_ast	*new_node;
 	t_token	*temp;
 
-	new_node = create_node((*tokens)->type, (*tokens)->value);
+	new_node = create_node((*tokens)->type, (*tokens)->value, sub_shell);
 	if (!new_node)
 		return ;
 	new_node->left = (*list)->root;

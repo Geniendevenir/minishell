@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 20:38:03 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/04 21:48:10 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/05 17:06:13 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,12 @@ void	if_no_last_ope(t_ast **new_node, t_ast_ptr **list)
 	if ((*list)->last_pipe)
 	{
 		(*new_node)->left = (*list)->last_pipe;
-		if ((*list)->root && ((*list)->root)->type != TOKEN_AND && ((*list)->root)->type != TOKEN_OR)
+		if ((*list)->root && ((*list)->root)->type
+			!= TOKEN_AND && ((*list)->root)->type != TOKEN_OR)
 			(*list)->root = *new_node;
 	}
 	else
-	{	
+	{
 		(*new_node)->left = (*list)->root;
 		(*list)->root = *new_node;
 	}
@@ -71,12 +72,12 @@ otherwise we have to put save_pipe.
 we have to put on the left of the last OPERATOR
 
 */
-void	handle_pipe(t_token **tokens, t_ast_ptr **list)
+void	handle_pipe(t_token **tokens, t_ast_ptr **list, int sub_shell)
 {
 	t_ast	*new_node;
 	t_token	*temp;
 
-	new_node = create_node((*tokens)->type, (*tokens)->value);
+	new_node = create_node((*tokens)->type, (*tokens)->value, sub_shell);
 	if (!new_node)
 		return ;
 	if (!(*list)->last_ope)

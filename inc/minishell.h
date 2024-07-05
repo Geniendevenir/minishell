@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/04 23:19:08 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/05 16:54:58 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ typedef struct s_wildcard {
 
 
 typedef struct s_ast {
+	int subshell;
 	int exit_state;
 	enum s_type type;
 	char		*value;
@@ -279,20 +280,20 @@ void	print_envv(t_env **env);
 
 /*						AST					*/
 
-t_ast	*parse_expression(t_token **token_list);
-t_ast	*parse_subexpression(t_token **tokens);
-t_ast	*handle_option(t_token **tokens, t_ast* current);
+t_ast	*parse_expression(t_token **token_list, int sub_shell);
+t_ast	*parse_subexpression(t_token **tokens, int sub_shell);
+t_ast	*handle_option(t_token **tokens, t_ast* current, int sub_shell);
 t_ast	*close_parenthesis(t_token **tokens, t_ast* root);
-t_ast	*handle_builtin_and_cmd(t_token **tokens, t_ast	*current);
-t_ast	*create_node(enum s_type type, char* value);
-void	handle_parenthesis_open(t_token **tokens, t_ast_ptr **list);
-void	ope_pipe_redirect(t_token **tokens, t_ast_ptr **list);
-void	handle_and_or_root_priority(t_token **tokens, t_ast_ptr **list);
-t_ast	*open_parenthesis(t_token **tokens, t_ast	*current);
-void	handle_pipe(t_token **tokens, t_ast_ptr **list);
-void	while_in_handle_redirect(t_ast_ptr **list, t_ast **new_node, t_ast *last_ope, t_ast *last_pipe);
-void	handle_redirect(t_token **tokens, t_ast_ptr **list);
-void	handle_builtin_cmd_or_option(t_token **tokens, t_ast_ptr **list);
+t_ast	*handle_builtin_and_cmd(t_token **tokens, t_ast	*current, int sub_shell);
+t_ast	*create_node(enum s_type type, char* value, int sub_shell);
+void	handle_parenthesis_open(t_token **tokens, t_ast_ptr **list, int sub_shell);
+void	ope_pipe_redirect(t_token **tokens, t_ast_ptr **list, int sub_shell);
+void	handle_and_or_root_priority(t_token **tokens, t_ast_ptr **list, int sub_shell);
+t_ast	*open_parenthesis(t_token **tokens, t_ast	*current, int sub_shell);
+void	handle_pipe(t_token **tokens, t_ast_ptr **list, int sub_shell);
+void	while_in_handle_redirect(t_ast_ptr **list, t_ast **new_node);
+void	handle_redirect(t_token **tokens, t_ast_ptr **list, int sub_shell);
+void	handle_builtin_cmd_or_option(t_token **tokens, t_ast_ptr **list, int sub_shell);
 void	swap_child_left(t_ast	*current, t_ast	*new_node);
 void	swap_child_right(t_ast	*current, t_ast	*new_node);
 void	swap_child_left_with_else(t_ast	*current, t_ast	*new_node);

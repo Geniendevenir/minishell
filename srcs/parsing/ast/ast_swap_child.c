@@ -6,13 +6,13 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 15:50:17 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/04 19:17:39 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/05 16:56:35 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_ast	*create_node(enum s_type type, char	*value)
+t_ast	*create_node(enum s_type type, char	*value, int subshell)
 {
 	t_ast	*node;
 
@@ -23,6 +23,7 @@ t_ast	*create_node(enum s_type type, char	*value)
 	node->value = ft_strdup(value);
 	if (!node->value)
 		return (NULL);
+	node->subshell = subshell;
 	node->exit_state = 0;
 	node->left = NULL;
 	node->right = NULL;
