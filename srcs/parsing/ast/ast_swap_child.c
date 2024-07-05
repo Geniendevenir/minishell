@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 15:50:17 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/03 17:21:11 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/04 19:17:39 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,5 +71,3 @@ void	swap_child_right_with_else(t_ast	*current, t_ast	*new_node)
 	else
 		current = new_node;
 }
-
-

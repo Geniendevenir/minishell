@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 19:49:19 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/03 19:27:12 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/05 14:39:38 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ t_ast	*open_parenthesis(t_token **tokens, t_ast	*current)
 	t_token	*temp;
 
 	free_token_and_next_in_ast(tokens, &temp);
+	//free(current->value);
 	sub_tree = parse_subexpression(tokens);
 	if (current)
 	{
@@ -36,7 +37,9 @@ t_ast	*open_parenthesis(t_token **tokens, t_ast	*current)
 		current = sub_tree;
 	}
 	else
+	{
 		current = sub_tree;
+	}
 	return (current);
 }
 

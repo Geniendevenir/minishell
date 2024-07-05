@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/03 19:47:12 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/04 23:19:08 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -282,13 +282,13 @@ void	print_envv(t_env **env);
 t_ast	*parse_expression(t_token **token_list);
 t_ast	*parse_subexpression(t_token **tokens);
 t_ast	*handle_option(t_token **tokens, t_ast* current);
-t_ast	*open_parenthesis(t_token **tokens, t_ast* current);
 t_ast	*close_parenthesis(t_token **tokens, t_ast* root);
 t_ast	*handle_builtin_and_cmd(t_token **tokens, t_ast	*current);
 t_ast	*create_node(enum s_type type, char* value);
 void	handle_parenthesis_open(t_token **tokens, t_ast_ptr **list);
 void	ope_pipe_redirect(t_token **tokens, t_ast_ptr **list);
 void	handle_and_or_root_priority(t_token **tokens, t_ast_ptr **list);
+t_ast	*open_parenthesis(t_token **tokens, t_ast	*current);
 void	handle_pipe(t_token **tokens, t_ast_ptr **list);
 void	while_in_handle_redirect(t_ast_ptr **list, t_ast **new_node, t_ast *last_ope, t_ast *last_pipe);
 void	handle_redirect(t_token **tokens, t_ast_ptr **list);
@@ -299,9 +299,10 @@ void	swap_child_left_with_else(t_ast	*current, t_ast	*new_node);
 void	swap_child_right_with_else(t_ast	*current, t_ast	*new_node);
 void	part_handle_option(t_ast **current, t_ast **new_node, t_ast **temp);
 void	while_in_handle_pipe(t_ast **current, t_ast **new_node, t_ast *save_operator);
-void	if_no_last_operator(t_ast **new_node, t_ast_ptr **list);
+void	if_last_ope_exist(t_ast **new_node, t_ast_ptr **list);
 void	if_no_save_operator(t_ast **current, t_ast **new_node,
 	t_ast **save_operator, t_ast **save_pipe);
+void	init_pointer_ast(t_ast_ptr **list);
 bool	is_pipe(t_token **tok);
 void	free_token_and_next_in_ast(t_token **tokens, t_token **temp);
 void	get_first_parent(t_ast_ptr **list);

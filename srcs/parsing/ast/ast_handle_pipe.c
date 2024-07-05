@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 20:38:03 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/03 19:48:51 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/04 21:48:10 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,24 @@ bool	is_pipe(t_token **tok)
 		return (0);
 }
 
-void	if_no_last_operator(t_ast **new_node, t_ast_ptr **list)
+void	if_no_last_ope(t_ast **new_node, t_ast_ptr **list)
+{
+	if ((*list)->last_pipe)
+	{
+		(*new_node)->left = (*list)->last_pipe;
+		if ((*list)->root && ((*list)->root)->type != TOKEN_AND && ((*list)->root)->type != TOKEN_OR)
+			(*list)->root = *new_node;
+	}
+	else
+	{	
+		(*new_node)->left = (*list)->root;
+		(*list)->root = *new_node;
+	}
+	(*list)->current = *new_node;
+	(*list)->last_pipe = *new_node;
+}
+
+void	if_last_ope_exist(t_ast **new_node, t_ast_ptr **list)
 {
 	(*new_node)->left = (*list)->last_ope->right;
 	(*list)->last_ope->right = *new_node;
@@ -63,22 +80,8 @@ void	handle_pipe(t_token **tokens, t_ast_ptr **list)
 	if (!new_node)
 		return ;
 	if (!(*list)->last_ope)
-	{
-			if ((*list)->last_pipe)
-			{
-				new_node->left = (*list)->last_pipe;
-				if ((*list)->root &&((*list)->root)->type != TOKEN_AND && ((*list)->root)->type != TOKEN_OR)
-					(*list)->root = new_node;
-			}
-			else
-			{	
-				new_node->left = (*list)->root;
-				(*list)->root = new_node;
-			}
-			(*list)->current = new_node;
-			(*list)->last_pipe = new_node;
-	}
+		if_no_last_ope(&new_node, list);
 	else
-		if_no_last_operator(&new_node, list);
+		if_last_ope_exist(&new_node, list);
 	free_token_and_next_in_ast(tokens, &temp);
 }
