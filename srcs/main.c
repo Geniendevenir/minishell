@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/05 15:12:52 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/05 16:56:58 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,20 @@ t_sig	g_sig;
 
 char	*minishell(t_all *p, int *exit_status)
 {
+	int	next_status;
 	rl_event_hook = event;
 	p->line = readline("\033[1;032mMinishell> \033[m");
 	if (p->line == NULL)
 	{
 		printf("exit\n");
-		*exit_status = 0; //CHECK
+		next_status = 0; //CHECK
 		return (free(p->line), free_all(p), rl_clear_history(), exit(0), NULL);
 	}
 	if (p->sig->sig_int == 0)
 	{
-		*exit_status = parser(p->line, p->env, &p->ast);
+		next_status = parser(p->line, p->env, &p->ast);
 		/* 
-			if (exit_status == 0)
+			if (next_status == 0)
 		{
 			printAST(p->ast,0);
 			executer(&p->ast, p->env);
@@ -36,6 +37,7 @@ char	*minishell(t_all *p, int *exit_status)
 		} */
 		add_history(p->line);
 	}
+	*exit_status = next_status;
 	p->sig->sig_int = 0;
 	free(p->line);
 	p->line = NULL;

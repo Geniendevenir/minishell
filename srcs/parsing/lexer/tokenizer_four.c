@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 14:02:01 by allan             #+#    #+#             */
-/*   Updated: 2024/07/01 16:19:46 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/05 17:12:11 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,9 @@ bool	dquotes_token(const char *cmd_line, size_t *i, t_token **token_list)
 bool	env_dquotes(const char *cmd_line, t_index *index, t_token **token_list)
 {
 	char	*token_value;
+	int		option;
 
+	option = 1;
 	if (index->j > *index->i) //Tokenize la string avant l'ENV
 	{
 		token_value = ft_substr(cmd_line, *index->i, (index->j - *index->i));
@@ -52,7 +54,10 @@ bool	env_dquotes(const char *cmd_line, t_index *index, t_token **token_list)
 	}
 	(*index->i) = index_foward(&index->j); //Se positionne apres le $ (Norminette BS)
 	if (cmd_line[index->j] == '?') //Cas special "$?"
+	{
+		option = 2;
 		index->j++;
+	}
 	else
 	{
 		while (is_valid_env(cmd_line[index->j]) == 0) //Tous les autres cas
@@ -61,7 +66,7 @@ bool	env_dquotes(const char *cmd_line, t_index *index, t_token **token_list)
 	token_value = ft_substr(cmd_line, *index->i, (index->j - *index->i));
 	if (!token_value)
 		return (1);
-	if (dquote_add_token(token_value, token_list, 1) == 1)
+	if (dquote_add_token(token_value, token_list, option) == 1)
 		return (1);
 	(*index->i) = index->j;
 	return (0);
@@ -88,7 +93,7 @@ bool	dquotes_last_token(const char *cmd_line, t_index *index, t_token **token_li
 	return (0);
 }
 
-bool	dquote_add_token(char *token_value, t_token **token_list, bool option)
+bool	dquote_add_token(char *token_value, t_token **token_list, int option)
 {
 	t_token	*current;
 	int	len;
@@ -98,11 +103,21 @@ bool	dquote_add_token(char *token_value, t_token **token_list, bool option)
 		return (1);
 	current = token_last(*token_list);
 	current->len = len;
-	current->state = STATE_WORD;
-	if (option == 1)
-		current->type = TOKEN_ENV;
-	else if (option == 0)
+	if (option == 0)
+	{
+		current->state = STATE_WORD;
 		current->type = TOKEN_DQUOTES;
+	}
+	else if (option == 1)
+	{
+		current->state = STATE_WORD;
+		current->type = TOKEN_ENV;
+	}
+	else if (option == 2)
+	{
+		current->state = STATE_EXIT_STATUS;
+		current->type = TOKEN_DQUOTES;
+	}
 	return (0);
 }
 

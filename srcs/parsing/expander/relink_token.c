@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 23:11:11 by allan             #+#    #+#             */
-/*   Updated: 2024/07/01 19:41:26 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/05 17:31:31 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,13 @@ t_token	*relink_word(t_token *current, t_token **new_list, int *error)
 {
 	char	*word;
 	char	*new_word;
-	bool	wildcard;
+	int		wildcard;
 
 	relink_word_init(&word, &new_word, &wildcard);
-	while (current && current->state == STATE_WORD)
+	while (current && (current->state == STATE_WORD || current->state == STATE_EXIT_STATUS))
 	{
+		if (current->state == STATE_EXIT_STATUS)
+			wildcard = 2;
 		if (current->type == TOKEN_WILDCARD)
 			wildcard = 1;
 		if (!word)
@@ -66,14 +68,14 @@ t_token	*relink_word(t_token *current, t_token **new_list, int *error)
 	return (current);
 }
 
-void	relink_word_init(char **word, char **new_word, bool *wildcard)
+void	relink_word_init(char **word, char **new_word, int *wildcard)
 {
 	*word = NULL;
 	*new_word = NULL;
 	*wildcard = 0;
 }
 
-bool	add_word(t_token **new_list, char *word, bool option)
+bool	add_word(t_token **new_list, char *word, int option)
 {
 	t_token *last;
 
@@ -86,6 +88,11 @@ bool	add_word(t_token **new_list, char *word, bool option)
 	if (option == 0)
 	{
 		last->state = STATE_WORD;
+		last->type = TOKEN_WORD;
+	}
+	else if (option == 2)
+	{
+		last->state = STATE_EXIT_STATUS;
 		last->type = TOKEN_WORD;
 	}
 	else
