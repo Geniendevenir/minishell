@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/05 18:24:22 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/05 19:44:52 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ char	*minishell(t_all *p, int *exit_status)
 			printAST(p->ast,0);
 			executer(&p->ast, p->env);
 		} */
-		//free_ast(p->ast);
+		free_ast(p->ast);
 		add_history(p->line);
 	}
 	*exit_status = next_status;

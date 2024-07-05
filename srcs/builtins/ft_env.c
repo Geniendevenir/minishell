@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:25:36 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/05 14:04:58 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/05 18:41:52 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_env	*ft_envnew(char *key, char *value)
 	return (list);
 }
 
-t_all	*init_env(char **env)
+t_all	*init_env(char **env, int *exit_status)
 {
 	t_all *p;
 
@@ -46,7 +46,7 @@ t_all	*init_env(char **env)
 	//init_signal(p->sig,0);
 	if (!p->env)
 		return (free(p), NULL);
-	if (create_signal() == -1)
+	if (create_signal(exit_status) == -1)
 		return (free(p), NULL);
 	//p->sig->cmd_stat = 0;
 	return (p);

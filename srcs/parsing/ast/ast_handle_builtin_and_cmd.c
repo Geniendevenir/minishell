@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_handle_builtin_and_cmd.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 19:57:09 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/05 17:26:35 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/05 19:37:49 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ t_ast	*handle_option(t_token **tokens, t_ast *current, int sub_shell)
 	t_token	*tmp;
 
 	new_node = create_node(*tokens, sub_shell);
-	if (current && current->type == WORD_BUILTIN)
+	if (current && (current->type == WORD_BUILTIN || current->type == WORD_CMD))
 		part_handle_option(&current, &new_node, &temp);
 	else
 	{
