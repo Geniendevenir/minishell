@@ -6,20 +6,11 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 19:57:09 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/05 23:50:19 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/06 13:23:20 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-bool	if_cmd_or_option(t_token **tokens)
-{
-	if ((*tokens)->type == WORD_BUILTIN || (*tokens)->type == WORD_CMD
-		|| (*tokens)->type == WORD_ABSPATH || (*tokens)->type == WORD_OPTION)
-		return (1);
-	else
-		return (0);
-}
 
 void	part_handle_option(t_ast_ptr **list, t_ast **new_node, t_ast **temp)
 {
@@ -38,19 +29,37 @@ void	part_handle_option(t_ast_ptr **list, t_ast **new_node, t_ast **temp)
 	}
 }
 
-t_ast	*handle_builtin_and_cmd(t_token **tokens, t_ast_ptr	**list, int sub_shell)
+void	part_builtin_and_cmd(t_ast_ptr **list, t_ast **new_node,
+	t_ast **temp_current)
+{
+	if (is_redirect_enum((*list)->current->type))
+	{
+		*temp_current = (*list)->current;
+		while ((*list)->current->left)
+			(*list)->current = (*list)->current->left;
+		(*list)->current->left = *new_node;
+		(*new_node)->parent = (*list)->current;
+		(*list)->current = *temp_current;
+	}
+	else if ((*list)->current->left)
+	{
+		(*list)->current->right = (*new_node);
+		(*new_node)->parent = (*list)->current;
+		(*list)->current = (*new_node);
+	}
+}
+
+t_ast	*handle_builtin_and_cmd(t_token **tokens, t_ast_ptr	**list,
+	int sub_shell)
 {
 	t_ast	*new_node;
 	t_token	*temp;
+	t_ast	*temp_current;
 
 	new_node = create_node(*tokens, sub_shell);
 	(*list)->last_cmd = new_node;
 	if ((*list)->current)
-	{
-		(*list)->current->right = new_node;
-		new_node->parent = (*list)->current;
-		(*list)->current = new_node;
-	}
+		part_builtin_and_cmd(list, &new_node, &temp_current);
 	else
 		(*list)->current = new_node;
 	free_token_and_next_in_ast(tokens, &temp);
@@ -60,7 +69,6 @@ t_ast	*handle_builtin_and_cmd(t_token **tokens, t_ast_ptr	**list, int sub_shell)
 t_ast	*handle_option(t_token **tokens, t_ast_ptr **list, int sub_shell)
 {
 	t_ast	*new_node;
-	t_ast	*temp;
 	t_token	*tmp;
 
 	new_node = create_node(*tokens, sub_shell);

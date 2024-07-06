@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 18:41:34 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/05 17:19:37 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/06 13:26:50 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,20 +20,6 @@ void	ope_pipe_redirect(t_token **tokens, t_ast_ptr **list, int subshell)
 		handle_pipe(tokens, list, subshell);
 	else if (is_redirect(tokens))
 		handle_redirect(tokens, list, subshell);
-}
-
-void	free_list_ptr(t_ast_ptr **list, t_ast **temp_free, int option)
-{
-	if (option == 1)
-	{
-		*temp_free = (*list)->root;
-		free((*list));
-	}
-	else if (option == 2)
-	{
-		*temp_free = (*list)->current;
-		free((*list));
-	}
 }
 
 t_ast	*parse_expression(t_token **tokens, int subshell)

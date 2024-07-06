@@ -6,21 +6,11 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 15:48:03 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/05 17:27:00 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/06 13:23:34 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-bool	is_redirect(t_token **tok)
-{
-	if ((*tok)->type == WORD_FILEIN
-		|| (*tok)->type == WORD_LIMITER || (*tok)->type == WORD_FILEOUT
-		|| (*tok)->type == WORD_FILEOUT_APPEND)
-		return (1);
-	else
-		return (0);
-}
 
 void	while_in_handle_redirect(t_ast_ptr **list, t_ast **new_node)
 {

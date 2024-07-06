@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 14:48:05 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/05 22:29:05 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/06 13:36:34 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int	check_cmd_exist(char *word, t_env *env)
 	return (0);
 }
 
-enum s_type	check_word(char *word, t_word *boolean, t_env *env)
+enum s_type	check_word(char *word, t_word *boolean)
 {
 	if (boolean->redi_in == 1)
 	{

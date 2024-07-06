@@ -6,19 +6,11 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 20:38:03 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/05 17:27:52 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/06 13:23:56 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-bool	is_pipe(t_token **tok)
-{
-	if ((*tok)->type == TOKEN_PIPE)
-		return (1);
-	else
-		return (0);
-}
 
 void	if_no_last_ope(t_ast **new_node, t_ast_ptr **list)
 {

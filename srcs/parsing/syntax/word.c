@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:27:35 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/05 22:21:54 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/06 13:38:05 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	print_and_free_define_word(t_token **list, t_token *current)
 	token_free(list);
 }
 
-bool	define_word(t_token **token_list, t_word *boolean, t_env *env)
+bool	define_word(t_token **token_list, t_word *boolean)
 {
 	t_token	*current;
 
@@ -68,7 +68,7 @@ bool	define_word(t_token **token_list, t_word *boolean, t_env *env)
 		else if (if_define_word(current) == 1)
 			boolean->cmd = 0;
 		else if (current->type == TOKEN_WORD)
-			current->type = check_word(current->value, boolean, env);
+			current->type = check_word(current->value, boolean);
 		current = current->next;
 	}
 	return (0);

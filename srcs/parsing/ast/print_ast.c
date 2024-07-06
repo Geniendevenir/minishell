@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 19:49:03 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/05 21:59:33 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/06 13:12:43 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,8 @@ void printAST(t_ast* node, int level)// a enlever
     // Print current node with proper indentation
     for (int i = 0; i < level; i++) printf("    ");
     printf("%s: %s\n",getAST_Class(node), node->value);
-	//printf("%s | sub = %d\n",node->value,node->subshell);
-	//printf("%s | sub = %d\n",node->value,node->state);
+	//printf("|%s sub = %d\n",node->value,node->subshell);
+	//printf("|%s | state = %d\n",node->value,node->state);
     // Print the left subtree (with increased level)
     if (node->left) {
         printAST(node->left, level + 1);

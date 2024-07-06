@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/05 23:54:16 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/06 13:38:29 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -293,14 +293,14 @@ void		print_envv(t_env **env);
 
 t_ast		*parse_expression(t_token **token_list, int sub_shell);
 t_ast		*parse_subexpression(t_token **tokens, int sub_shell);
-t_ast	*handle_option(t_token **tokens, t_ast_ptr **list, int sub_shell);
+t_ast		*open_parenthesis(t_token **tokens, t_ast	*current, int sub_shell);
 t_ast		*close_parenthesis(t_token **tokens, t_ast* root);
-t_ast	*handle_builtin_and_cmd(t_token **tokens, t_ast_ptr	**list, int sub_shell);
+t_ast		*handle_builtin_and_cmd(t_token **tokens, t_ast_ptr	**list, int sub_shell);
+t_ast		*handle_option(t_token **tokens, t_ast_ptr **list, int sub_shell);
 t_ast		*create_node(t_token *token, int subshell);
 void		handle_parenthesis_open(t_token **tokens, t_ast_ptr **list, int sub_shell);
 void		ope_pipe_redirect(t_token **tokens, t_ast_ptr **list, int sub_shell);
 void		handle_and_or_root_priority(t_token **tokens, t_ast_ptr **list, int sub_shell);
-t_ast		*open_parenthesis(t_token **tokens, t_ast	*current, int sub_shell);
 void		handle_pipe(t_token **tokens, t_ast_ptr **list, int sub_shell);
 void		while_in_handle_redirect(t_ast_ptr **list, t_ast **new_node);
 void		handle_redirect(t_token **tokens, t_ast_ptr **list, int sub_shell);
@@ -315,12 +315,16 @@ void		if_last_ope_exist(t_ast **new_node, t_ast_ptr **list);
 void		if_no_save_operator(t_ast **current, t_ast **new_node,
 t_ast		**save_operator, t_ast **save_pipe);
 void		init_pointer_ast(t_ast_ptr **list);
-bool		is_pipe(t_token **tok);
 void		free_token_and_next_in_ast(t_token **tokens, t_token **temp);
 void		get_first_parent(t_ast_ptr **list);
+bool		is_pipe(t_token **tok);
 bool		is_ope(t_token **tokens);
 bool		if_cmd_or_option(t_token **tokens);
 bool		is_redirect(t_token **tok);
+bool		is_redirect_enum(enum s_type word);
+void		free_list_ptr(t_ast_ptr **list, t_ast **temp_free, int option);
+
+
 
 /*					SIGNALS					*/
 
@@ -336,10 +340,9 @@ int			check_cmd_exist(char *word, t_env *env);
 int			check_builtin(char *word);
 int			check_file(char *word);
 int			check_absolute_path_cmd(char *word);
-int			check_word_part(char *word, t_word *boolean, t_env *env);
-enum s_type	check_word(char *word, t_word *boolean, t_env *env);
-bool		define_word(t_token **token_list, t_word *boolean, t_env *env);
-
+int			check_word_part(char *word, t_word *boolean);
+enum s_type	check_word(char *word, t_word *boolean);
+bool		define_word(t_token **token_list, t_word *boolean);
 bool		is_operator(t_token *c, int option);
 int			double_operator(t_token *c);
 int			check_first_token(t_token *c);
