@@ -1,31 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ast_handle_and_or.c                                :+:      :+:    :+:   */
+/*   ast_free.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/01 19:52:14 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/06 13:30:58 by Matprod          ###   ########.fr       */
+/*   Created: 2024/07/06 13:26:01 by Matprod           #+#    #+#             */
+/*   Updated: 2024/07/06 13:29:34 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_and_or_root_priority(t_token **tokens, t_ast_ptr **list,
-	int sub_shell)
+void	free_ast(t_ast *node)
 {
-	t_ast	*new_node;
-	t_token	*temp;
-
-	new_node = create_node(*tokens, sub_shell);
-	if (!new_node)
+	if (node == NULL)
 		return ;
-	new_node->left = (*list)->root;
-	if ((*list)->root)
-		((*list)->root)->parent = new_node;
-	(*list)->root = new_node;
-	(*list)->current = (*list)->root;
-	(*list)->last_ope = (*list)->current;
-	free_token_and_next_in_ast(tokens, &temp);
+	free_ast(node->left);
+	free_ast(node->right);
+	if (node->value)
+		free(node->value);
+	free(node);
+}
+
+void	free_list_ptr(t_ast_ptr **list, t_ast **temp_free, int option)
+{
+	if (option == 1)
+	{
+		*temp_free = (*list)->root;
+		free((*list));
+	}
+	else if (option == 2)
+	{
+		*temp_free = (*list)->current;
+		free((*list));
+	}
 }

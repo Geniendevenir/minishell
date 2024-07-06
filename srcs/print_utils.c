@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:41:06 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/02 19:22:57 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/06 18:00:20 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,4 +42,16 @@ void print_error_cmd_not_found(t_token *current)
 {
 	write(2, current->value, ft_strlen(current->value));
 	write(2, ": command not found\n", 20);
+}
+
+void	print_tab(char **command)
+{
+	int	i;
+
+	i = 0;
+	while (command[i])
+	{
+		printf("%s\n", command[i]);
+		i++;
+	}
 }

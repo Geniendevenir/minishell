@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 16:42:50 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/04 12:59:54 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/06 13:47:27 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,28 +34,28 @@
 
 */
 
-bool	is_operator(t_token *c, int option)
+bool	is_operator(enum s_type type, int option)
 {
 	if (option == 1)
 	{
-		if (c->type == TOKEN_AND || c->type == TOKEN_OR)
+		if (type == TOKEN_AND || type == TOKEN_OR)
 			return (1);
 	}
 	if (option == 2)
 	{
-		if (c->type == TOKEN_AND || c->type == TOKEN_OR
-			|| c->type == TOKEN_PIPE)
+		if (type == TOKEN_AND || type == TOKEN_OR
+			|| type == TOKEN_PIPE)
 			return (1);
 	}
 	if (option == 3)
 	{
-		if (c->type == TOKEN_REDIRECTIN || c->type == TOKEN_REDIRECTOUT
-			|| c->type == TOKEN_APPENDOUT || c->type == TOKEN_HEREDOC)
+		if (type == TOKEN_REDIRECTIN || type == TOKEN_REDIRECTOUT
+			|| type == TOKEN_APPENDOUT || type == TOKEN_HEREDOC)
 			return (1);
 	}
 	if (option == 4)
 	{
-		if (c->type == TOKEN_OPENPAR || c->type == TOKEN_CLOSEPAR)
+		if (type == TOKEN_OPENPAR || type == TOKEN_CLOSEPAR)
 			return (1);
 	}
 	return (0);
@@ -71,7 +71,7 @@ int		double_operator(t_token *c)
 {
 	if (!c->next)
 	{
-		if ((is_operator(c, 2) || is_operator(c, 3)))
+		if ((is_operator(c->type, 2) || is_operator(c->type, 3)))
 		{
 			error_syntax(c, 5);
 			return (1);
@@ -84,10 +84,10 @@ int		double_operator(t_token *c)
 			error_syntax(c, 5);
 			return (1);
 		}
-		if ((is_operator(c, 2) && (is_operator(c->next, 2)
-			|| is_operator(c->next, 4))) || (is_operator(c, 3)
-			&& ((is_operator(c->next, 3) || is_operator(c->next, 2)
-			|| is_operator(c->next, 4)))))
+		if ((is_operator(c->type, 2) && (is_operator(c->next->type, 2)
+			|| is_operator(c->next->type, 4))) || (is_operator(c->type, 3)
+			&& ((is_operator(c->next->type, 3) || is_operator(c->next->type, 2)
+			|| is_operator(c->next->type, 4)))))
 		{
 			error_syntax(c->next, 1);
 			return (1);

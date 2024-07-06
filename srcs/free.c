@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:34:27 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/01 17:14:41 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/06 13:48:19 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,3 @@ void	free_array(char **array)
 	free(array);
 }
 
-void free_ast(t_ast *node) 
-{
-	if (node == NULL)
-		return ;
-	free_ast(node->left);
-	free_ast(node->right);
-	if (node->value)
-		free(node->value);
-	free(node);
-}

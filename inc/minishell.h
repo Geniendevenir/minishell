@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/05 17:46:06 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/06 18:01:56 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,7 @@ typedef struct s_ast_ptr
 	t_ast	*current;
 	t_ast	*last_ope;
 	t_ast	*last_pipe;
+	t_ast	*last_cmd;
 }	t_ast_ptr;
 
 typedef struct s_file
@@ -180,10 +181,26 @@ typedef struct s_word
 	int cmd;
 } t_word;
 
+typedef struct s_exec
+{
+	bool			pipe;
+	bool			redirectin;
+	bool			redirectout;
+	struct s_ast 	*in;
+	struct s_ast 	*out;
+	char 			**command;
+}				t_exec;
+
 extern t_sig	g_sig;
 
 //						EXECUTION                      //
-int			executer(t_ast **ast, t_env *env);
+int			executer(t_ast **ast, t_env *env, int *exit_status);
+
+t_exec		exec_init(t_exec exec);
+void		exec_free(t_exec *exec);
+int 		get_command(t_ast *current, t_exec *exec);
+int			command_size(t_ast *current);
+char 		**parse_command(t_ast *current, int size);
 
 void		traverse_ast(t_ast *root, t_env *env);
 int			exec_parent_node(t_ast *current, t_env *env);
@@ -215,8 +232,6 @@ int			tokenizer_three(const char *cmd_line, size_t *i, t_token **token_list);
 int			tokenizer_four(const char *cmd_line, size_t *i, t_token **token_list);
 
 //token_management
-void		token_print(t_token **token_list);
-void		token_print_amazing(t_token **token_list);
 void 		token_init(t_token **token_list);
 t_token 	*token_last(t_token *token_list);
 bool		token_addback(t_token **token_list, char *value, int option);
@@ -254,10 +269,15 @@ bool		is_valid_env(char c);
 bool		is_freeable(char *value, int option);
 bool		is_wildcard(const char *cmd_line, int i);
 
+//print
+void		token_print(t_token **token_list);
+void		token_print_amazing(t_token **token_list);
+void		amazing_printing(t_token *current, int i);
+const char* getToken_State(t_token *current);
+const char	*getToken_Class(t_token *current);
+
 //error
 void		error_lexer(int error);
-void		amazing_printing(t_token *current, int i);
-const char	*getToken_Class(t_token *current);
 
 
 /*								EXPANDER						*/
@@ -293,14 +313,14 @@ void		print_envv(t_env **env);
 
 t_ast		*parse_expression(t_token **token_list, int sub_shell);
 t_ast		*parse_subexpression(t_token **tokens, int sub_shell);
-t_ast		*handle_option(t_token **tokens, t_ast* current, int sub_shell);
+t_ast		*open_parenthesis(t_token **tokens, t_ast	*current, int sub_shell);
 t_ast		*close_parenthesis(t_token **tokens, t_ast* root);
-t_ast		*handle_builtin_and_cmd(t_token **tokens, t_ast	*current, int sub_shell);
+t_ast		*handle_builtin_and_cmd(t_token **tokens, t_ast_ptr	**list, int sub_shell);
+t_ast		*handle_option(t_token **tokens, t_ast_ptr **list, int sub_shell);
 t_ast		*create_node(t_token *token, int subshell);
 void		handle_parenthesis_open(t_token **tokens, t_ast_ptr **list, int sub_shell);
 void		ope_pipe_redirect(t_token **tokens, t_ast_ptr **list, int sub_shell);
 void		handle_and_or_root_priority(t_token **tokens, t_ast_ptr **list, int sub_shell);
-t_ast		*open_parenthesis(t_token **tokens, t_ast	*current, int sub_shell);
 void		handle_pipe(t_token **tokens, t_ast_ptr **list, int sub_shell);
 void		while_in_handle_redirect(t_ast_ptr **list, t_ast **new_node);
 void		handle_redirect(t_token **tokens, t_ast_ptr **list, int sub_shell);
@@ -309,18 +329,22 @@ void		swap_child_left(t_ast	*current, t_ast	*new_node);
 void		swap_child_right(t_ast	*current, t_ast	*new_node);
 void		swap_child_left_with_else(t_ast	*current, t_ast	*new_node);
 void		swap_child_right_with_else(t_ast	*current, t_ast	*new_node);
-void		part_handle_option(t_ast **current, t_ast **new_node, t_ast **temp);
+void		part_handle_option(t_ast_ptr **list, t_ast **new_node, t_ast **temp);
 void		while_in_handle_pipe(t_ast **current, t_ast **new_node, t_ast *save_operator);
 void		if_last_ope_exist(t_ast **new_node, t_ast_ptr **list);
 void		if_no_save_operator(t_ast **current, t_ast **new_node,
 t_ast		**save_operator, t_ast **save_pipe);
 void		init_pointer_ast(t_ast_ptr **list);
-bool		is_pipe(t_token **tok);
 void		free_token_and_next_in_ast(t_token **tokens, t_token **temp);
 void		get_first_parent(t_ast_ptr **list);
+bool		is_pipe(t_token **tok);
 bool		is_ope(t_token **tokens);
 bool		if_cmd_or_option(t_token **tokens);
 bool		is_redirect(t_token **tok);
+bool		is_redirect_enum(enum s_type word);
+void		free_list_ptr(t_ast_ptr **list, t_ast **temp_free, int option);
+
+
 
 /*					SIGNALS					*/
 
@@ -328,19 +352,17 @@ int			event(void);
 int			create_signal(int *exit_status);
 
 /*					SYNTAX AND WORD					*/
-
-int			check_word_part_cmd(char *word, t_word *boolean, t_env *env);
+int			check_word_part_cmd(char *word, t_word *boolean);
 int			check_word_part_append(t_word *boolean);
 int			check_word_part_rediout(t_word *boolean);
 int			check_cmd_exist(char *word, t_env *env);
 int			check_builtin(char *word);
 int			check_file(char *word);
 int			check_absolute_path_cmd(char *word);
-int			check_word_part(char *word, t_word *boolean, t_env *env);
-enum s_type	check_word(char *word, t_word *boolean, t_env *env);
-bool		define_word(t_token **token_list, t_word *boolean, t_env *env);
-
-bool		is_operator(t_token *c, int option);
+int			check_word_part(char *word, t_word *boolean);
+enum s_type	check_word(char *word, t_word *boolean);
+bool		define_word(t_token **token_list, t_word *boolean);
+bool		is_operator(enum s_type type, int option);
 int			double_operator(t_token *c);
 int			check_first_token(t_token *c);
 bool		check_syntax(t_token *current);
@@ -378,6 +400,7 @@ void		print_error_token_special(char *value);
 void		print_error_cmd_not_found(t_token *current);
 void		printAST(t_ast* node, int level);
 const char* getAST_Class(t_ast *current);
+void		print_tab(char **command);
 
 /*					BUILTINS				*/
 //ENV

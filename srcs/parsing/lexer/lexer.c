@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 14:38:47 by allan             #+#    #+#             */
-/*   Updated: 2024/07/05 17:13:55 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/05 20:26:42 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ int	tokenizer_three(const char *cmd_line, size_t *i, t_token **token_list)
 		if (cmd_line[*i + 1] == '?') //A CHECK
 		{
 			error = token_addback(token_list, "$?", 2);
-			env_special_token(token_list, 2);
+			env_special_token(token_list, 1);
 			(*i) += 2;
 		}
 		else if (is_env(cmd_line[*i + 1]) == 1) //A CHECK

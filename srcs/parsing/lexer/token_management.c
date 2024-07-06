@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:22:12 by allan             #+#    #+#             */
-/*   Updated: 2024/07/01 17:01:14 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/05 20:25:16 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,8 +161,24 @@ void	amazing_printing(t_token *current, int i)
     printf("----------------------------------\n");
     printf("| Type: %s                        \n", getToken_Class(current));
     printf("----------------------------------\n");
-    printf("| Len: %ld                        |\n", current->len);
-    printf("----------------------------------\n");
+	printf("| State: %s                        \n", getToken_State(current));
+	printf("----------------------------------\n");
+}
+
+const char* getToken_State(t_token *current)
+{
+	const char* Token_Class[] = {
+    	"STATE_START",
+		"STATE_WHITESPACE",
+		"STATE_WORD",
+		"STATE_OPERATOR",
+		"STATE_EXIT_STATUS"
+	};
+    if (current->state >= 0 && current->state <= 4) {
+        return Token_Class[current->state];
+    } else {
+        return "NULL";
+    }
 }
 
 const char* getToken_Class(t_token *current)

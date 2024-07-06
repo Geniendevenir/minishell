@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 14:02:01 by allan             #+#    #+#             */
-/*   Updated: 2024/07/05 17:12:11 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/05 20:35:33 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ bool	env_dquotes(const char *cmd_line, t_index *index, t_token **token_list)
 			return (1);
 	}
 	(*index->i) = index_foward(&index->j); //Se positionne apres le $ (Norminette BS)
-	if (cmd_line[index->j] == '?') //Cas special "$?"
+	if (cmd_line[index->j] == '?') //Cas special "$?" A MODIFIER SE POSITIONNER A I--
 	{
 		option = 2;
 		index->j++;

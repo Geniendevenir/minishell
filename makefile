@@ -65,6 +65,8 @@ SRCS 				=	srcs/free.c\
 						srcs/parsing/ast/ast_handle_redirect.c\
 						srcs/parsing/ast/ast_handle_parenthesis.c\
 						srcs/parsing/ast/print_ast.c\
+						srcs/parsing/ast/ast_if_parameters.c\
+						srcs/parsing/ast/ast_free.c\
 						srcs/hate_the_norm.c\
 
 # Apply the pattern substitution to each source file in SRC and produce a corresponding list of object files in the OBJ_DIR
