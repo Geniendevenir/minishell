@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 23:11:11 by allan             #+#    #+#             */
-/*   Updated: 2024/07/05 20:29:30 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/07 19:15:14 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ int		relink_token(t_token **token_list, t_token *current, int error)
 	while (current)
 	{
 		error = 1;
-		if (current->state == STATE_WORD || current->state == STATE_EXIT_STATUS)
+		if ((current->state == STATE_WORD || current->state == STATE_EXIT_STATUS) 
+			&& (current->type != WORD_LIMITER && current->type != WORD_SQLIMITER))
 			current = relink_word(current, &new_list, &error);
 		else
 		{
@@ -108,6 +109,14 @@ bool	relink_operator(t_token *current, t_token **new_list)
 	t_token *last;
 
 	if (current->state == STATE_OPERATOR)
+	{
+		if (token_addback(new_list, current->value, 2) == 1)
+			return (1);
+		last = token_last(*new_list);
+		last->state = current->state;
+		last->type = current->type;
+	}
+	else if (current->type == WORD_LIMITER || current->type == WORD_SQLIMITER)
 	{
 		if (token_addback(new_list, current->value, 2) == 1)
 			return (1);

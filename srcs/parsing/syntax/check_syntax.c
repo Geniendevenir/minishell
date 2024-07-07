@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 16:42:50 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/06 13:47:27 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/07 19:22:59 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int		double_operator(t_token *c)
 {
 	if (!c->next)
 	{
-		if ((is_operator(c->type, 2) || is_operator(c->type, 3)))
+		if ((is_operator(c->type, 2) || is_operator(c->type, 3) || is_operator(c->type, 9)))
 		{
 			error_syntax(c, 5);
 			return (1);
@@ -79,6 +79,11 @@ int		double_operator(t_token *c)
 	}
 	else if (c->next)
 	{
+		if (c->type == TOKEN_HEREDOC && (c->next->type != WORD_LIMITER && c->next->type != WORD_SQLIMITER))
+		{
+			error_syntax(c->next, 1);
+			return (1);
+		}
 		if (c->type == TOKEN_REDIRECTIN && c->next->type == TOKEN_REDIRECTOUT)
 		{
 			error_syntax(c, 5);
@@ -109,14 +114,14 @@ int	check_first_token(t_token *c)
 
 bool 	check_syntax(t_token *current)
 {
-	if (!current)
-		return (0);
 	int			skip;
 	t_syntax	syntax;
 	
 	skip = 0;
 	syntax.openpar = 0;
 	syntax.operator = 0;
+	if (!current)
+		return (0);
 	if (check_first_token(current) == 1)
 		return (1);
 	while (current)

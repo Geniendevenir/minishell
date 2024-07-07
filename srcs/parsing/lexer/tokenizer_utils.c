@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 10:19:15 by allan             #+#    #+#             */
-/*   Updated: 2024/07/04 18:52:11 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/07 18:51:23 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ bool	is_wildcard(const char *cmd_line, int i)
 
 bool	is_freeable(char *value, int option)
 {
+	if (value[0] == '\0')
+		return (1);
 	if (option == 2)
 		return (1);
 	if (option == 1)

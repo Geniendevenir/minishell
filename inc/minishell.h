@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/06 21:02:18 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/07 16:34:53 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ enum s_type{
 	WORD_STRING,
 	WORD_ERROR, //ERREUR (le WORD n'est pas classifie)
 	WORD_WTF, //dans le cas ou j'ai oublie un cas
+	WORD_SQLIMITER
 };
 
 typedef struct s_token
@@ -267,6 +268,12 @@ bool		dquote_add_token(char *token_value, t_token **token_list, int option);
 bool		dquotes_last_token(const char *cmd_line, t_index *index, t_token **token_list);
 bool		env_dquotes(const char *cmd_line, t_index *index, t_token **token_list);
 size_t		index_foward(size_t *j);
+bool		limiter_token(const char *cmd_line, size_t *i, t_token **token_list);
+bool		stop_limiter(const char *cmd_line, size_t *i, bool option);
+bool		limiter_squote(const char *cmd_line, t_index *index, char **token_value);
+bool		limiter_dquote(const char *cmd_line, t_index *index, char **token_value);
+bool		limiter_word(const char *cmd_line, t_index *index, char **token_value);
+bool		last_heredoc(t_token **token_list);
 
 //utils
 bool		is_whitespace(char c);
