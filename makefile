@@ -36,7 +36,9 @@ SRCS 				=	srcs/free.c\
 						srcs/parsing/lexer/tokenizer_two.c\
 						srcs/parsing/lexer/tokenizer_three.c\
 						srcs/parsing/lexer/tokenizer_four.c\
+						srcs/parsing/lexer/tokenizer_five.c\
 						srcs/parsing/lexer/tokenizer_utils.c\
+						srcs/parsing/lexer/limiter_utils.c\
 						srcs/parsing/error_parser.c\
 						srcs/parsing/expander/expander.c\
 						srcs/parsing/expander/remove_env.c\
