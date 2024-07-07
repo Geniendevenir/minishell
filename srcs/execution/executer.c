@@ -6,34 +6,11 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 21:23:21 by allan             #+#    #+#             */
-/*   Updated: 2024/07/06 18:29:35 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/07 13:15:29 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_exec	exec_init(t_exec exec)
-{
-	exec.pipe = 0;
-	exec.redirectin = 0;
-	exec.redirectout = 0;
-	exec.in = NULL;
-	exec.out = NULL;
-	exec.command = NULL;
-	return (exec);
-}
-
-void	exec_free(t_exec *exec)
-{
-	exec->pipe = 0;
-	exec->redirectin = 0;
-	exec->redirectout = 0;
-	exec->in = NULL;
-	exec->out = NULL;
-	if (exec->command)
-		free_array(exec->command);
-	exec->command = NULL;
-}
 
 int		executer(t_ast **ast, t_env *env, int *exit_status)
 {
@@ -41,22 +18,23 @@ int		executer(t_ast **ast, t_env *env, int *exit_status)
 	t_exec	exec;
 	
 	current = *ast;
+	exec_init(exec);
 	while (current && current->left)
 		current = current->left;
-	//printf("%s\n", current->value); //OK
-	while (current && current->parent && (current->type != WORD_CMD || current->type != WORD_OPTION))
+	while (current->parent && (current->parent->type == WORD_CMD || current->parent->type == WORD_OPTION || current->parent->type == WORD_BUILTIN))
 		current = current->parent;
-	printf("%s\n", current->value); // OK
-	if (current->type != WORD_CMD)
-		current = current->left;
 	if (get_command(current, &exec) == 1)
 	{
 		printf("Get Command Error Malloc\n");
 		exec_free(&exec);
 		return (1);
 	}
-	printf("RESULT\n");
+	printf("start = %s\n", current->value);
+	printf("COMMAND\n");
 	print_tab(exec.command);
+	printf("REDIRECT\n");
+	//set_pipe(&exec, 1);
+	exec_assign_redirect(current, &exec);
 	exec_free(&exec);
 	/* while (current && current->parent && is_operator(current->type, 2) == 0)
 	{
@@ -65,58 +43,107 @@ int		executer(t_ast **ast, t_env *env, int *exit_status)
 	return (0);
 }
 
-int get_command(t_ast *current, t_exec *exec)
+/*
+	if (NON PIPE) OK
+	{
+		exec->pipeleft == 0;
+		exec->piperight == 0;
+	}
+	else if (PIPE LEFT)
+	{
+		exec->pipeleft == 1;
+		exec->piperight == 0;
+	}
+	else if (PIPE RIGHT)
+	{
+		exec->pipeleft = 0;
+		exec->piperight == 1;
+	}
+*/
+
+int		exec_assign_redirect(t_ast *current, t_exec *exec)
 {
-	int	size;
-		
-	size = command_size(current);
-	printf("%d\n", size);
-	exec->command = parse_command(current, size);
-	if (!exec->command)
-		return (1);
+	while (current && (exec->redirectin == 0 || exec->redirectout == 0))
+	{
+		if (is_operator(current->type, 2) == 1) //En remontant Si je croise un pipe, pipe 0 = gauche/ pipe 1 = droite
+		{
+			/* if (current->type == TOKEN_PIPE)
+			{
+				if (exec->pipe == 1)
+				{
+					if (exec->out == NULL)
+					{
+						exec->out = current;
+						exec->redirectout = 1;
+					}
+					if (exec->in != NULL)
+					exec->redirectin = 1;
+				}
+				else if (exec->pipe == 2)
+				{
+					if (exec->in == NULL)
+					{
+						exec->in = current;
+						exec->redirectin = 1;
+					}
+					if (exec->out != NULL)
+					exec->redirectout = 1;
+				}
+			}
+			else
+			{ */
+				if (exec->in != NULL)
+					exec->redirectin = 1;
+				if (exec->out != NULL)
+					exec->redirectout = 1;
+		}
+		if ((current->type == WORD_FILEIN || current->type == WORD_LIMITER) && exec->redirectin == 0)
+		{
+			printf("new in = %s\n", current->value);
+			exec->in = current;
+		}
+		else if ((current->type == WORD_FILEOUT || current->type == WORD_FILEOUT_APPEND) && exec->redirectout == 0)
+		{
+			printf("new out = %s\n", current->value);
+			exec->out = current;
+		}
+		if (!current->parent)
+			break;
+		current = current->parent;
+	}
+	printf("final node = %s\n", current->value);
+	if (exec->in)
+		printf("in = %s\n", exec->in->value);
+	else
+		printf("in = NULL\n");
+	if (exec->out)
+		printf("out = %s\n", exec->out->value);
+	else
+		printf("out = NULL\n");
 	return (0);
 }
 
-int	command_size(t_ast *current)
-{
-	int size;
-
-	size = 1;
-	while (current->left && (current->type == WORD_CMD || current->type == WORD_OPTION))
-	{
-		size++;
-		current = current->left;
-	}
-	return (size);
-}
-
-char **parse_command(t_ast *current, int size)
-{
-	char **command;
-	int i;
-
-	i = 0;
-	command = malloc(sizeof(char *) * size + 1);
-	if (!command)
-		return (NULL);
-	while (size > 0)
-	{
-		if (!current->value)
-			return (NULL);
-		printf("%s\n", current->value);
-		command[i] = ft_strdup(current->value); //pas besoin de free current->value ici
-		if (!command[i])
-		{
-			free_array(command);
-			return (NULL);
-		}
-		i++;
-		size--;
-		current = current->left;
-	}
-	command[i] = 0;
-	return (command);
-}
+/* if (current->type == TOKEN_PIPE)
+			{
+				if (exec->pipe == 0)
+				{
+					if (exec->out == NULL)
+					{
+						exec->out = current;
+						exec->redirectout = 1;
+					}
+				}
+				else if (exec->pipe == 1)
+				{
+					if (exec->in == NULL)
+					{
+						exec->in = current;
+						exec->redirectin = 1;
+					}
+				}
+			}
+			else
+			{ */
 
 
 /*

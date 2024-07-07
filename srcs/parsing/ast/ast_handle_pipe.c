@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_handle_pipe.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 20:38:03 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/06 13:23:56 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/06 21:18:54 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	if_no_last_ope(t_ast **new_node, t_ast_ptr **list)
 	}
 	else
 	{
+		(*list)->root->parent = *new_node;
 		(*new_node)->left = (*list)->root;
 		(*list)->root = *new_node;
 	}

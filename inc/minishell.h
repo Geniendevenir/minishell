@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/06 18:01:56 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/06 21:02:18 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,7 @@ typedef struct s_word
 
 typedef struct s_exec
 {
-	bool			pipe;
+	int			pipe;
 	bool			redirectin;
 	bool			redirectout;
 	struct s_ast 	*in;
@@ -196,11 +196,18 @@ extern t_sig	g_sig;
 //						EXECUTION                      //
 int			executer(t_ast **ast, t_env *env, int *exit_status);
 
-t_exec		exec_init(t_exec exec);
-void		exec_free(t_exec *exec);
+//redirect
+int		exec_assign_redirect(t_ast *current, t_exec *exec);
+
+//exec_parse_command
 int 		get_command(t_ast *current, t_exec *exec);
 int			command_size(t_ast *current);
 char 		**parse_command(t_ast *current, int size);
+
+//exec_utils
+t_exec		exec_init(t_exec exec);
+void		exec_free(t_exec *exec);
+void		set_pipe(t_exec *exec, int set_pipe);
 
 void		traverse_ast(t_ast *root, t_env *env);
 int			exec_parent_node(t_ast *current, t_env *env);
