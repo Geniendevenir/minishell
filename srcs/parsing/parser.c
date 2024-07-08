@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:24:04 by allan             #+#    #+#             */
-/*   Updated: 2024/07/07 19:23:06 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/07 20:46:43 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int parser(char *cmd_line, t_env *env, t_ast **ast)
 	//t_token *dup_list;
 	
 	error = 0;
-	if (!cmd_line)
+	if (cmd_line[0] == '\0')
 		return (1);
 	token_list = malloc(sizeof(t_token));
 	if (!token_list)
@@ -99,22 +99,22 @@ int parser(char *cmd_line, t_env *env, t_ast **ast)
 	token_print_amazing(&token_list); */
 	if (expander(&token_list, env, error) == 1)
 		return (1);
-	printf("\n\n\nAFTER EXPANDER:\n");
+	/* printf("\n\n\nAFTER EXPANDER:\n");
 	token_print(&token_list);
-	token_print_amazing(&token_list);
+	token_print_amazing(&token_list); */
 	if (check_syntax(token_list) == 1)
 	{
 		token_free(&token_list);
 		return (1);
 	}
-	/* init_t_word(&word);
+	init_t_word(&word);
 	if (define_word(&token_list, &word))
 		return (1);
-	printf("\n\n\nAFTER define word:\n");
-	token_print_amazing(&token_list); */
-/* 	sub_shell = 0;
+	printf("\n\nAFTER define word:\n");
+	token_print_amazing(&token_list);
+	sub_shell = 0;
 	*ast = parse_expression(&token_list, sub_shell);
-	printAST(*ast, 0); */
+	printAST(*ast, 0);
 	//printf("AFTER EXPANDER:\n");
 	//token_print(&token_list);
 	//token_free(&dup_list);

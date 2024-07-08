@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/07 16:14:23 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/07 20:39:27 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,11 @@ char	*minishell(t_all *p, int *exit_status)
 	{
 		next_status = parser(p->line, p->env, &p->ast);
 		//printf("next_status = %d\n", next_status);
-		/* if (next_status == 0)
+		if (next_status == 0)
 		{
 			next_status = executer(&p->ast, p->env, exit_status);
-		} */
-		//free_ast(p->ast);
+			free_ast(p->ast);
+		}
 		add_history(p->line);
 	}
 	*exit_status = next_status;

@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 16:42:50 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/07 19:22:59 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/07 21:04:12 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,11 @@ int		double_operator(t_token *c)
 			error_syntax(c->next, 1);
 			return (1);
 		}
+		if ((c->type == TOKEN_REDIRECTIN || c->type == TOKEN_REDIRECTOUT) && c->next->type != TOKEN_WORD)
+		{
+			error_syntax(c->next, 1);
+			return (1);
+		}
 		if (c->type == TOKEN_REDIRECTIN && c->next->type == TOKEN_REDIRECTOUT)
 		{
 			error_syntax(c, 5);
@@ -96,6 +101,14 @@ int		double_operator(t_token *c)
 		{
 			error_syntax(c->next, 1);
 			return (1);
+		}
+		if (c->next->next)
+		{
+			if ((c->type == TOKEN_REDIRECTIN || c->type == TOKEN_REDIRECTOUT) && c->next->type == TOKEN_WORD && c->next->next->type == TOKEN_OPENPAR)
+			{
+				error_syntax(c->next->next, 1);
+					return (1);
+			}
 		}
 	}
 	return (0);

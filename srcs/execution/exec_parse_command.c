@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 18:37:43 by allan             #+#    #+#             */
-/*   Updated: 2024/07/07 13:12:41 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/07 20:20:19 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int get_command(t_ast *current, t_exec *exec)
 	int	size;
 		
 	size = command_size(current);
+	printf("cmd size = %d\n", size);
 	exec->command = parse_command(current, size);
 	if (!exec->command)
 		return (1);
@@ -42,7 +43,7 @@ char **parse_command(t_ast *current, int size)
 	int i;
 
 	i = 0;
-	command = malloc(sizeof(char *) * size + 1);
+	command = malloc(sizeof(char *) * (size + 1));
 	if (!command)
 		return (NULL);
 	while (size > 0)

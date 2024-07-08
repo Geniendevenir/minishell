@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   word.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:27:35 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/06 13:38:05 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/07 20:07:39 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,6 @@ bool	define_word(t_token **token_list, t_word *boolean)
 			boolean->redi_in = 1;
 		else if (current->type == TOKEN_REDIRECTOUT)
 			boolean->redi_out = 1;
-		else if (current->type == TOKEN_HEREDOC)
-			boolean->here_doc = 1;
 		else if (current->type == TOKEN_APPENDOUT)
 			boolean->append = 1;
 		else if (if_define_word(current) == 1)
