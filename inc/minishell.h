@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/08 11:58:08 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/08 15:14:37 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,15 @@ typedef struct s_syntax
 	int		openpar;
 	bool	operator;
 }				t_syntax;
+
+typedef struct s_path
+{
+	char	*path_value;
+	char	**env_paths;
+	char	*final_path;
+	char	*part_path;
+	int		i;
+}				t_path;
 
 enum s_state{
 	STATE_START,
@@ -200,12 +209,17 @@ extern t_sig	g_sig;
 int			executer(t_ast **ast, t_env *env, int *exit_status);
 
 //redirect
-int		assign_redirect(t_ast *current, t_exec *exec);
+int			assign_redirect(t_ast *current, t_exec *exec);
 
-//exec_parse_command
+//parse_cmd
 int 		get_command(t_ast *current, t_exec *exec);
 int			command_size(t_ast *current);
 char 		**parse_command(t_ast *current, int size);
+//path_cmd
+char	*find_path(t_env *env);
+char		*path_free(t_path *p, int *error, int option);
+void		p_init(t_path *p);
+char		*get_path(const char *cmd, t_env *env, int *error);
 
 //exec_utils
 void		exec_init(t_exec *exec);

@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 19:29:39 by allan             #+#    #+#             */
-/*   Updated: 2024/07/07 20:01:31 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/08 14:27:43 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ bool limiter_token(const char *cmd_line, size_t *i, t_token **token_list)
 		if (create_limiter(cmd_line, &index, &token_value))
 			return (1);
 	}
-	if (!token_value)
-		index.error = token_addback(token_list, '\0', 2);
+	if (!token_value || !*token_value)
+		index.error = token_addback(token_list, "\0", 2);
 	else
 		index.error = token_addback(token_list, token_value, 3);
 	if (index.error == 1)

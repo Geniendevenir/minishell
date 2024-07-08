@@ -59,7 +59,8 @@ SRCS 				=	srcs/free.c\
 						srcs/execution/exec_builtins.c\
 						srcs/execution/executer.c\
 						srcs/execution/executer_utils.c\
-						srcs/execution/exec_parse_command.c\
+						srcs/execution/parse_cmd.c\
+						srcs/execution/path_cmd.c\
 						srcs/parsing/ast/ast.c\
 						srcs/parsing/ast/ast_utils.c\
 						srcs/parsing/ast/ast_handle_builtin_and_cmd.c\

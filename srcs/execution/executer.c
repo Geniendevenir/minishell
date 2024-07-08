@@ -6,126 +6,57 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 21:23:21 by allan             #+#    #+#             */
-/*   Updated: 2024/07/08 13:01:10 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/08 17:02:16 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-
-bool	find_path(t_env *env)
-{
-	while (env && ft_strcmp(env->key, "PATH") != 0)
-	{
-		if (ft_strcmp(env->key, "PATH") == 0)
-			return (1);
-		env = env->next;
-	}
-	return (0);
-}
-
-char	*free_path(char	**env_paths, int *error, char **part_path)
-{
-	
-}
-
-char	*get_path(const char *cmd, t_env *env, int *error)
-{
-	char	**env_paths;
-	char	*final_path;
-	char	*part_path;
-	int		i;
-	
-	i = 0;
-	if (!env) // If no ENV
-	{
-		*error = 1;
-		return (NULL);
-	}
-	if (find_path(env) == 0)
-		return (NULL);
-	env_paths = ft_split(env->value, ':');
-	if (!env_paths)
-	{
-		*error = 1;
-		return (NULL);
-	}
-	while (env_paths[i])
-	{
-		part_path = ft_strjoin(env_paths[i], "/");
-		if (!part_path)
-		{
-			free_array(env_paths);
-			*error = 1;
-			return (NULL);
-		}
-		final_path = ft_strjoin(part_path, cmd);
-		if (!final_path)
-		{
-			free(part_path);
-			free_array(env_paths);
-			*error = 1;
-			return (NULL);
-		}
-		free(part_path); //OK
-		if (access(final_path, F_OK) == 0)
-		{
-			free_array(env_paths);
-			return (final_path);
-		}
-		free_array(env_paths);
-		free(final_path);
-		i++;
-	}
-	*error = 0;
-	return (NULL);
-}
-
-void	exec(char *argv, char **envp)
-{
-	char	**cmd;
-	char	*path;
-
-	cmd = ft_split(argv, ' ');
-	path = get_path(cmd[0], envp);
-	if (!path)
-	{
-		free(path);
-		free_tab(cmd);
-		//msg(ERR_CMD);part_path
-	}
-	if (execve(path, cmd, envp) == -1)
-	{
-		free(path);
-		free_tab(cmd);
-		//msg(ERR_EXEC);
-	}
-}
-
-//RECHECK TOUS LES RETURNS
-//QUAND EXPAND $? ?????????????
+//RECHECK TOUS LES RETURNS / EXIT STATUS
 int		execute_cmd(t_exec	*exec, t_env *env)
 {
-	char *temp;
+	char	*path;
+	char	*temp;
+	int		error;
 
+	error = 0;
+	temp = NULL;
 	if (!exec->command || !exec->command[0])
 		return (1);
-	if (access(exec->command, X_OK) == 1) //check if not absolute path
+	//test builtin
+	//printf("exec->command[0] = %s\n", exec->command[0]);
+	if (access(exec->command[0], X_OK) == -1) //check if not absolute path
 	{
+		path = get_path(exec->command[0], env, &error);
+		if (error != 0)
+		{
+			printf("ERROR: get_path error\n");
+			if (path)
+				free (path);
+			return (1); //malloc error
+		}
+		if (!path)
+		{
+			write(1, exec->command[0], ft_strlen(exec->command[0]));
+			write(1, ": command not found\n", 20);
+			return (127);
+		}
 		temp = exec->command[0];
+		free(temp); // Ca sert a qqchose ?
+		exec->command[0] = path;
 	}
-	
+	return (0);
 }
 
 int		executer(t_ast **ast, t_env *env, int *exit_status)
 {
 	t_ast *current;
 	t_exec	exec;
+	int		result;
 
 	current = *ast;
 	exec_init(&exec);
-	while (current && current->left) //Down->Left
+	while (current && current->left) //Down->Left : A CHAQUE DESCENTE LEFT OR RIHT EXPAND LES ENV POUR LES WORD ET LES HEREDOC DONT LE TYPE N'EST PAS SQ_LIMITER 
 		current = current->left;
 	while (current->parent && (current->parent->type == WORD_CMD || current->parent->type == WORD_OPTION || current->parent->type == WORD_BUILTIN)) //Up->Cmd
 		current = current->parent;
@@ -140,7 +71,16 @@ int		executer(t_ast **ast, t_env *env, int *exit_status)
 	printf("REDIRECT\n");
 	//set_pipe(&exec, 1);
 	assign_redirect(current, &exec); //Assign Redirect Finir check pipe
-	execute_cmd(&exec); //execute
+	result = execute_cmd(&exec, env); //execute
+	if (result != 0)
+	{
+		exec_free(&exec);
+		if (result == 1)
+			printf("execute_cmd Malloc Error\n");
+		return (1);
+	}
+	printf("COMMAND:\n");
+	print_tab(exec.command);
 	exec_free(&exec);
 	return (0);
 }

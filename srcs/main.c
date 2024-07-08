@@ -6,13 +6,15 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/07 20:39:27 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/08 15:00:28 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./minishell.h"
 
 t_sig	g_sig;
+
+//RECHECK TOUS LES !str ET VOIR SI PAS BESOIN DE !*str a la place ou en plus
 
 char	*minishell(t_all *p, int *exit_status)
 {
@@ -35,6 +37,7 @@ char	*minishell(t_all *p, int *exit_status)
 			next_status = executer(&p->ast, p->env, exit_status);
 			free_ast(p->ast);
 		}
+		//free_ast(p->ast); //a delete quand on test execution
 		add_history(p->line);
 	}
 	*exit_status = next_status;
