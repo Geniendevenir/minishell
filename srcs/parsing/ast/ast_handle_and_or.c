@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 19:52:14 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/06 13:30:58 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/08 14:20:59 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,5 @@ void	handle_and_or_root_priority(t_token **tokens, t_ast_ptr **list,
 	(*list)->root = new_node;
 	(*list)->current = (*list)->root;
 	(*list)->last_ope = (*list)->current;
-	free_token_and_next_in_ast(tokens, &temp);
+	free_token_and_next(tokens, &temp);
 }

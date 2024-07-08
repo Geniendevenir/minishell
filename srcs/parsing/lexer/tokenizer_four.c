@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 14:02:01 by allan             #+#    #+#             */
-/*   Updated: 2024/07/05 20:35:33 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/07 19:40:33 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ bool	dquotes_token(const char *cmd_line, size_t *i, t_token **token_list)
 {
 	t_index	index;
 
-	index.i = i;
+	index_init(&index, i, 0);
 	(*index.i)++;
 	index.j = *index.i;
 	while (cmd_line[index.j] && cmd_line[index.j] != '\"')
@@ -147,3 +147,4 @@ bool squote_token(const char *cmd_line, size_t *i, t_token **token_list)
 	(*i) = j + 1;
 	return (0);
 }
+

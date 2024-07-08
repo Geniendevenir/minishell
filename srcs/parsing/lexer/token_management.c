@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:22:12 by allan             #+#    #+#             */
-/*   Updated: 2024/07/05 20:25:16 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/07 18:58:12 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ t_token *token_last(t_token *token_list)
 bool	token_addback(t_token **token_list, char *value, int option)
 {
 	t_token *token;
-	
+
 	if (!token_list)
 	{
 		if (is_freeable(value, option) == 0)
@@ -213,8 +213,9 @@ const char* getToken_Class(t_token *current)
 		"WORD_STRING",
 		"WORD_ERROR",
 		"WORD_WTF",
+		"WORD_SQLIMITER"
 	};
-    if (current->type >= 0 && current->type < 28) {
+    if (current->type >= 0 && current->type <= 29) {
         return Token_Class[current->type];
     } else {
         return "NULL";

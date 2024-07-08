@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parcour_ast.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:05:39 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/02 12:25:27 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/08 12:27:11 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,14 @@ typedef struct s_limiter
 	return (1);
 } */
 
-void traverse_ast(t_ast *root, t_env *env)
+/* void traverse_ast(t_ast *root, t_env *env)
 {
 	t_ast *current;
 	t_ast *last_visited;
-	/* t_env *env2;
+	 t_env *env2;
 
 	env2 = env;
-	free_env(env2); */
+	free_env(env2);
 
 	current = root;
 	last_visited = NULL;
@@ -76,7 +76,7 @@ void traverse_ast(t_ast *root, t_env *env)
 			break; // Si on ne peut plus aller à droite, on a fini le parcours
 		
 	}
-}
+} */
 /*
 
 	typedef struct s_ast

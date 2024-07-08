@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:24:04 by allan             #+#    #+#             */
-/*   Updated: 2024/07/07 13:18:34 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/08 22:19:18 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ t_token	*duplicate_token_list(const t_token *head)
 //p->line, p->env, &p->ast
 //char *cmd_line, t_env *env, t_ast **ast
 //printf("test\n");
-int parser(char *cmd_line, t_env *env, t_ast **ast)
+int parser(char *cmd_line, t_env *env, t_ast **ast, t_all **p)
 {
 	t_token	*token_list;
 	t_word	word;
@@ -86,7 +86,7 @@ int parser(char *cmd_line, t_env *env, t_ast **ast)
 	//t_token *dup_list;
 	
 	error = 0;
-	if (!cmd_line)
+	if (cmd_line[0] == '\0')
 		return (1);
 	token_list = malloc(sizeof(t_token));
 	if (!token_list)
@@ -94,13 +94,11 @@ int parser(char *cmd_line, t_env *env, t_ast **ast)
 	token_init(&token_list);
 	if (lexer(cmd_line, &token_list, error) == 1)
 		return (1);
-	printf("test1\n");
 	/* printf("AFTER LEXER:\n");
 	token_print(&token_list);
 	token_print_amazing(&token_list); */
 	if (expander(&token_list, env, error) == 1)
 		return (1);
-	printf("test2\n");
 	/* printf("\n\n\nAFTER EXPANDER:\n");
 	token_print(&token_list);
 	token_print_amazing(&token_list); */
@@ -109,16 +107,15 @@ int parser(char *cmd_line, t_env *env, t_ast **ast)
 		token_free(&token_list);
 		return (1);
 	}
-	printf("test3\n");
+	here_doc(&token_list,p);
+	//printf("TESTT APRES HEREDOC\n");
 	init_t_word(&word);
 	if (define_word(&token_list, &word))
 		return (1);
-	printf("test4\n");
-	/* printf("\n\n\nAFTER define word:\n");
+	/* printf("\n\nAFTER define word:\n");
 	token_print_amazing(&token_list); */
 	sub_shell = 0;
 	*ast = parse_expression(&token_list, sub_shell);
-	printf("test5\n");
 	printAST(*ast, 0);
 	//printf("AFTER EXPANDER:\n");
 	//token_print(&token_list);

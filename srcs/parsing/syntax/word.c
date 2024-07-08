@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:27:35 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/06 13:38:05 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/08 13:17:45 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	init_t_word(t_word *word)
 {
 	word->redi_in = 0;
 	word->redi_out = 0;
-	word->here_doc = 0;
 	word->append = 0;
 	word->operator = 0;
 	word->cmd = 0;
@@ -61,8 +60,6 @@ bool	define_word(t_token **token_list, t_word *boolean)
 			boolean->redi_in = 1;
 		else if (current->type == TOKEN_REDIRECTOUT)
 			boolean->redi_out = 1;
-		else if (current->type == TOKEN_HEREDOC)
-			boolean->here_doc = 1;
 		else if (current->type == TOKEN_APPENDOUT)
 			boolean->append = 1;
 		else if (if_define_word(current) == 1)

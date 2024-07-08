@@ -3,44 +3,50 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 22:57:28 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/05 15:05:30 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/08 23:31:23 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-t_all	*init_all(char **env, int *exit_status)
+t_all	*init_all(char **env)
 {
-	t_all *p;
-	
+	t_all	*p;
+
 	p = malloc(sizeof(t_all));
 	if (!p)
 		return (NULL);
 	p->env = env_to_struct(env);
 	if (!p->env)
 		return (free(p), NULL);
-	p->sig = init_signal(0, exit_status);
+	p->sig = malloc(sizeof(t_sig));
 	if (!p->sig)
-		return (free(p), NULL);
+		return (free_env(p->env), free(p), NULL);
+	if (create_signal() == -1)
+		return (free_env(p->env), free(p), free(p->sig), NULL);
+	p->sig->sig_quit = 0;
+	p->sig->sig_int = 0;
+	p->sig->p_status = 0;
+	p->sig->cmd_stat = 0;
+	p->line_num = 1;
+	p->here_doc = NULL;
 	p->ast = NULL;
 	p->line = NULL;
 	return (p);
 }
 
-t_sig	*init_signal(int nb, int *exit_status)
+void	init_signal(int nb, t_all **p)
 {
-    t_sig *sig;
-
-	if (create_signal(exit_status) == -1)
-		return (NULL);
-	sig = malloc(sizeof(t_sig));
-	if (!sig)
-		return (NULL);
-	sig->sig_quit = nb;
-	sig->sig_int = nb;
-	sig->p_status = nb;
-	return(sig);
+	(*p)->sig = malloc(sizeof(t_sig));
+	if (!(*p)->sig)
+		return ;
+	if (create_signal() == -1)
+		return ;
+	(*p)->sig->sig_quit = nb;
+	(*p)->sig->sig_int = nb;
+	(*p)->sig->p_status = nb;
+	(*p)->sig->cmd_stat = nb;
 }

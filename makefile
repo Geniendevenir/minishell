@@ -36,7 +36,9 @@ SRCS 				=	srcs/free.c\
 						srcs/parsing/lexer/tokenizer_two.c\
 						srcs/parsing/lexer/tokenizer_three.c\
 						srcs/parsing/lexer/tokenizer_four.c\
+						srcs/parsing/lexer/tokenizer_five.c\
 						srcs/parsing/lexer/tokenizer_utils.c\
+						srcs/parsing/lexer/limiter_utils.c\
 						srcs/parsing/error_parser.c\
 						srcs/parsing/expander/expander.c\
 						srcs/parsing/expander/remove_env.c\
@@ -44,6 +46,10 @@ SRCS 				=	srcs/free.c\
 						srcs/parsing/expander/expand_env.c\
 						srcs/parsing/expander/relink_token.c\
 						srcs/parsing/expander/expand_wildcard.c\
+						srcs/parsing/here_doc/here_doc_name.c\
+						srcs/parsing/here_doc/here_doc_signals.c\
+						srcs/parsing/here_doc/here_doc_utils.c\
+						srcs/parsing/here_doc/here_doc.c\
 						srcs/builtins/ft_env.c\
 						srcs/builtins/ft_pwd.c\
 						srcs/builtins/ft_cd.c\

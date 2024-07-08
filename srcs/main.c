@@ -3,49 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/07 13:16:31 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/08 22:44:05 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./minishell.h"
+#include "minishell.h"
 
-t_sig	g_sig;
-
-char	*minishell(t_all *p, int *exit_status)
-{
-	int	next_status;
-
-	rl_event_hook = event;
-	p->line = readline("\033[1;032mMinishell> \033[m");
-	if (p->line == NULL)
-	{
-		printf("exit\n");
-		next_status = 0; //CHECK
-		return (free(p->line), free_all(p), rl_clear_history(), exit(0), NULL);
-	}
-	if (p->sig->sig_int == 0)
-	{
-		next_status = parser(p->line, p->env, &p->ast);
-		printf("next_status = %d\n", next_status);
-		/* if (next_status == 0)
-		{
-			next_status = executer(&p->ast, p->env, exit_status);
-		} */
-		free_ast(p->ast);
-		add_history(p->line);
-	}
-	*exit_status = next_status;
-	p->sig->sig_int = 0;
-	free(p->line);
-	p->line = NULL;
-	return (p->line);
-}
-
-//valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --suppressions=./.readline.supp ./minishell
-//ps -f --forest : see shell process tree
+int		sig_int = 0;
 
 int	main(int argc, char **argv, char **env)
 {
@@ -55,7 +22,7 @@ int	main(int argc, char **argv, char **env)
 	exit_status = 0;
 	(void)argc;
 	(void) **argv;
-	p = init_all(env, &exit_status);
+	p = init_all(env);
 	if (!p || p == NULL)
 		return (EXIT_FAILURE);
 	while (p->line == NULL)
@@ -64,6 +31,43 @@ int	main(int argc, char **argv, char **env)
 	}
 	return (exit_status);
 }
+
+char	*minishell(t_all *p, int *exit_status)
+{
+	extern int	sig_int;
+	int			next_status;
+
+	rl_event_hook = event;
+	p->line = readline("\033[1;032mMinishell> \033[m");
+	if (p->line == NULL)
+	{
+		printf("exit\n");
+		next_status = 0; //CHECK
+		return (free(p->line), free_all(p), rl_clear_history(), exit(0), NULL);
+	}
+	printf("sigquit = %d\n", p->sig->sig_quit);
+	if (sig_int == 0 && p->sig->sig_quit == 0)
+	{
+		next_status = parser(p->line, p->env, &p->ast, &p);
+		printf("next_status = %d\n", next_status);
+		/* if (next_status == 0)
+		{
+			next_status = executer(&p->ast, p->env, exit_status);
+		} */
+		free_ast(p->ast);
+		add_history(p->line);
+	}
+	*exit_status = next_status;
+	sig_int = 0;
+	free(p->line);
+	p->line = NULL;
+	p->line_num++;
+	return (p->line);
+}
+
+//valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --suppressions=./.readline.supp ./minishell
+//ps -f --forest : see shell process tree
+
 
 //TEST MAIN
 

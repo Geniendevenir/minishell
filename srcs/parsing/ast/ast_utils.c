@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 19:12:00 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/05 23:03:10 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/08 14:20:59 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ t_ast	*create_node(t_token *token, int subshell)
 	return (node);
 }
 
-void	free_token_and_next_in_ast(t_token **tokens, t_token **temp)
+void	free_token_and_next(t_token **tokens, t_token **temp)
 {
 	*temp = *tokens;
 	*tokens = (*tokens)->next;
@@ -42,7 +42,7 @@ void	free_token_and_next_in_ast(t_token **tokens, t_token **temp)
 
 void	get_first_parent(t_ast_ptr **list)
 {
-	while ((*list)->current->parent)
+	while ((*list)->current && (*list)->current->parent)
 		(*list)->current = (*list)->current->parent;
 }
 

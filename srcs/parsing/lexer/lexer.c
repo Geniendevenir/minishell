@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 14:38:47 by allan             #+#    #+#             */
-/*   Updated: 2024/07/05 20:26:42 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/07 19:45:15 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,9 +96,11 @@ int	tokenizer_two(const char *cmd_line, size_t *i, t_token **token_list)
 int	tokenizer_three(const char *cmd_line, size_t *i, t_token **token_list)
 {
 	int	error;
-	
+
 	error = 0;
-	if (cmd_line[*i] == '$')
+	if (last_heredoc(token_list) == 1)
+		error = limiter_token(cmd_line, i, token_list);
+	else if (cmd_line[*i] == '$')
 	{
 		if (cmd_line[*i + 1] == '?') //A CHECK
 		{
@@ -115,8 +117,6 @@ int	tokenizer_three(const char *cmd_line, size_t *i, t_token **token_list)
 		else
 			error = env_token(cmd_line, i, token_list);
 	}
-	else if (cmd_line[*i] == '*' || is_wildcard(cmd_line, *i) == 0)
-		error = wildcard_token(cmd_line, i, token_list);
 	else
 		error = tokenizer_four(cmd_line, i, token_list);
 	return (error);
@@ -127,7 +127,9 @@ int	tokenizer_four(const char *cmd_line, size_t *i, t_token **token_list)
 	int	error;
 
 	error = 0;
-	if (cmd_line[*i] == '\"')
+	if (cmd_line[*i] == '*' || is_wildcard(cmd_line, *i) == 0)
+		error = wildcard_token(cmd_line, i, token_list);
+	else if (cmd_line[*i] == '\"')
 	{
 		if (cmd_line[*i + 1] == '\"')
 			*i += 2;
@@ -135,8 +137,9 @@ int	tokenizer_four(const char *cmd_line, size_t *i, t_token **token_list)
 			error = dquotes_token(cmd_line, i, token_list);
 	}
 	else if (cmd_line[*i] == '\'')
-		error = squote_token(cmd_line, i, token_list);
+			error = squote_token(cmd_line, i, token_list);
 	else
 		error = lexical_token(cmd_line, i, token_list);
 	return (error);
 }
+//echo test << oui (ok << nice) << NULL
