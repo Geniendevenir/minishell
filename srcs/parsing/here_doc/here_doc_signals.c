@@ -6,18 +6,33 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 21:19:55 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/09 20:19:02 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/10 00:53:23 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void sighandler_hdoc(int signal)
+{
+	extern int sig_int;
+	
+	if (signal == SIGINT)
+	{
+		sig_int = 1;
+		//printf("sigint");
+		rl_done = 1;
+		write(1, "\n", 2);
+		rl_on_new_line();
+	}
+	return ;
+}
+
 int	create_signal_here(t_all **p)
 {
-	struct termios		old_termios;
-	struct termios		new_termios;
-	struct sigaction	a;
-
+	struct termios old_termios;
+	struct termios new_termios;
+	struct sigaction a;
+	
 	if (tcgetattr(0, &old_termios) != 0)
 		return (-1);
 	new_termios = old_termios;
@@ -25,12 +40,12 @@ int	create_signal_here(t_all **p)
 	new_termios.c_cc[VSUSP] = 26;
 	if (tcsetattr(0, TCSANOW, &new_termios))
 		return (-1);
-	a.sa_handler = sighandler;
+	a.sa_handler = sighandler_hdoc;
 	a.sa_flags = 0;
 	sigemptyset(&a.sa_mask);
 	if (sigaction(SIGINT, &a, NULL) != 0)
 		return (-1);
-	return (/* init_signal(0, p) ,*/ 0);
+	return (0);
 }
 
 int	signals_hdoc(int opt, t_all **p)
@@ -39,7 +54,7 @@ int	signals_hdoc(int opt, t_all **p)
 	
 	if (opt == 0)
 	{
-		if ( stop_signals() == -1 || create_signal() == -1)
+		if (stop_signals() == -1 || create_signal_here(p) == -1)
 		{
 			printf("signals hdoc opt 0\n");
 			return (-1);
@@ -57,7 +72,7 @@ int	signals_hdoc(int opt, t_all **p)
 		if (sig_int != 1)
 		{
 			printf("signals hdoc opt 1\n");
-			//init_signal(0, p);
+			init_signal(0, p);
 		}
 		return (0);
 	}

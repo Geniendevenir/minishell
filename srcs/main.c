@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/09 20:16:08 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/09 23:29:37 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ char	*minishell(t_all *p, int *exit_status)
 		{
 			next_status = executer(&p->ast, p->env, exit_status);
 		} */
-		free_ast(p->ast);
 		add_history(p->line);
+		free_ast(p->ast);
 	}
 	*exit_status = next_status;
 	sig_int = 0;

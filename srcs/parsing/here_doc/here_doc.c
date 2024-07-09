@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 14:57:22 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/09 20:27:11 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/10 00:57:00 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,33 +34,31 @@ char	*hdoc_process(int fd, t_token *limiter, t_all **p)
 {
 	extern int	sig_int;
 	char		*buffer;
-	int			prev;
 
-	/* write(1, "> ", 2);*/	
-	buffer = readline("> ");
-	if (limiter->value)
-		limiter->value = ft_strjoin_spe(limiter->value, "\n");
-	else if (!*limiter->value)
-		limiter->value = ft_strdup("\n");
-	if (buffer == NULL && sig_int == 0)
-		return (warning(limiter->value, (*p)->line_num), NULL);
-	prev = prev_valo(buffer);
-	(*p)->line_num = 1;
-	while (ft_strcmp(buffer, limiter->value) != 0 && sig_int == 0)
+	buffer = NULL;
+	while (1)
 	{
 		if (buffer != NULL)
+		{
 			write(fd, buffer, ft_strlen(buffer));
-		if (buffer != NULL)
+			write(fd, "\n", 1);
 			free(buffer);
-		//write(1, "> ", 2);	
-		buffer = readline("> ");
-		(*p)->line_num++;
-		if (prev == 1 && buffer == NULL  && sig_int != 1)
+		}
+		buffer = readline(">> ");
+		if (buffer == NULL && sig_int == 0 && (*p)->line_num == 1)
+		{
+			return (warning(limiter->value, (*p)->line_num), NULL);
+		}
+		else if (buffer == NULL && sig_int != 1)
 		{
 			warning(limiter->value, (*p)->line_num);
 			break ;
 		}
-		prev = prev_valo(buffer);
+		else if (ft_strcmp(buffer, limiter->value) == 0)
+		{
+			break ;
+		}
+		(*p)->line_num++;
 	}
 	return (cleanbuffer(buffer));
 }
@@ -89,7 +87,7 @@ int	fill_here_doc(t_token **current, int max, t_all **p, int *nb)
 	free((*current)->value);
 	(*current)->value = ft_strdup((*p)->here_doc[*nb]);
 	(*nb)++;
-	if (/* signals_hdoc(1, p) == -1 ||  */(*current)->value == NULL || sig_int == 1)
+	if (signals_hdoc(1, p) == -1 || (*current)->value == NULL || sig_int == 1)
 		return (close (fd), quit_here_doc(1, *p, *nb));
 	else
 		return (close (fd), 1);
@@ -122,4 +120,5 @@ void here_doc(t_token **token_list, t_all **p)
 		else
 			break;
 	}
+	create_signal();
 }
