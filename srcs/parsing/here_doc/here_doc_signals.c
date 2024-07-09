@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 21:19:55 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/09 12:16:05 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/09 12:52:46 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ int	signals_hdoc(int opt, t_all **p)
 			return (-1);
 		if (sig_int != 1)
 		{
-			free((*p)->sig);
 			init_signal(0, p);
 		}
 		return (0);
