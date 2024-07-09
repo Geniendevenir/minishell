@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error_parser.c                                     :+:      :+:    :+:   */
+/*   error_management.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 13:58:59 by allan             #+#    #+#             */
-/*   Updated: 2024/07/07 19:20:00 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/09 23:10:55 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,4 +105,18 @@ bool	error_syntax(t_token *current, int error)
 	if (error == 5)
 		write(2, "bash: syntax error near unexpected token 'newline'\n", 51);
 	return (1);
+}
+
+void	error_expander(t_ast *current, int error)
+{
+	if (error == 1)
+	{
+		write(1, "bash: ", 6);
+		write(1, current->value, ft_strlen(current->value));
+		write(1, ": ambiguous redirect\n", 21);
+	}
+	/* if (error == 2)
+	if (error == 3)
+	if (error == 4)
+	if (error == 5) */
 }

@@ -6,11 +6,20 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 21:23:21 by allan             #+#    #+#             */
-/*   Updated: 2024/07/09 12:08:12 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/10 00:26:33 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+
+/*
+	TO DO
+	1 - Separate function split word
+	2 - Find a way to Include EXIT STATUS
+	3 - Finish left_expand: Subshell, Exit Status, Set Pipe
+	4 - Theorize an algo to explore and execute the entire ast
+ */
 
 //RECHECK TOUS LES RETURNS / EXIT STATUS
 int		execute_cmd(t_exec	*exec, t_env *env)
@@ -48,75 +57,46 @@ int		execute_cmd(t_exec	*exec, t_env *env)
 	return (0);
 }
 
-
-/*
-SUBSHELL
-IF WORD
+//printf("test\n");
+bool	left_expand(t_ast **ast, t_ast *current, t_env *env)
 {
-	SEPARATEUR
-	EXPANDER
-	IF NEW_VALUE = NULL
+	int	error;
+
+	error = 0;
+	while (current) //Down->Left : A CHAQUE DESCENTE LEFT OR RIHT EXPAND LES ENV POUR LES WORD ET LES HEREDOC DONT LE TYPE N'EST PAS SQ_LIMITER
 	{
-		SUPPRIMER LE NODE ET RATACHER L'AST
-		IF (CURRENT == CMD)
+		//if (current->subshell == 1) fork
+		if (current->state == STATE_WORD && current->type != WORD_SQLIMITER && current->type != WORD_LIMITER)
 		{
-			IF (CURRENT->NEXT)
-			CURRENT->NEXT devient cmd
+			error = split_word(ast, &current, env);
+			if (error != 0 && error != -1)
+				return (1); //CHANGE RETURN AS IT ALSO TAKE INTO ACCOUNT EMPTY PROMTP AFTER EXPANDER
+		}
+		if (error != -1)
+		{
+			if (!current->left)
+				return (0);
+			current = current->left;
 		}
 	}
-	
+	return (0);
 }
-*/
-//printf("test\n");
+
 int		executer(t_ast **ast, t_env *env, int *exit_status)
 {
 	t_ast *current;
-	t_ast *next;
 	t_exec	exec;
 	int		result;
 
 	current = *ast;
 	exec_init(&exec);
 	//printf("test\n");
-	
-	/* if (!current->left && current->state == STATE_WORD)
+	if (left_expand(ast, current, env) == 1)
 	{
-		printf("test\n");
-		split_word(current, env);		
-	} */
-	while (current) //Down->Left : A CHAQUE DESCENTE LEFT OR RIHT EXPAND LES ENV POUR LES WORD ET LES HEREDOC DONT LE TYPE N'EST PAS SQ_LIMITER
-	{
-		//if (current->subshell == 1) fork
-		next = NULL;
-		if (current->state == STATE_WORD)
-		{
-			if (current->left)
-				next = current->left;
-			if (split_word(ast, current, env) != 0)
-			{
-				exec_free(&exec);
-				free_ast(*ast);
-				return (1); //CHANGE RETURN AS IT ALSO TAKE INTO ACCOUNT EMPTY PROMTP AFTER EXPANDER
-			}
-			if (!next)
-				break;
-			current = next;
-		}
-		else
-		{
-			if (!current->left)
-				break ;
-			current = current->left;
-		}
+		exec_free(&exec);
+		return (1);
 	}
 	
-	/* current = *ast;
-	while (current) //check Invalid read of size
-	{
-		if (!current->left)
-				break ;
-			current = current->left;
-	} */
 	/* while (current->parent && (current->parent->type == WORD_CMD || current->parent->type == WORD_OPTION || current->parent->type == WORD_BUILTIN)) //Up->Cmd
 		current = current->parent;
 	if (get_command(current, &exec) == 1) // Get cmd
@@ -142,7 +122,6 @@ int		executer(t_ast **ast, t_env *env, int *exit_status)
 	print_tab(exec.command); */
 	exec_free(&exec);
 	printAST(*ast, 0);
-	free_ast(*ast);
 	return (0);
 }
 

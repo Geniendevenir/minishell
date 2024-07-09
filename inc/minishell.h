@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/09 12:30:07 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/10 00:16:02 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,10 +211,11 @@ typedef struct s_exec
 
 //						EXECUTION                      //
 int			executer(t_ast **ast, t_env *env, int *exit_status);
+//ast_explorer
+bool		left_expand(t_ast **ast, t_ast *current, t_env *env);
 
 //redirect
-int			exec_assign_redirect(t_ast *current, t_exec *exec);//parse_cmd
-int 		get_command(t_ast *current, t_exec *exec);
+int			assign_redirect(t_ast *current, t_exec *exec);
 int			command_size(t_ast *current);
 char 		**parse_command(t_ast *current, int size);
 //parse_cmd
@@ -317,8 +318,11 @@ void		amazing_printing(t_token *current, int i);
 const char* getToken_State(t_token *current);
 const char	*getToken_Class(t_token *current);
 
-//error
+//error_management
 void		error_lexer(int error);
+bool		error_syntax(t_token *current, int error);
+void		error_expander(t_ast *current, int error);
+
 //here_doc
 char		*cleanbuffer(char *buffer);
 int			prev_valo(char *buffer);
@@ -341,13 +345,18 @@ char		*ft_strjoin_spe(char *s1, char const *s2);
 
 /*								EXPANDER						*/
 //split_word
-void		replace_word(t_ast **root, t_ast *node, t_ast *new_node);
-void		delete_word(t_ast **root, t_ast *node);
+t_ast		*replace_word(t_ast **root, t_ast *node, t_ast *new_node);
+void		delete_word(t_ast **root, t_ast **node);
 bool		modify_word(t_ast **node, t_token *token_list);
-int			split_word(t_ast **root, t_ast *ast, t_env *env);
+int			split_word(t_ast **root, t_ast **current, t_env *env);
 int			split_one(const char *cmd_line, size_t *i, t_token **token_list);
 int			split_two(const char *cmd_line, size_t *i, t_token **token_list);
 bool		limit_word(char c);
+int			word_management(t_ast **root, t_ast **current, t_token	*token_list);
+
+//handle_wildcard
+int			handle_wildcard(t_ast **current, t_token **token_list);
+bool		insert_word(t_ast **node, t_token *token);
 
 bool		expander(t_token **token_list, t_env *env, int error);
 
@@ -438,7 +447,6 @@ bool		is_operator(enum s_type type, int option);
 int			double_operator(t_token *c);
 int			check_first_token(t_token *c);
 bool		check_syntax(t_token *current);
-bool		error_syntax(t_token *current, int error);
 
 bool		check_parenthesis(t_token *current, t_syntax syntax, int *skip);
 bool		closepar_error(t_token *current, t_syntax syntax, int *skip);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_word_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 19:24:26 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/05 22:32:16 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/09 19:13:35 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	check_word_part_cmd(char *word, t_word *boolean)
 	if (check_builtin(word) == 1)
 	{
 		boolean->cmd = 1;
-		return (WORD_BUILTIN);
+		return (WORD_CMD);
 	}
 	else
 	{

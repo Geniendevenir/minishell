@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:24:04 by allan             #+#    #+#             */
-/*   Updated: 2024/07/09 12:51:30 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/09 23:57:22 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,7 @@ t_token	*duplicate_token_list(const t_token *head)
 	}
 	return (new_head);
 }
-//p->line, p->env, &p->ast
-//char *cmd_line, t_env *env, t_ast **ast
+
 //printf("test\n");
 int parser(char *cmd_line, t_env *env, t_ast **ast, t_all **p)
 {
@@ -111,7 +110,7 @@ int parser(char *cmd_line, t_env *env, t_ast **ast, t_all **p)
 	token_print_amazing(&token_list); */
 	sub_shell = 0;
 	*ast = parse_expression(&token_list, sub_shell);
-	printAST(*ast, 0);
+	//printAST(*ast, 0);
 	//printf("AFTER EXPANDER:\n");
 	//token_print(&token_list);
 	//token_free(&dup_list);

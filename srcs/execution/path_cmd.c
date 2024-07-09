@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 13:26:25 by allan             #+#    #+#             */
-/*   Updated: 2024/07/08 15:20:01 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/10 00:29:20 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ char	*get_path(const char *cmd, t_env *env, int *error)
 	p.env_paths = ft_split(p.path_value, ':');
 	if (!p.env_paths)
 		return (path_free(&p, error, 4));
-	print_tab(p.env_paths);
+	//print_tab(p.env_paths);
 	while (p.env_paths[p.i])
 	{
 		p.part_path = ft_strjoin(p.env_paths[p.i], "/");

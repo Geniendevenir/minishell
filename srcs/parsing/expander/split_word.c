@@ -6,59 +6,38 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 17:54:19 by allan             #+#    #+#             */
-/*   Updated: 2024/07/09 13:20:54 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/10 00:11:57 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-void	replace_word(t_ast **root, t_ast *node, t_ast *new_node)
+/* int	word_management(t_ast **root, t_ast **current, t_token	*token_list)
 {
-	if (node->type == WORD_CMD)
+	int	error;
+	
+	if (!token_list->value || !*token_list->value)
 	{
-		if (node->left)
-			node->left->type = WORD_CMD;
+		delete_word(root, current);
+		return (-1); //check valeur non utilise par exit status
 	}
-	if (node->parent == NULL)  // node is the root
-		*root = new_node;
-	else if (node->parent->left == node)
-		node->parent->left = new_node;
-	if (new_node != NULL)
-		new_node->parent = node->parent;
-}
+	else if (token_list->next)
+	{
+		if (handle_wildcard(current, &token_list) == 1)
+			return (1);
+	}
+	else if (ft_strcmp((*current)->value, token_list->value) != 0)
+		error = modify_word(current, token_list);
+	return (error);
+} */
 
-// Function to delete a node from the tree
-void delete_word(t_ast **root, t_ast *node)
+//separate split_word from word management
+int split_word(t_ast **root, t_ast **current, t_env *env)
 {
-	if (node == NULL) 
-		return ;
-	if (node->left == NULL)
-		replace_word(root, node, NULL); // Case 2: Node is a leaf
-	else
-		replace_word(root, node, node->left); // Case 3: Node has only left child
-	free(node->value);
-	free(node);
-}
-
-bool	modify_word(t_ast **node, t_token *token_list)
-{
-	char *temp;
-
-	temp = (*node)->value;
-	(*node)->value = ft_strdup(token_list->value);
-	free(temp);
-	if (!(*node)->value)
-		return (1);
-	return (0);
-}
-
-
-int split_word(t_ast **root, t_ast *current, t_env *env) //
-{
-	size_t	i;
-	t_token	*token_list;
-	int		error;
+	size_t		i;
+	t_token		*token_list;
+	int			error;
+	t_ast		*save;
 
 	error = 0;
 	token_list = malloc(sizeof(t_token));
@@ -66,9 +45,9 @@ int split_word(t_ast **root, t_ast *current, t_env *env) //
 		return (1);
 	token_init(&token_list);
 	i = 0;
-	while (i < ft_strlen(current->value))
+	while (i < ft_strlen((*current)->value))
 	{
-		error = split_one(current->value, &i, &token_list);
+		error = split_one((*current)->value, &i, &token_list);
 		if (error != 0)
 		{
 			token_free(&token_list);
@@ -78,15 +57,22 @@ int split_word(t_ast **root, t_ast *current, t_env *env) //
 	}
 	if (expander(&token_list, env, error) == 1) //free token list automatiquement
 		return (1);
-	printf("AFTER EXPANDER:\n");
-	token_print(&token_list);
-	if (!token_list->value || !*token_list->value) //wich one ?
-		delete_word(root, current);
-	else
+	/* printf("AFTER EXPANDER:\n");
+	token_print(&token_list); */
+	//error = word_management(root, current, token_list);
+	if (!token_list->value || !*token_list->value)
 	{
-		if (ft_strcmp(current->value, token_list->value) != 0)
-			error = modify_word(&current, token_list);
+		delete_word(root, current);
+		token_free(&token_list);
+		return (-1); //check valeur non utilise par exit status
 	}
+	else if (token_list->next)
+	{
+		if (handle_wildcard(current, &token_list) == 1)
+			return (1);
+	}
+	else if (ft_strcmp((*current)->value, token_list->value) != 0)
+		error = modify_word(current, token_list);
 	token_free(&token_list);
 	return (error);
 }
