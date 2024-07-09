@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 21:53:41 by allan             #+#    #+#             */
-/*   Updated: 2024/07/08 22:09:07 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/09 13:20:59 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ bool	dquotes_token(const char *cmd_line, size_t *i, t_token **token_list)
 	return (0);
 }
 
-bool	env_dquotes(const char *cmd_line, t_index *index, t_token **token_list)
+bool	env_dquotes(const char *cmd_line, t_index *index, t_token **token_list) //
 {
 	char	*token_value;
 	int		option;

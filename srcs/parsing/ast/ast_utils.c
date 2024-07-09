@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 19:12:00 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/07 20:09:34 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/08 14:20:59 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ t_ast	*create_node(t_token *token, int subshell)
 	return (node);
 }
 
-void	free_token_and_next_in_ast(t_token **tokens, t_token **temp)
+void	free_token_and_next(t_token **tokens, t_token **temp)
 {
 	*temp = *tokens;
 	*tokens = (*tokens)->next;

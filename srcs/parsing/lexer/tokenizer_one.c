@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:26:32 by allan             #+#    #+#             */
-/*   Updated: 2024/07/02 15:03:37 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/09 13:04:02 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,15 +54,6 @@ bool outpar_token(size_t *i, t_token **token_list)
 	(*i)++;
 	return (0);
 }
-
-/*
-
-allan@allan-XPS-15-9570:~/project/test$ echo cool &&||| echo test
-bash: syntax error near unexpected token `||'
-
-SI ||| trois ou plus 
-D'abord sonsidere comme un pipe puis comme un ou: ||| = Un | et un ||
-*/
 
 bool or_token(size_t *i, t_token **token_list)
 {

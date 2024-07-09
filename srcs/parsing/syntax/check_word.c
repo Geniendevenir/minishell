@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_word.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 14:48:05 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/08 12:10:44 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/08 13:17:12 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,12 +100,6 @@ enum s_type	check_word(char *word, t_word *boolean)
 		return (check_word_part_rediout(boolean));
 	else if (boolean->append == 1)
 		return (check_word_part_append(boolean));
-	else if (boolean->here_doc == 1 && boolean->cmd == 1)
-	{
-		boolean->here_doc = 0;
-		boolean->cmd = 0;
-		return (WORD_LIMITER);
-	}
 	else if (boolean->cmd == 1)
 		return (WORD_OPTION);
 	else if ((boolean->redi_in == 0) && (boolean->redi_out == 0)

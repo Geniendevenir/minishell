@@ -7,8 +7,7 @@
 		"functional": "c",
 		"tuple": "c",
 		"type_traits": "c",
-		"utility": "c",
-		"unistd.h": "c"
+		"utility": "c"
 	},
 	"files.autoSave": "afterDelay",
     "editor.detectIndentation": false,

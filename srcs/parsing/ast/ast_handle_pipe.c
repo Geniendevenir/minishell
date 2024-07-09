@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_handle_pipe.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 20:38:03 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/06 21:18:54 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/08 14:20:59 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,5 +77,5 @@ void	handle_pipe(t_token **tokens, t_ast_ptr **list, int sub_shell)
 		if_no_last_ope(&new_node, list);
 	else
 		if_last_ope_exist(&new_node, list);
-	free_token_and_next_in_ast(tokens, &temp);
+	free_token_and_next(tokens, &temp);
 }

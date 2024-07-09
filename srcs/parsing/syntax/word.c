@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   word.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:27:35 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/07 20:07:39 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/08 13:17:45 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	init_t_word(t_word *word)
 {
 	word->redi_in = 0;
 	word->redi_out = 0;
-	word->here_doc = 0;
 	word->append = 0;
 	word->operator = 0;
 	word->cmd = 0;

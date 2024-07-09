@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:24:04 by allan             #+#    #+#             */
-/*   Updated: 2024/07/08 22:16:05 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/09 12:51:30 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ t_token	*duplicate_token_list(const t_token *head)
 //p->line, p->env, &p->ast
 //char *cmd_line, t_env *env, t_ast **ast
 //printf("test\n");
-int parser(char *cmd_line, t_env *env, t_ast **ast)
+int parser(char *cmd_line, t_env *env, t_ast **ast, t_all **p)
 {
 	t_token	*token_list;
 	t_word	word;
@@ -94,12 +94,7 @@ int parser(char *cmd_line, t_env *env, t_ast **ast)
 	token_init(&token_list);
 	if (lexer(cmd_line, &token_list, error) == 1)
 		return (1);
-	/* printf("AFTER LEXER:\n");
-	token_print(&token_list);
-	token_print_amazing(&token_list); */
-	/* if (expander(&token_list, env, error) == 1)
-		return (1); */
-	/* printf("\n\n\nAFTER EXPANDER:\n");
+/* 	printf("AFTER LEXER:\n");
 	token_print(&token_list);
 	token_print_amazing(&token_list); */
 	if (check_syntax(token_list) == 1)
@@ -107,6 +102,8 @@ int parser(char *cmd_line, t_env *env, t_ast **ast)
 		token_free(&token_list);
 		return (1);
 	}
+	here_doc(&token_list,p);
+	//printf("TESTT APRES HEREDOC\n");
 	init_t_word(&word);
 	if (define_word(&token_list, &word))
 		return (1);

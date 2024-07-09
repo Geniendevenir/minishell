@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/09 12:13:38 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/09 12:30:07 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,19 @@
 # include "../libft/inc/ft_printf.h"
 # include "../libft/inc/get_next_line.h"
 
+# define BASE "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+# define BASE_LENGTH 62
+# define MAX_FILENAME_LENGTH 165
+
 //DONT CHANGE THE NUMBER
-#define ERROR_MALLOC 1
-#define ERROR_AND 2
-#define ERROR_ENV 3
-#define ERROR_DQUOTES 4
-#define ERROR_SQUOTES 7
-#define ERROR_SEMICOLON 5
-#define ERROR_DUOSEMICOLON 8
-#define ERROR_FILE 6
+# define ERROR_MALLOC 1
+# define ERROR_AND 2
+# define ERROR_ENV 3
+# define ERROR_DQUOTES 4
+# define ERROR_SQUOTES 7
+# define ERROR_SEMICOLON 5
+# define ERROR_DUOSEMICOLON 8
+# define ERROR_FILE 6
 
 /*					 LEXER					*/
 
@@ -111,8 +115,8 @@ enum s_type{
 	WORD_LIMITER,
 	WORD_STRING,
 	WORD_ERROR, //ERREUR (le WORD n'est pas classifie)
-	WORD_WTF, //dans le cas ou j'ai oublie un cas
-	WORD_SQLIMITER
+	WORD_WTF,
+	WORD_SQLIMITER, //dans le cas ou j'ai oublie un cas
 };
 
 typedef struct s_token
@@ -179,7 +183,9 @@ typedef struct s_all
 {
 	t_env	*env;
 	t_ast	*ast;
+	char	**here_doc;
 	char	*line;
+	int		line_num;
 	t_sig	*sig;
 }	t_all;
 
@@ -187,7 +193,6 @@ typedef struct s_word
 {
 	int redi_in;
 	int redi_out;
-	int here_doc;
 	int append;
 	int operator;
 	int cmd;
@@ -203,20 +208,21 @@ typedef struct s_exec
 	char 			**command;
 }				t_exec;
 
-extern t_sig	g_sig;
 
 //						EXECUTION                      //
 int			executer(t_ast **ast, t_env *env, int *exit_status);
 
 //redirect
-int			assign_redirect(t_ast *current, t_exec *exec);
-
+int			exec_assign_redirect(t_ast *current, t_exec *exec);//parse_cmd
+int 		get_command(t_ast *current, t_exec *exec);
+int			command_size(t_ast *current);
+char 		**parse_command(t_ast *current, int size);
 //parse_cmd
 int 		get_command(t_ast *current, t_exec *exec);
 int			command_size(t_ast *current);
 char 		**parse_command(t_ast *current, int size);
 //path_cmd
-char	*find_path(t_env *env);
+char		*find_path(t_env *env);
 char		*path_free(t_path *p, int *error, int option);
 void		p_init(t_path *p);
 char		*get_path(const char *cmd, t_env *env, int *error);
@@ -241,7 +247,7 @@ bool		is_redirect_folder(t_ast *current);
 
 //				PARSER
 
-int			parser(char *cmd_line, t_env *env, t_ast **ast);
+int			parser(char *cmd_line, t_env *env, t_ast **ast, t_all **p);
 
 //check_lexer
 int			check_quotes(char *cmd_line);
@@ -313,6 +319,24 @@ const char	*getToken_Class(t_token *current);
 
 //error
 void		error_lexer(int error);
+//here_doc
+char		*cleanbuffer(char *buffer);
+int			prev_valo(char *buffer);
+char		*hdoc_process(int fd, t_token *limiter, t_all **p);
+int			fill_here_doc(t_token **current, int max, t_all **p, int *nb);
+void		here_doc(t_token **token_list, t_all **p);
+void		warning(char *str, int nb);
+int			quit_here_doc(int opt, t_all *p, int nb);
+void		free_here_docs(char **here_docs);
+int			here_doc_count(t_token *tok);
+void		init_here_docs(t_token *token_list, t_all **p);
+int			create_signal_here(t_all **p);
+int			signals_hdoc(int opt, t_all **p);
+int			fichier_existe(const char *name);
+void		if_in_increment_base(size_t len, size_t *j, char *name);
+void		increment_base(char *name, size_t len_base);
+char		*generate_name(void);
+char		*ft_strjoin_spe(char *s1, char const *s2);
 
 
 /*								EXPANDER						*/
@@ -354,6 +378,7 @@ void		print_envv(t_env **env);
 
 //////////////////////////////////////////////////////////
 
+
 /*						AST					*/
 
 t_ast		*parse_expression(t_token **token_list, int sub_shell);
@@ -380,7 +405,7 @@ void		if_last_ope_exist(t_ast **new_node, t_ast_ptr **list);
 void		if_no_save_operator(t_ast **current, t_ast **new_node,
 t_ast		**save_operator, t_ast **save_pipe);
 void		init_pointer_ast(t_ast_ptr **list);
-void		free_token_and_next_in_ast(t_token **tokens, t_token **temp);
+void		free_token_and_next(t_token **tokens, t_token **temp);
 void		get_first_parent(t_ast_ptr **list);
 bool		is_pipe(t_token **tok);
 bool		is_ope(t_token **tokens);
@@ -394,7 +419,9 @@ void		free_list_ptr(t_ast_ptr **list, t_ast **temp_free, int option);
 /*					SIGNALS					*/
 
 int			event(void);
-int			create_signal(int *exit_status);
+int			create_signal(void);
+void		sighandler(int signal);
+int			stop_signals(void);
 
 /*					SYNTAX AND WORD					*/
 int			check_word_part_cmd(char *word, t_word *boolean);
@@ -423,8 +450,8 @@ bool		check_current_parenthesis(t_token *current, int option);
 
 
 /*					 INIT					*/
-t_all		*init_all(char **env, int *exit_status);
-t_sig		*init_signal(int nb, int *exit_status);
+t_all		*init_all(char **env);
+void		init_signal(int nb, t_all **p);
 void		init_t_word(t_word *word);
 
 /*					 FREE					*/
@@ -474,7 +501,9 @@ bool		check_echo(char *str);
 int			ft_echo(char **cmd);
 
 int			main(int argc, char **argv, char **env);
+char		*minishell(t_all *p, int *exit_status);
 
+//extern int	sig_int;
 /*						AST	TRY				*/
 
 #define PRECEDENCE_LOWEST 1

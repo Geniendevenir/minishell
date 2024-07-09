@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 18:41:34 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/06 13:26:50 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/08 14:20:59 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ t_ast	*parse_expression(t_token **tokens, int subshell)
 		else if (if_cmd_or_option(tokens))
 			handle_builtin_cmd_or_option(tokens, &list, subshell);
 		else
-			free_token_and_next_in_ast(tokens, &temp);
+			free_token_and_next(tokens, &temp);
 	}
 	get_first_parent(&list);
 	free_list_ptr(&list, &temp_free, 2);

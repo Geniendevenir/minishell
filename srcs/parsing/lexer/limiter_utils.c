@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 19:48:26 by allan             #+#    #+#             */
-/*   Updated: 2024/07/07 19:58:13 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/09 13:06:11 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 bool	last_heredoc(t_token **token_list)
 {
-	t_token *current;
-	int	heredoc;
+	t_token	*current;
+	int		heredoc;
 
 	heredoc = 0;
 	current = *token_list;

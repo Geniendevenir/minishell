@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 17:54:19 by allan             #+#    #+#             */
-/*   Updated: 2024/07/09 12:18:06 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/09 13:20:54 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,11 @@
 
 void	replace_word(t_ast **root, t_ast *node, t_ast *new_node)
 {
+	if (node->type == WORD_CMD)
+	{
+		if (node->left)
+			node->left->type = WORD_CMD;
+	}
 	if (node->parent == NULL)  // node is the root
 		*root = new_node;
 	else if (node->parent->left == node)
@@ -49,7 +54,7 @@ bool	modify_word(t_ast **node, t_token *token_list)
 }
 
 
-int split_word(t_ast **root, t_ast *current, t_env *env)
+int split_word(t_ast **root, t_ast *current, t_env *env) //
 {
 	size_t	i;
 	t_token	*token_list;

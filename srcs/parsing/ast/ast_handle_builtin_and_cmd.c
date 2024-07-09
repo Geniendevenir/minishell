@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_handle_builtin_and_cmd.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 19:57:09 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/06 21:15:00 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/08 14:20:59 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ t_ast	*handle_builtin_and_cmd(t_token **tokens, t_ast_ptr	**list,
 		part_builtin_and_cmd(list, &new_node, &temp_current);
 	else
 		(*list)->current = new_node;
-	free_token_and_next_in_ast(tokens, &temp);
+	free_token_and_next(tokens, &temp);
 	return ((*list)->current);
 }
 
@@ -77,7 +77,7 @@ t_ast	*handle_option(t_token **tokens, t_ast_ptr **list, int sub_shell)
 	(*list)->last_cmd->left = new_node;
 	new_node->parent = (*list)->last_cmd;
 	(*list)->current = new_node;
-	free_token_and_next_in_ast(tokens, &tmp);
+	free_token_and_next(tokens, &tmp);
 	return ((*list)->current);
 }
 
