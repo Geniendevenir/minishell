@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenizer_three.c                                  :+:      :+:    :+:   */
+/*   split_one.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/02 22:28:07 by allan             #+#    #+#             */
-/*   Updated: 2024/07/08 18:26:01 by allan            ###   ########.fr       */
+/*   Created: 2024/07/08 21:53:15 by allan             #+#    #+#             */
+/*   Updated: 2024/07/08 22:51:55 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* int	env_token(const char *cmd_line, size_t *i, t_token **token_list)
+int	env_token(const char *cmd_line, size_t *i, t_token **token_list)
 {
 	t_token	*current;
 	char	*token_value;
@@ -40,11 +40,16 @@ void	env_special_token(t_token **token_list, int option)
 
 	current = token_last(*token_list);
 	current->len = 1;
-	current->type = TOKEN_WORD;
 	if (option == 1)
-		current->state = STATE_EXIT_STATUS;
-	else if (option == 2)
+	{
+		current->type = TOKEN_ENV;
 		current->state = STATE_WORD;
+	}
+	else if (option == 2)
+	{
+		current->type = TOKEN_WORD;
+		current->state = STATE_WORD;
+	}
 }
 
 bool	wildcard_token(const char *cmd_line, size_t *i, t_token **token_list)
@@ -54,7 +59,7 @@ bool	wildcard_token(const char *cmd_line, size_t *i, t_token **token_list)
 	size_t	j;
 
 	j = *i;
-	while (cmd_line[j] && (is_word(cmd_line[j]) == 0 || cmd_line[j] == '*'))
+	while (cmd_line[j] && (limit_word(cmd_line[j]) == 0 || cmd_line[j] == '*'))
 		j++;
 	token_value = ft_substr(cmd_line, *i, (j - *i));
 	if (!token_value)
@@ -67,34 +72,17 @@ bool	wildcard_token(const char *cmd_line, size_t *i, t_token **token_list)
 	current->type = TOKEN_WILDCARD;
 	(*i) = j;
 	return (0);
-} */
+}
 
-bool lexical_token(const char *cmd_line, size_t *i, t_token **token_list)
+bool word_token(const char *cmd_line, size_t *i, t_token **token_list)
 {
 	t_token	*current;
 	char	*token_value;
 	size_t	j;
 
 	j = *i;
-	//Hello'oui'"NON"
-	while (cmd_line[j])
-	{
-		if (cmd_line[j] == '\'')
-		{
-			j++;
-			while (cmd_line[j] && cmd_line[j] != '\'')
-				j++;
-		}
-		else if (cmd_line[j] == '\"')
-		{
-			j++;
-			while (cmd_line[j] && cmd_line[j] != '\"')
-				j++;
-		}
-		else if (is_word(cmd_line[j]) == 1)
-			break;
+	while (cmd_line[j] && limit_word(cmd_line[j]) == 0)
 		j++;
-	}
 	token_value = ft_substr(cmd_line, *i, (j - *i));
 	if (!token_value)
 		return (1);

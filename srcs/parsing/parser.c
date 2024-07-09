@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:24:04 by allan             #+#    #+#             */
-/*   Updated: 2024/07/08 14:24:34 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/08 22:16:05 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,8 @@ int parser(char *cmd_line, t_env *env, t_ast **ast)
 	/* printf("AFTER LEXER:\n");
 	token_print(&token_list);
 	token_print_amazing(&token_list); */
-	if (expander(&token_list, env, error) == 1)
-		return (1);
+	/* if (expander(&token_list, env, error) == 1)
+		return (1); */
 	/* printf("\n\n\nAFTER EXPANDER:\n");
 	token_print(&token_list);
 	token_print_amazing(&token_list); */
@@ -110,8 +110,8 @@ int parser(char *cmd_line, t_env *env, t_ast **ast)
 	init_t_word(&word);
 	if (define_word(&token_list, &word))
 		return (1);
-	printf("\n\nAFTER define word:\n");
-	token_print_amazing(&token_list);
+	/* printf("\n\nAFTER define word:\n");
+	token_print_amazing(&token_list); */
 	sub_shell = 0;
 	*ast = parse_expression(&token_list, sub_shell);
 	printAST(*ast, 0);

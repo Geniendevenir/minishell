@@ -1,18 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenizer_four.c                                   :+:      :+:    :+:   */
+/*   split_two.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/15 14:02:01 by allan             #+#    #+#             */
-/*   Updated: 2024/07/08 18:06:40 by allan            ###   ########.fr       */
+/*   Created: 2024/07/08 21:53:41 by allan             #+#    #+#             */
+/*   Updated: 2024/07/08 22:09:07 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "minishell.h"
-/* 
+
 bool	dquotes_token(const char *cmd_line, size_t *i, t_token **token_list)
 {
 	t_index	index;
@@ -70,12 +69,6 @@ bool	env_dquotes(const char *cmd_line, t_index *index, t_token **token_list)
 		return (1);
 	(*index->i) = index->j;
 	return (0);
-}
-
-size_t	index_foward(size_t *j)
-{
-	*j += 1;
-	return (*j);
 }
 
 bool	dquotes_last_token(const char *cmd_line, t_index *index, t_token **token_list)
@@ -146,5 +139,4 @@ bool squote_token(const char *cmd_line, size_t *i, t_token **token_list)
 	current->type = TOKEN_SQUOTES;
 	(*i) = j + 1;
 	return (0);
-} */
-
+}

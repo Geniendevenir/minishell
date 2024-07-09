@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/08 15:14:37 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/09 12:13:38 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -276,6 +276,7 @@ bool		inputre_token(size_t *i, t_token **token_list);
 bool		outputapp_token(size_t *i, t_token **token_list);
 bool		outputre_token(size_t *i, t_token **token_list);
 bool		lexical_token(const char *cmd_line, size_t *i, t_token **token_list);
+bool		word_token(const char *cmd_line, size_t *i, t_token **token_list); //split
 int			env_token(const char *cmd_line, size_t *i, t_token **token_list);
 void		env_special_token(t_token **token_list, int option);
 bool		wildcard_token(const char *cmd_line, size_t *i, t_token **token_list);
@@ -315,7 +316,17 @@ void		error_lexer(int error);
 
 
 /*								EXPANDER						*/
+//split_word
+void		replace_word(t_ast **root, t_ast *node, t_ast *new_node);
+void		delete_word(t_ast **root, t_ast *node);
+bool		modify_word(t_ast **node, t_token *token_list);
+int			split_word(t_ast **root, t_ast *ast, t_env *env);
+int			split_one(const char *cmd_line, size_t *i, t_token **token_list);
+int			split_two(const char *cmd_line, size_t *i, t_token **token_list);
+bool		limit_word(char c);
+
 bool		expander(t_token **token_list, t_env *env, int error);
+
 //expand env
 int			expand_env(t_token **token_list, t_env **env);
 bool		find_first_env(t_token **current, t_env **env);

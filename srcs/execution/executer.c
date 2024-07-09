@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 21:23:21 by allan             #+#    #+#             */
-/*   Updated: 2024/07/08 17:02:16 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/09 12:08:12 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,17 +48,76 @@ int		execute_cmd(t_exec	*exec, t_env *env)
 	return (0);
 }
 
+
+/*
+SUBSHELL
+IF WORD
+{
+	SEPARATEUR
+	EXPANDER
+	IF NEW_VALUE = NULL
+	{
+		SUPPRIMER LE NODE ET RATACHER L'AST
+		IF (CURRENT == CMD)
+		{
+			IF (CURRENT->NEXT)
+			CURRENT->NEXT devient cmd
+		}
+	}
+	
+}
+*/
+//printf("test\n");
 int		executer(t_ast **ast, t_env *env, int *exit_status)
 {
 	t_ast *current;
+	t_ast *next;
 	t_exec	exec;
 	int		result;
 
 	current = *ast;
 	exec_init(&exec);
-	while (current && current->left) //Down->Left : A CHAQUE DESCENTE LEFT OR RIHT EXPAND LES ENV POUR LES WORD ET LES HEREDOC DONT LE TYPE N'EST PAS SQ_LIMITER 
-		current = current->left;
-	while (current->parent && (current->parent->type == WORD_CMD || current->parent->type == WORD_OPTION || current->parent->type == WORD_BUILTIN)) //Up->Cmd
+	//printf("test\n");
+	
+	/* if (!current->left && current->state == STATE_WORD)
+	{
+		printf("test\n");
+		split_word(current, env);		
+	} */
+	while (current) //Down->Left : A CHAQUE DESCENTE LEFT OR RIHT EXPAND LES ENV POUR LES WORD ET LES HEREDOC DONT LE TYPE N'EST PAS SQ_LIMITER
+	{
+		//if (current->subshell == 1) fork
+		next = NULL;
+		if (current->state == STATE_WORD)
+		{
+			if (current->left)
+				next = current->left;
+			if (split_word(ast, current, env) != 0)
+			{
+				exec_free(&exec);
+				free_ast(*ast);
+				return (1); //CHANGE RETURN AS IT ALSO TAKE INTO ACCOUNT EMPTY PROMTP AFTER EXPANDER
+			}
+			if (!next)
+				break;
+			current = next;
+		}
+		else
+		{
+			if (!current->left)
+				break ;
+			current = current->left;
+		}
+	}
+	
+	/* current = *ast;
+	while (current) //check Invalid read of size
+	{
+		if (!current->left)
+				break ;
+			current = current->left;
+	} */
+	/* while (current->parent && (current->parent->type == WORD_CMD || current->parent->type == WORD_OPTION || current->parent->type == WORD_BUILTIN)) //Up->Cmd
 		current = current->parent;
 	if (get_command(current, &exec) == 1) // Get cmd
 	{
@@ -80,8 +139,10 @@ int		executer(t_ast **ast, t_env *env, int *exit_status)
 		return (1);
 	}
 	printf("COMMAND:\n");
-	print_tab(exec.command);
+	print_tab(exec.command); */
 	exec_free(&exec);
+	printAST(*ast, 0);
+	free_ast(*ast);
 	return (0);
 }
 
@@ -292,3 +353,31 @@ typedef struct s_ast {
 			current = current->left
 		}
 */
+
+/* int		executer(t_ast **ast, t_env *env, int *exit_status)
+{
+	t_ast *current;
+	t_exec	exec;
+	int		result;
+
+	current = *ast;
+	exec_init(&exec);
+	while (current)
+	{
+		if (current->state == STATE_WORD)
+		{
+			if (split_word(ast, current, env) != 0)
+			{
+				exec_free(&exec);
+				free_ast(*ast);
+				return (1);
+			}
+		}
+		if (!current->left)
+			break ;
+		current = current->left;
+	}
+	exec_free(&exec);
+	free_ast(*ast);
+	return (0);
+} */

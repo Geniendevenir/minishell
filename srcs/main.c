@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/08 15:00:28 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/08 23:11:31 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ char	*minishell(t_all *p, int *exit_status)
 		if (next_status == 0)
 		{
 			next_status = executer(&p->ast, p->env, exit_status);
-			free_ast(p->ast);
 		}
 		//free_ast(p->ast); //a delete quand on test execution
 		add_history(p->line);
