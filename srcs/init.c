@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 22:57:28 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/08 23:49:00 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/09 13:01:37 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ t_all	*init_all(char **env)
 	if (!p->sig)
 		return (free_env(p->env), free(p), NULL);
 	if (create_signal() == -1)
-		return (free_env(p->env), free(p), free(p->sig), NULL);
+		return (free_env(p->env), free(p->sig), free(p), NULL);
 	p->sig->sig_quit = 0;
 	p->sig->sig_int = 0;
 	p->sig->p_status = 0;

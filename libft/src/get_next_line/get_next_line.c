@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 11:26:27 by allan             #+#    #+#             */
-/*   Updated: 2024/07/08 12:24:28 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/09 16:49:04 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ char	*get_next_line(int fd)
 	static char	*stash;
 	char		*display;
 
+	//stop_signals();
 	if (fd == -42)
 	{
 		if (stash && stash != NULL)

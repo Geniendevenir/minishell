@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/09 12:30:07 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/09 17:46:14 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -337,6 +337,8 @@ void		if_in_increment_base(size_t len, size_t *j, char *name);
 void		increment_base(char *name, size_t len_base);
 char		*generate_name(void);
 char		*ft_strjoin_spe(char *s1, char const *s2);
+void		bloquer_signal_eof(void);
+void		restaurer_signal_eof(void);
 
 
 /*								EXPANDER						*/

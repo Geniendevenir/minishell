@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 14:57:22 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/09 12:17:17 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/09 20:27:11 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,25 +36,26 @@ char	*hdoc_process(int fd, t_token *limiter, t_all **p)
 	char		*buffer;
 	int			prev;
 
-	buffer = get_next_line(0);
+	/* write(1, "> ", 2);*/	
+	buffer = readline("> ");
 	if (limiter->value)
 		limiter->value = ft_strjoin_spe(limiter->value, "\n");
 	else if (!*limiter->value)
 		limiter->value = ft_strdup("\n");
-	if (buffer == NULL && sig_int != 1)
+	if (buffer == NULL && sig_int == 0)
 		return (warning(limiter->value, (*p)->line_num), NULL);
 	prev = prev_valo(buffer);
 	(*p)->line_num = 1;
 	while (ft_strcmp(buffer, limiter->value) != 0 && sig_int == 0)
 	{
-		//printf("buffer = %slimiter = %s\n",buffer, limiter->value);
 		if (buffer != NULL)
 			write(fd, buffer, ft_strlen(buffer));
 		if (buffer != NULL)
 			free(buffer);
-		buffer = (get_next_line(0));
+		//write(1, "> ", 2);	
+		buffer = readline("> ");
 		(*p)->line_num++;
-		if (prev == 1 && buffer == NULL && sig_int != 1)
+		if (prev == 1 && buffer == NULL  && sig_int != 1)
 		{
 			warning(limiter->value, (*p)->line_num);
 			break ;
@@ -66,9 +67,9 @@ char	*hdoc_process(int fd, t_token *limiter, t_all **p)
 
 int	fill_here_doc(t_token **current, int max, t_all **p, int *nb)
 {
-	extern int sig_int;
-	int		fd;
-	char	*buffer;
+	extern int	sig_int;
+	int			fd;
+	char		*buffer;
 
 	if (*nb == max)
 		return ((*p)->here_doc[*nb] = NULL, 1);
@@ -88,7 +89,7 @@ int	fill_here_doc(t_token **current, int max, t_all **p, int *nb)
 	free((*current)->value);
 	(*current)->value = ft_strdup((*p)->here_doc[*nb]);
 	(*nb)++;
-	if (signals_hdoc(1, p) == -1 || (*current)->value == NULL || sig_int == 1)
+	if (/* signals_hdoc(1, p) == -1 ||  */(*current)->value == NULL || sig_int == 1)
 		return (close (fd), quit_here_doc(1, *p, *nb));
 	else
 		return (close (fd), 1);
@@ -96,7 +97,7 @@ int	fill_here_doc(t_token **current, int max, t_all **p, int *nb)
 
 void here_doc(t_token **token_list, t_all **p)
 {
-	t_token *current;
+	t_token	*current;
 	int		max;
 	int		nb;
 
@@ -110,14 +111,14 @@ void here_doc(t_token **token_list, t_all **p)
 		{
 			if (fill_here_doc(&current, max, p, &nb) == -1)
 			{
+				//write(1, "\n", 1);
 				free_here_docs((*p)->here_doc);
 				(*p)->here_doc = NULL;
+				break ;
 			}
 		}
 		if (current->next)
-		{
 			current = current->next;
-		}
 		else
 			break;
 	}
