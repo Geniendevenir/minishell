@@ -6,11 +6,37 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 16:29:41 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/08 23:19:16 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/09 12:14:52 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*ft_strjoin_spe(char *s1, char const *s2)
+{
+	char	*dest;
+	size_t	i;
+	size_t	destlen;
+
+	i = 0;
+	destlen = ft_strlen(s1) + ft_strlen(s2);
+	dest = malloc(destlen + 1 * sizeof(char));
+	if (!dest)
+		return (NULL);
+	while (*(s1 + i))
+	{
+		*(dest + i) = *(s1 + i);
+		i++;
+	}
+	while (*s2)
+	{
+		*(dest + i) = *s2++;
+		i++;
+	}
+	*(dest + i) = '\0';
+	free(s1);
+	return (dest);
+}
 
 void	warning(char *str, int nb)
 {
@@ -39,7 +65,7 @@ int	quit_here_doc(int opt, t_all *p, int nb)
 	}
 	else if (opt == 1)
 	{
-		unlink (p->here_doc[nb]);
+		//unlink (p->here_doc[nb]);
 		free(p->here_doc[nb]);
 		p->here_doc[nb] = NULL;
 	}

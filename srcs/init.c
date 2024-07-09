@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 22:57:28 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/08 23:31:23 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/08 23:49:00 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ t_all	*init_all(char **env)
 
 void	init_signal(int nb, t_all **p)
 {
+	if ((*p)->sig)
+		free((*p)->sig);
 	(*p)->sig = malloc(sizeof(t_sig));
 	if (!(*p)->sig)
 		return ;
