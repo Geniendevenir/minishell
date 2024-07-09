@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/08 22:44:05 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/09 12:41:34 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,12 @@ char	*minishell(t_all *p, int *exit_status)
 	if (sig_int == 0 && p->sig->sig_quit == 0)
 	{
 		next_status = parser(p->line, p->env, &p->ast, &p);
-		printf("next_status = %d\n", next_status);
-		/* if (next_status == 0)
+		//printf("next_status = %d\n", next_status);
+		if (next_status == 0)
 		{
 			next_status = executer(&p->ast, p->env, exit_status);
-		} */
-		free_ast(p->ast);
+		}
+		//free_ast(p->ast);
 		add_history(p->line);
 	}
 	*exit_status = next_status;

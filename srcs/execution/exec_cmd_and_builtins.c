@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd_and_builtins.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 19:17:38 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/08 12:29:17 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/30 22:09:20 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/* #include "minishell.h"
+#include "minishell.h"
 
 int	len_ast(t_ast *ast)
 {
@@ -32,8 +32,8 @@ char	**free_in_parent_cmd(char **cmd)
 	return (NULL);
 }
 
-//return a char**cmd | cmd[0] = command name and cmd[n] = n options
-//else return NULL
+/*return a char**cmd | cmd[0] = command name and cmd[n] = n options
+else return NULL*/
 char	**split_cmd(t_ast *current)
 {
 	char	**cmd;
@@ -73,4 +73,4 @@ int exec_cmd_or_builtin(t_ast *current, t_all *env)
 		return (1);
 	return (-1);
 	
-} */
+}

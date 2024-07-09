@@ -6,14 +6,14 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 16:21:55 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/08 12:28:38 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/06/30 15:24:32 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 // Initialise une structure t_file avec les valeurs par défaut
-/* t_file *init_files(t_ast *current)
+t_file *init_files(t_ast *current)
 {
 	t_file	*file;	
 	file = malloc(sizeof(t_file));
@@ -49,4 +49,4 @@ void	add_file(t_file **files, t_ast *current)
 	}
 	new_file->next = *files;
 	*files = new_file;
-} */
+}

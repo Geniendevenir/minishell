@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/09 00:20:10 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/09 12:30:07 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,15 @@ typedef struct s_syntax
 	int		openpar;
 	bool	operator;
 }				t_syntax;
+
+typedef struct s_path
+{
+	char	*path_value;
+	char	**env_paths;
+	char	*final_path;
+	char	*part_path;
+	int		i;
+}				t_path;
 
 enum s_state{
 	STATE_START,
@@ -204,15 +213,22 @@ typedef struct s_exec
 int			executer(t_ast **ast, t_env *env, int *exit_status);
 
 //redirect
-int		exec_assign_redirect(t_ast *current, t_exec *exec);
-
-//exec_parse_command
+int			exec_assign_redirect(t_ast *current, t_exec *exec);//parse_cmd
 int 		get_command(t_ast *current, t_exec *exec);
 int			command_size(t_ast *current);
 char 		**parse_command(t_ast *current, int size);
+//parse_cmd
+int 		get_command(t_ast *current, t_exec *exec);
+int			command_size(t_ast *current);
+char 		**parse_command(t_ast *current, int size);
+//path_cmd
+char		*find_path(t_env *env);
+char		*path_free(t_path *p, int *error, int option);
+void		p_init(t_path *p);
+char		*get_path(const char *cmd, t_env *env, int *error);
 
 //exec_utils
-t_exec		exec_init(t_exec exec);
+void		exec_init(t_exec *exec);
 void		exec_free(t_exec *exec);
 void		set_pipe(t_exec *exec, int set_pipe);
 
@@ -266,6 +282,7 @@ bool		inputre_token(size_t *i, t_token **token_list);
 bool		outputapp_token(size_t *i, t_token **token_list);
 bool		outputre_token(size_t *i, t_token **token_list);
 bool		lexical_token(const char *cmd_line, size_t *i, t_token **token_list);
+bool		word_token(const char *cmd_line, size_t *i, t_token **token_list); //split
 int			env_token(const char *cmd_line, size_t *i, t_token **token_list);
 void		env_special_token(t_token **token_list, int option);
 bool		wildcard_token(const char *cmd_line, size_t *i, t_token **token_list);
@@ -302,10 +319,38 @@ const char	*getToken_Class(t_token *current);
 
 //error
 void		error_lexer(int error);
+//here_doc
+char		*cleanbuffer(char *buffer);
+int			prev_valo(char *buffer);
+char		*hdoc_process(int fd, t_token *limiter, t_all **p);
+int			fill_here_doc(t_token **current, int max, t_all **p, int *nb);
+void		here_doc(t_token **token_list, t_all **p);
+void		warning(char *str, int nb);
+int			quit_here_doc(int opt, t_all *p, int nb);
+void		free_here_docs(char **here_docs);
+int			here_doc_count(t_token *tok);
+void		init_here_docs(t_token *token_list, t_all **p);
+int			create_signal_here(t_all **p);
+int			signals_hdoc(int opt, t_all **p);
+int			fichier_existe(const char *name);
+void		if_in_increment_base(size_t len, size_t *j, char *name);
+void		increment_base(char *name, size_t len_base);
+char		*generate_name(void);
+char		*ft_strjoin_spe(char *s1, char const *s2);
 
 
 /*								EXPANDER						*/
+//split_word
+void		replace_word(t_ast **root, t_ast *node, t_ast *new_node);
+void		delete_word(t_ast **root, t_ast *node);
+bool		modify_word(t_ast **node, t_token *token_list);
+int			split_word(t_ast **root, t_ast *ast, t_env *env);
+int			split_one(const char *cmd_line, size_t *i, t_token **token_list);
+int			split_two(const char *cmd_line, size_t *i, t_token **token_list);
+bool		limit_word(char c);
+
 bool		expander(t_token **token_list, t_env *env, int error);
+
 //expand env
 int			expand_env(t_token **token_list, t_env **env);
 bool		find_first_env(t_token **current, t_env **env);
@@ -330,24 +375,6 @@ bool		add_file(t_token **current, char *file_name, bool found);
 bool		wildcard_return(DIR **d);
 	
 void		print_envv(t_env **env);
-//here_doc
-char		*cleanbuffer(char *buffer);
-int			prev_valo(char *buffer);
-char		*hdoc_process(int fd, t_token *limiter, t_all **p);
-int			fill_here_doc(t_token **current, int max, t_all **p, int *nb);
-void		here_doc(t_token **token_list, t_all **p);
-void		warning(char *str, int nb);
-int			quit_here_doc(int opt, t_all *p, int nb);
-void		free_here_docs(char **here_docs);
-int			here_doc_count(t_token *tok);
-void		init_here_docs(t_token *token_list, t_all **p);
-int			create_signal_here(t_all **p);
-int			signals_hdoc(int opt, t_all **p);
-int			fichier_existe(const char *name);
-void		if_in_increment_base(size_t len, size_t *j, char *name);
-void		increment_base(char *name, size_t len_base);
-char		*generate_name(void);
-char		*ft_strjoin_spe(char *s1, char const *s2);
 
 //////////////////////////////////////////////////////////
 

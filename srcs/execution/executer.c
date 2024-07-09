@@ -6,68 +6,154 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 21:23:21 by allan             #+#    #+#             */
-/*   Updated: 2024/07/07 13:15:29 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/09 12:08:12 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+//RECHECK TOUS LES RETURNS / EXIT STATUS
+int		execute_cmd(t_exec	*exec, t_env *env)
+{
+	char	*path;
+	char	*temp;
+	int		error;
+
+	error = 0;
+	temp = NULL;
+	if (!exec->command || !exec->command[0])
+		return (1);
+	//test builtin
+	//printf("exec->command[0] = %s\n", exec->command[0]);
+	if (access(exec->command[0], X_OK) == -1) //check if not absolute path
+	{
+		path = get_path(exec->command[0], env, &error);
+		if (error != 0)
+		{
+			printf("ERROR: get_path error\n");
+			if (path)
+				free (path);
+			return (1); //malloc error
+		}
+		if (!path)
+		{
+			write(1, exec->command[0], ft_strlen(exec->command[0]));
+			write(1, ": command not found\n", 20);
+			return (127);
+		}
+		temp = exec->command[0];
+		free(temp); // Ca sert a qqchose ?
+		exec->command[0] = path;
+	}
+	return (0);
+}
+
+
+/*
+SUBSHELL
+IF WORD
+{
+	SEPARATEUR
+	EXPANDER
+	IF NEW_VALUE = NULL
+	{
+		SUPPRIMER LE NODE ET RATACHER L'AST
+		IF (CURRENT == CMD)
+		{
+			IF (CURRENT->NEXT)
+			CURRENT->NEXT devient cmd
+		}
+	}
+	
+}
+*/
+//printf("test\n");
 int		executer(t_ast **ast, t_env *env, int *exit_status)
 {
 	t_ast *current;
+	t_ast *next;
 	t_exec	exec;
-	
+	int		result;
+
 	current = *ast;
-	exec_init(exec);
-	while (current && current->left)
-		current = current->left;
-	while (current->parent && (current->parent->type == WORD_CMD || current->parent->type == WORD_OPTION || current->parent->type == WORD_BUILTIN))
+	exec_init(&exec);
+	//printf("test\n");
+	
+	/* if (!current->left && current->state == STATE_WORD)
+	{
+		printf("test\n");
+		split_word(current, env);		
+	} */
+	while (current) //Down->Left : A CHAQUE DESCENTE LEFT OR RIHT EXPAND LES ENV POUR LES WORD ET LES HEREDOC DONT LE TYPE N'EST PAS SQ_LIMITER
+	{
+		//if (current->subshell == 1) fork
+		next = NULL;
+		if (current->state == STATE_WORD)
+		{
+			if (current->left)
+				next = current->left;
+			if (split_word(ast, current, env) != 0)
+			{
+				exec_free(&exec);
+				free_ast(*ast);
+				return (1); //CHANGE RETURN AS IT ALSO TAKE INTO ACCOUNT EMPTY PROMTP AFTER EXPANDER
+			}
+			if (!next)
+				break;
+			current = next;
+		}
+		else
+		{
+			if (!current->left)
+				break ;
+			current = current->left;
+		}
+	}
+	
+	/* current = *ast;
+	while (current) //check Invalid read of size
+	{
+		if (!current->left)
+				break ;
+			current = current->left;
+	} */
+	/* while (current->parent && (current->parent->type == WORD_CMD || current->parent->type == WORD_OPTION || current->parent->type == WORD_BUILTIN)) //Up->Cmd
 		current = current->parent;
-	if (get_command(current, &exec) == 1)
+	if (get_command(current, &exec) == 1) // Get cmd
 	{
 		printf("Get Command Error Malloc\n");
 		exec_free(&exec);
 		return (1);
 	}
-	printf("start = %s\n", current->value);
-	printf("COMMAND\n");
+	printf("COMMAND:\n");
 	print_tab(exec.command);
 	printf("REDIRECT\n");
 	//set_pipe(&exec, 1);
-	exec_assign_redirect(current, &exec);
-	exec_free(&exec);
-	/* while (current && current->parent && is_operator(current->type, 2) == 0)
+	assign_redirect(current, &exec); //Assign Redirect Finir check pipe
+	result = execute_cmd(&exec, env); //execute
+	if (result != 0)
 	{
-		current = current->parent;
-	} */
+		exec_free(&exec);
+		if (result == 1)
+			printf("execute_cmd Malloc Error\n");
+		return (1);
+	}
+	printf("COMMAND:\n");
+	print_tab(exec.command); */
+	exec_free(&exec);
+	printAST(*ast, 0);
+	free_ast(*ast);
 	return (0);
 }
 
-/*
-	if (NON PIPE) OK
-	{
-		exec->pipeleft == 0;
-		exec->piperight == 0;
-	}
-	else if (PIPE LEFT)
-	{
-		exec->pipeleft == 1;
-		exec->piperight == 0;
-	}
-	else if (PIPE RIGHT)
-	{
-		exec->pipeleft = 0;
-		exec->piperight == 1;
-	}
-*/
 
-int		exec_assign_redirect(t_ast *current, t_exec *exec)
+int		assign_redirect(t_ast *current, t_exec *exec)
 {
 	while (current && (exec->redirectin == 0 || exec->redirectout == 0))
 	{
-		if (is_operator(current->type, 2) == 1) //En remontant Si je croise un pipe, pipe 0 = gauche/ pipe 1 = droite
+		if (is_operator(current->type, 2) == 1) //En remontant Si je croise un pipe, pipe 1 = gauche/ pipe 2 = millieu / pipe 3 = droite
 		{
-			/* if (current->type == TOKEN_PIPE)
+			if (current->type == TOKEN_PIPE)
 			{
 				if (exec->pipe == 1)
 				{
@@ -79,7 +165,7 @@ int		exec_assign_redirect(t_ast *current, t_exec *exec)
 					if (exec->in != NULL)
 					exec->redirectin = 1;
 				}
-				else if (exec->pipe == 2)
+				else if (exec->pipe == 3)
 				{
 					if (exec->in == NULL)
 					{
@@ -91,11 +177,12 @@ int		exec_assign_redirect(t_ast *current, t_exec *exec)
 				}
 			}
 			else
-			{ */
+			{
 				if (exec->in != NULL)
 					exec->redirectin = 1;
 				if (exec->out != NULL)
 					exec->redirectout = 1;
+			}
 		}
 		if ((current->type == WORD_FILEIN || current->type == WORD_LIMITER) && exec->redirectin == 0)
 		{
@@ -123,27 +210,6 @@ int		exec_assign_redirect(t_ast *current, t_exec *exec)
 	return (0);
 }
 
-/* if (current->type == TOKEN_PIPE)
-			{
-				if (exec->pipe == 0)
-				{
-					if (exec->out == NULL)
-					{
-						exec->out = current;
-						exec->redirectout = 1;
-					}
-				}
-				else if (exec->pipe == 1)
-				{
-					if (exec->in == NULL)
-					{
-						exec->in = current;
-						exec->redirectin = 1;
-					}
-				}
-			}
-			else
-			{ */
 
 
 /*
@@ -287,3 +353,31 @@ typedef struct s_ast {
 			current = current->left
 		}
 */
+
+/* int		executer(t_ast **ast, t_env *env, int *exit_status)
+{
+	t_ast *current;
+	t_exec	exec;
+	int		result;
+
+	current = *ast;
+	exec_init(&exec);
+	while (current)
+	{
+		if (current->state == STATE_WORD)
+		{
+			if (split_word(ast, current, env) != 0)
+			{
+				exec_free(&exec);
+				free_ast(*ast);
+				return (1);
+			}
+		}
+		if (!current->left)
+			break ;
+		current = current->left;
+	}
+	exec_free(&exec);
+	free_ast(*ast);
+	return (0);
+} */
