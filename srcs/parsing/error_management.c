@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 13:58:59 by allan             #+#    #+#             */
-/*   Updated: 2024/07/09 23:10:55 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/10 18:24:40 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,4 +119,9 @@ void	error_expander(t_ast *current, int error)
 	if (error == 3)
 	if (error == 4)
 	if (error == 5) */
+}
+
+void	error_executer(char *error)
+{
+	write(2, error, ft_strlen(error));
 }

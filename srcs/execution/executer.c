@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 21:23:21 by allan             #+#    #+#             */
-/*   Updated: 2024/07/10 17:05:11 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/10 18:27:29 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,9 @@
 
 
 /*
-	TO DO
-	1 - Separate function split word OK
-	2 - Find a way to Include EXIT STATUS OK
-	3 - CREATE THE ExIT_STATUS MAP
-	3 - Finish left_expand: Subshell, Exit Status, Set Pipe
-	4 - Theorize an algo to explore and execute the entire ast
+	NE PAS OUBLIER
+	1 - Expand HEREDOC
+	2 - 
  */
 
 //RECHECK TOUS LES RETURNS / EXIT STATUS
@@ -33,8 +30,6 @@ int		execute_cmd(t_exec	*exec, t_env *env)
 	temp = NULL;
 	if (!exec->command || !exec->command[0])
 		return (1);
-	//test builtin
-	//printf("exec->command[0] = %s\n", exec->command[0]);
 	if (access(exec->command[0], X_OK) == -1) //check if not absolute path
 	{
 		path = get_path(exec->command[0], env, &error);
@@ -58,17 +53,40 @@ int		execute_cmd(t_exec	*exec, t_env *env)
 	return (0);
 }
 
-int		create_subshell(t_all *p, t_ast *current, int subshell)
+
+int		create_subshell(t_all *p, t_ast *current)
 {
-	if (is_operator(current->type, 1) == 1 && current->subshell > subshell)
+
+	int			pid1;
+	int			pid2;
+
+	if (!current->parent)
 	{
-		//find output redirect of the whole subshell
-		//open folders (Look at the permission depending on < or <<)
-		//fork
-		//Si dans l'enfant return (0) = Continuer left_expand;
-			//=> Se terminera quand on retournera a ce meme operateur et qu'on aura execute a gauche et a droite.
-		//Si dans le parent waitpid puis return (1) = quitter left expand et remonter jusqu'au root
-		//stock exit status
+		if (is_operator(current->type, 1) == 1 && current->subshell > 0)
+		{
+			pid1 = fork();
+			if (pid1 == -1)
+				error_executer(ERR_FORK);
+			else if (pid1 == 0)
+				return (-1);
+			else
+			{
+				waitpid(pid1, NULL, 0);
+				return (-2);
+			}
+			//fork
+			//Si dans l'enfant return (0) = Continuer left_expand;
+				//=> Se terminera quand on retournera a ce meme operateur et qu'on aura execute a gauche et a droite.
+			//Si dans le parent waitpid puis return (1) = quitter left expand et remonter jusqu'au root
+			//stock exit status
+		}
+	}
+	else if (current->parent)
+	{
+		if (is_operator(current->type, 1) == 1 && current->subshell > current->parent->subshell)
+		{
+
+		}
 	}
 	else if (current->type == TOKEN_PIPE)
 	{
@@ -83,7 +101,9 @@ t_ast *left_expand(t_all *p, t_ast *current)
 	while (current) //Down->Left : A CHAQUE DESCENTE LEFT OR RIHT EXPAND LES ENV POUR LES WORD ET LES HEREDOC DONT LE TYPE N'EST PAS SQ_LIMITER
 	{
 		//if (current->subshell == 1) fork
-		
+		p->error = create_subshell(p, current);
+		if (p->error == -2)
+			return (current); //father goes back up after his son died
 		if (current->state == STATE_WORD && current->type != WORD_SQLIMITER && current->type != WORD_LIMITER)
 		{
 			p->error = split_word(p, &current);
@@ -100,7 +120,7 @@ t_ast *left_expand(t_all *p, t_ast *current)
 	return (current);
 }
 
-int		executer(t_all *p, int option)
+int		executer(t_all *p) //, int option
 {
 	t_ast *current;
 	t_exec	exec;
@@ -117,8 +137,9 @@ int		executer(t_all *p, int option)
 		exec_free(&exec);
 		return (1);
 	}
-	if (!current)
+	//if (!current)
 		//exit;
+	// II - TROUVER CMD/ FIND REDIRECT / CREATE CMD / EXECUTE COMMAND
 	if (current)
 	{
 		while (current->parent && (current->parent->type == WORD_CMD || current->parent->type == WORD_OPTION || current->parent->type == WORD_BUILTIN)) //Up->Cmd
@@ -129,21 +150,24 @@ int		executer(t_all *p, int option)
 			exec_free(&exec);
 			return (1);
 		}
-		printf("COMMAND:\n");
-		print_tab(exec.command);
 		// PERFECT
 
 		printf("REDIRECT\n");
 		//set_pipe(&exec, 1); add rule for 'in between pipe'
+		
+		//
 		assign_redirect(current, &exec); //Assign Redirect Finir check pipe
-		/* result = execute_cmd(&exec, p->env); //execute
+		result = execute_cmd(&exec, p->env);
 		if (result != 0)
 		{
 			exec_free(&exec);
 			if (result == 1)
 				printf("execute_cmd Malloc Error\n");
 			return (1);
-		} */
+		}
+		printf("COMMAND:\n");
+		print_tab(exec.command);
+		//EXECUTE CMD
 	}
 	//remonter->parent et if (is_operator)
 	//recursif(option 2);

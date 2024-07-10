@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/10 16:26:26 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/10 18:24:48 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,13 @@
 # define ERROR_SEMICOLON 5
 # define ERROR_DUOSEMICOLON 8
 # define ERROR_FILE 6
+
+# define ERR_INFILE "Error: Opening Infile Failed\n"
+# define ERR_OUTFILE "Error: Opening Outfile Failed\n"
+# define ERR_PIPE "Error: Pipe Initialisation Failed\n"
+# define ERR_FORK "Error: Fork Initialisation Failed\n"
+# define ERR_CMD "Error: Command not found\n"
+# define ERR_EXEC "Error: Command Execve Failed\n"
 
 /*					 LEXER					*/
 
@@ -203,7 +210,7 @@ typedef struct s_word
 
 typedef struct s_exec
 {
-	int			pipe;
+	int				pipe;
 	bool			redirectin;
 	bool			redirectout;
 	struct s_ast 	*in;
@@ -324,6 +331,7 @@ const char	*getToken_Class(t_token *current);
 void		error_lexer(int error);
 bool		error_syntax(t_token *current, int error);
 void		error_expander(t_ast *current, int error);
+void		error_executer(int error);
 
 //here_doc
 void		cleanbuffer(char *buffer);
