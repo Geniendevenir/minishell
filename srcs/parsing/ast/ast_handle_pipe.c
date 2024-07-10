@@ -6,60 +6,76 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 20:38:03 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/02 16:46:58 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/08 14:20:59 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	if_is_pipe(t_token **tok)
+void	if_no_last_ope(t_ast **new_node, t_ast_ptr **list)
 {
-	//(*tok)->type == TOKEN_PIPE || 
-	if ((*tok)->type == TOKEN_PIPE)
-		return (1);
+	if ((*list)->last_pipe)
+	{
+		(*new_node)->left = (*list)->last_pipe;
+		if ((*list)->root && ((*list)->root)->type
+			!= TOKEN_AND && ((*list)->root)->type != TOKEN_OR)
+			(*list)->root = *new_node;
+	}
 	else
-		return (0);
+	{
+		(*list)->root->parent = *new_node;
+		(*new_node)->left = (*list)->root;
+		(*list)->root = *new_node;
+	}
+	(*list)->current = *new_node;
+	(*list)->last_pipe = *new_node;
 }
 
-void	while_in_handle_pipe(t_ast **current, t_ast **new_node, t_ast *save_operator)
+void	if_last_ope_exist(t_ast **new_node, t_ast_ptr **list)
 {
-	while ((save_operator != (*current)) &&((*current)->parent && *current))
-		*current = (*current)->parent;
-	(*new_node)->left = (*current)->right;
-	(*new_node)->parent = *current;
-	(*current)->right = (*new_node);
-	while (*current && (*current)->right)
-		(*current) = (*current)->right;
+	(*new_node)->left = (*list)->last_ope->right;
+	(*list)->last_ope->right = *new_node;
+	(*new_node)->parent = (*list)->last_ope;
+	(*list)->current = *new_node;
+	(*list)->last_pipe = *new_node;
 }
 
-void	handle_pipe(t_token **tokens, t_ast **current, t_ast **root, t_ast **save_operator, t_ast **save_pipe)
+/*handle_pipe: add a PIPE node in the ast tree,
+PIPE has the second priority compared to the ROOT
+EXAMPLE:
+   ROOT (&& and ||)
+			|
+		   PIPE
+		    |
+		 REDIRECTIONS/FILES
+		 	|
+		   CMD
+		    |
+		 OPTIONS
+		    |
+		 BRANCH
+So we have to save the address of the last PIPE in
+"last_pipe" for handle REDIRECTIONS.
+SPECIAL CASE:
+-No OPERATOR before PIPE:
+if it's the first pipe we have to put on the left of the pipe the root
+, because we have only that before
+otherwise we have to put save_pipe.
+-An OPERATOR before PIPE:
+we have to put on the left of the last OPERATOR
+
+*/
+void	handle_pipe(t_token **tokens, t_ast_ptr **list, int sub_shell)
 {
 	t_ast	*new_node;
 	t_token	*temp;
 
-	new_node = create_node((*tokens)->type, (*tokens)->value);
+	new_node = create_node(*tokens, sub_shell);
 	if (!new_node)
 		return ;
-	if (!*save_operator)
-	{
-			new_node->left = *root;
-			*save_operator = new_node;
-			*current = new_node;
-			*save_pipe = *current;
-			printf("in if\n");
-	}
+	if (!(*list)->last_ope)
+		if_no_last_ope(&new_node, list);
 	else
-	{
-		//(*root)->left = new_node;
-		//printf("root->value %s | save_operator = %s", (*root)->value, (*save_operator)->value);
-		new_node->left = (*save_operator)->right;
-		(*save_operator)->right = new_node;
-		new_node->parent = *save_operator;
-		//*save_operator = new_node;
-		*current = new_node;
-		//*save_operator = *current;
-		*save_pipe = *current;
-		printf("save_pipe address in PIPE = %p\n", save_pipe);
-	}
-	free_token_and_next_in_ast(tokens, &temp);
+		if_last_ope_exist(&new_node, list);
+	free_token_and_next(tokens, &temp);
 }

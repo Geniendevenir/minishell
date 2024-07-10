@@ -9,7 +9,7 @@ OBJ_DIR				= obj/
 
 # Compiler and CFlags
 CC					= cc
-CFLAGS				= -Wall -Werror -Wextra -I
+CFLAGS				= -Wall -Wextra -I
 RM					= rm -f
 READLINE			= -lreadline
 
@@ -17,26 +17,12 @@ READLINE			= -lreadline
 MINI_SHELL_DIR		=	$(SRC_DIR)
 
 # Concatenate all source files
-SRCS 				=   srcs/env.c\
-						srcs/free.c\
+SRCS 				=	srcs/free.c\
 						srcs/main.c \
 						srcs/init.c\
 						srcs/print_utils.c \
 						srcs/signals.c\
 						srcs/utils.c\
-						srcs/execution/if_utils_exec.c\
-						srcs/execution/parcour_ast.c\
-						srcs/execution/exec_operator.c\
-						srcs/execution/exec_cmd_and_builtins.c\
-						srcs/execution/exec_builtins.c\
-						srcs/parsing/ast/ast.c\
-						srcs/parsing/ast/ast_handle_builtin_and_cmd.c\
-						srcs/parsing/ast/ast_swap_child.c\
-						srcs/parsing/ast/ast_handle_and_or.c\
-						srcs/parsing/ast/ast_handle_pipe.c\
-						srcs/parsing/ast/ast_handle_redirect.c\
-						srcs/parsing/ast/ast_handle_parenthesis.c\
-						srcs/parsing/ast/print_ast.c\
 						srcs/parsing/syntax/word.c\
 						srcs/parsing/syntax/check_word.c\
 						srcs/parsing/syntax/check_word_utils.c\
@@ -51,13 +37,45 @@ SRCS 				=   srcs/env.c\
 						srcs/parsing/lexer/tokenizer_three.c\
 						srcs/parsing/lexer/tokenizer_four.c\
 						srcs/parsing/lexer/tokenizer_utils.c\
-						srcs/parsing/lexer/error_lexer.c\
+						srcs/parsing/lexer/limiter_utils.c\
+						srcs/parsing/error_management.c\
+						srcs/parsing/expander/split_word.c\
+						srcs/parsing/expander/split_one.c\
+						srcs/parsing/expander/split_two.c\
 						srcs/parsing/expander/expander.c\
 						srcs/parsing/expander/remove_env.c\
 						srcs/parsing/expander/expander_utils.c\
 						srcs/parsing/expander/expand_env.c\
 						srcs/parsing/expander/relink_token.c\
 						srcs/parsing/expander/expand_wildcard.c\
+						srcs/parsing/expander/word_management.c\
+						srcs/builtins/ft_env.c\
+						srcs/builtins/ft_pwd.c\
+						srcs/builtins/ft_cd.c\
+						srcs/builtins/ft_export.c\
+						srcs/builtins/ft_exit.c\
+						srcs/builtins/ft_echo.c\
+						srcs/execution/exec_builtins.c\
+						srcs/execution/executer.c\
+						srcs/execution/executer_utils.c\
+						srcs/execution/parse_cmd.c\
+						srcs/execution/path_cmd.c\
+						srcs/parsing/ast/ast.c\
+						srcs/parsing/ast/ast_utils.c\
+						srcs/parsing/ast/ast_handle_builtin_and_cmd.c\
+						srcs/parsing/ast/ast_swap_child.c\
+						srcs/parsing/ast/ast_handle_and_or.c\
+						srcs/parsing/ast/ast_handle_pipe.c\
+						srcs/parsing/ast/ast_handle_redirect.c\
+						srcs/parsing/ast/ast_handle_parenthesis.c\
+						srcs/parsing/ast/print_ast.c\
+						srcs/parsing/ast/ast_if_parameters.c\
+						srcs/parsing/ast/ast_free.c\
+						srcs/hate_the_norm.c\
+						srcs/parsing/here_doc/here_doc_name.c\
+						srcs/parsing/here_doc/here_doc_signals.c\
+						srcs/parsing/here_doc/here_doc_utils.c\
+						srcs/parsing/here_doc/here_doc.c\
 
 # Apply the pattern substitution to each source file in SRC and produce a corresponding list of object files in the OBJ_DIR
 OBJ 				= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))

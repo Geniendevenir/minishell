@@ -6,67 +6,51 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 18:41:34 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/02 16:38:52 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/08 14:20:59 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_token_and_next_in_ast(t_token **tokens, t_token **temp)
+void	ope_pipe_redirect(t_token **tokens, t_ast_ptr **list, int subshell)
 {
-	*temp = *tokens;
-	*tokens = (*tokens)->next;
-	free((*temp)->value);
-	free((*temp));
+	if (is_ope(tokens))
+		handle_and_or_root_priority(tokens, list, subshell);
+	else if (is_pipe(tokens))
+		handle_pipe(tokens, list, subshell);
+	else if (is_redirect(tokens))
+		handle_redirect(tokens, list, subshell);
 }
 
-void	get_first_parent(t_ast **current)
+t_ast	*parse_expression(t_token **tokens, int subshell)
 {
-	while (*current && (*current)->parent)
-		*current = (*current)->parent;
-}
+	t_ast_ptr	*list;
+	t_ast		*temp_free;
+	t_token		*temp;
 
-t_ast	*parse_expression(t_token **tokens)
-{
-	t_ast	*root;
-	t_ast	*current;
-	t_ast   *save_operator;
-	t_ast	*save_pipe;
-	t_token	*temp;
-
-	save_pipe = NULL;
-	save_operator = NULL;
-	root = NULL;
-	current = NULL;
+	init_pointer_ast(&list);
 	while (*tokens)
 	{
 		if ((*tokens)->type == TOKEN_OPENPAR)
-			handle_parenthesis_open(tokens, &current, &root);
+			handle_parenthesis_open(tokens, &list, subshell);
 		else if ((*tokens)->type == TOKEN_CLOSEPAR)
-			return (close_parenthesis(tokens, root));
-		else if (if_token_and_or(tokens))
-			handle_and_or_root_priority(tokens, &root, &current, &save_operator);
-		else if ((*tokens)->type == TOKEN_PIPE)
 		{
-			handle_pipe(tokens, &current, &root, &save_operator, &save_pipe);
+			free_list_ptr(&list, &temp_free, 1);
+			return (close_parenthesis(tokens, temp_free));
 		}
-		else if (if_is_redirect(tokens))
-		{
-			printf("address of in redirect save_operator = %p\n", save_operator);
-			handle_redirect(tokens, &current, &root, &save_operator, &save_pipe);
-			if(current && root && save_operator)
-				printf("current->value = %s | save_operator address = %p | root->value = %s\n", current->value, save_operator, root->value);
-		}
+		else if (is_ope(tokens) || is_pipe(tokens) || is_redirect(tokens))
+			ope_pipe_redirect(tokens, &list, subshell);
 		else if (if_cmd_or_option(tokens))
-			handle_builtin_cmd_or_option(tokens, &current, &root);
+			handle_builtin_cmd_or_option(tokens, &list, subshell);
 		else
-			free_token_and_next_in_ast(tokens, &temp);
+			free_token_and_next(tokens, &temp);
 	}
-	get_first_parent(&current);
-	return (current);
+	get_first_parent(&list);
+	free_list_ptr(&list, &temp_free, 2);
+	return (temp_free);
 }
 
-t_ast	*parse_subexpression(t_token **tokens)
+t_ast	*parse_subexpression(t_token **tokens, int subshell)
 {
-	return (parse_expression(tokens));
+	return (parse_expression(tokens, subshell + 1));
 }

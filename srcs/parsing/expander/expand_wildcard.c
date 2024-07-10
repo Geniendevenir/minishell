@@ -6,85 +6,11 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 21:24:08 by allan             #+#    #+#             */
-/*   Updated: 2024/06/20 18:01:57 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/09 23:05:20 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*
-
-		SPECIAL CASE: 
-		HIDDEN FILES with "."
-		
-		
-		WILDCARD CASES:
-
-		CASE 1:	Hello*.txt
-		-> TOKEN_WILDCARD
-		
-		CASE 2:	*.txt
-		-> TOKEN_WILDCARD
-		
-		CASE 3:	$USER*.txt
-		-> TOKEN_ENV: $USER
-		-> TOKEN_WILDCARD: *.txt
-		
-		CASE 4:	*$USER.txt
-		-> TOKEN_WILDCARD: *
-		-> TOKEN_ENV: $USER
-		-> TOKEN_WORD: .txt
-		
-		CASE 5:	*Hello$USER
-		-> TOKEN_WILDCARD: *Hello
-		-> TOKEN_ENV: $USER
-
-		CASE 6: *mini*****c
-		-> TOKEN_WILDCARD
-
-		CASE 7: *mini*c****
-		-> TOKEN_WILDCARD
-
-		CASE 8: test$USER*hello.txt
-		-> TOKEN_WORD: test
-		-> TOKEN_ENV: $USER
-		-> TOKEN_WILDCARD: *hello.txt
-
-		CASE 9: test$USERHello*txt
-		-> TOKEN_WORD: test
-		-> TOKEN_ENV: $USERHello
-		-> TOKEN_WILDCARD: *.txt
-
-		CASE 10: test$USERHello*$USER.txt.$USER
-		-> TOKEN_WORD: test
-		-> TOKEN_ENV: $USERHello
-		-> TOKEN_WILDCARD: *
-		-> TOKEN_ENV: $USER
-		-> TOKEN_WORD: .txt
-		-> TOKEN_ENV: $USER
-
-		CASE 11: (presence d'un fichier nomme: tet)
-		-> COMMAND: cd te*et
-		-> Ne trouve pas les palindrome: bash: cd: te*et: No such file or directory
-
-		CASE 12: (presence fichier: tet et test*txt)
-		-> COMMAND: cd te**
-		-> Retour: bash: cd: too many arguments (trouve les deux fichiers)
-
-		CASE 13: (presence fichier: *ok)
-		-> COMMAND: cd *o
-		->Retour: bash: cd: *o: No such file or directory (ne finit pas par o mais par k)
-
-	ETAPE 1: Creer un TOKEN_WILDCARD / UNE REDIRECTION TOKEN_WORD VERS TOKEN_WILDCARD
-	ETAPE 2: EXPAND ENV. IF FOUND -> REPLACE NEW VALUE. IF NOT FOUND -> DELETE THE TOKEN. 
-	ETAPE 3: RECOLLER LES WORD/ENV/WILDCARD SI il n'y a pas d'espaces entre
-	ETAPE 4: EXPAND WILDCARD
-	POUR WILDCARD:
-	1 - (ex: BEGGIN*END) REGARDER SI DOSSIER COMMANCANT STRICTEMENT PAR BEGIN ET FINISSANT PAR END
-	2 - SI EXISTE REMPLACER PAR LE NOM DU FICHIER
-	3 - SINON GARDER LA SYNTAX DE BASE BEGGIN*END
-	FIN
-*/
 
 /*
 printf("test 1\n");
@@ -94,7 +20,7 @@ int	expand_wildcard(t_token **token_list, int *error)
 {
 	t_token *current;
 	char	*wildcard;
-	
+
 	wildcard = NULL;
 	*error = 1;
 	current = *token_list;
@@ -108,7 +34,7 @@ int	expand_wildcard(t_token **token_list, int *error)
 			*error = find_wildcard(wildcard, current, error);
 			free(wildcard);
 			if (*error != 0)
-				return (1);
+				return (*error);
 		}
 		current = current->next;
 	}
@@ -119,15 +45,12 @@ int find_wildcard(char *wildcard, t_token *current, int *error)
 {
 	DIR				*d;
     struct dirent	*dir;
-	t_wildcard	match;
+	t_wildcard		match;
 	bool			found;
 
     d = opendir(".");
     if (!d)
-	{
-        perror("opendir");
-        return (1); //add error
-    }
+		return (6); //check true error
 	found = 0;
     while (1)
 	{
@@ -139,10 +62,7 @@ int find_wildcard(char *wildcard, t_token *current, int *error)
 		{
             *error = add_file(&current, dir->d_name, found);
 			if (*error == 1)
-			{
-				closedir(d);
-				return (1); //add error
-			}
+				return (wildcard_return(&d));
 			found = 1;
 		}
     }
@@ -182,7 +102,7 @@ bool	file_match(t_wildcard match)
     }
     while (*match.wildcard == '*')
 		match.wildcard++;
-    return (!(*match.wildcard)); //File_name Match Wildcard
+    return (!(*match.wildcard));
 }
 
 bool	add_file(t_token **current, char *file_name, bool found)

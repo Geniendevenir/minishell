@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 10:19:15 by allan             #+#    #+#             */
-/*   Updated: 2024/06/15 23:49:45 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/08 22:13:10 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,15 @@ bool	is_valid_env(char c)
 
 bool	is_word(char c)
 {
+	if (c == '|' || c == '&' || c == '<' || c == '>' || c == '(' || c == ')')
+		return (1);
+	if (is_whitespace(c) == 1)
+		return (1);
+	return (0);
+}
+
+bool	limit_word(char c)
+{
 	if (c == '|' || c == '&' || c == '$' || c == '\'' || c == '\"'
 		|| c == '<' || c == '>' || c == '(' || c == ')')
 		return (1);
@@ -58,6 +67,8 @@ bool	is_wildcard(const char *cmd_line, int i)
 
 bool	is_freeable(char *value, int option)
 {
+	if (value[0] == '\0')
+		return (1);
 	if (option == 2)
 		return (1);
 	if (option == 1)
@@ -69,7 +80,7 @@ bool	is_freeable(char *value, int option)
 			|| !ft_strcmp(value, "&&") || !ft_strcmp(value, "<<"))
 			return (1);
 		if (!ft_strcmp(value, ">>") || !ft_strcmp(value, ">")
-			|| !ft_strcmp(value, "?"))
+			|| !ft_strcmp(value, "?") || !ft_strcmp(value, "$"))
 			return (1);
 	}
 	return (0);

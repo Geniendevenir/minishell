@@ -6,152 +6,150 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 16:42:50 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/02 15:21:26 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/08 13:19:15 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	if_in_check_double_syntax(t_token *c, int number)
+/*
+	()
+	()()
+	& | OK
+	
+	enum s_type{
+	NOT_DEFINE,
+	TOKEN_WORD,
+	TOKEN_AND,
+	TOKEN_OR,
+	TOKEN_PIPE,
+	TOKEN_REDIRECTIN,
+	TOKEN_REDIRECTOUT,
+	TOKEN_HEREDOC,
+	TOKEN_APPENDOUT,
+	TOKEN_LIMITER,
+	TOKEN_OPENPAR,
+	TOKEN_CLOSEPAR,
+};
+
+*/
+
+bool	is_operator(enum s_type type, int option)
 {
-	if (number == 1)
+	if (option == 1)
 	{
-		if (c->type == 1 || c->type == 14 ||
-		c->type == 2 || c->type == 3 || c->type == 12 || c->type == 13)
+		if (type == TOKEN_AND || type == TOKEN_OR)
 			return (1);
-		else
-			return (0);
 	}
-	else if (number == 2)
+	if (option == 2)
 	{
-		if (c->type == 4 || c->type == 5 || c->type == 6 || c->type == 7 ||
-		c->type == 8 || c->type == 9 || c->type == 10)
+		if (type == TOKEN_AND || type == TOKEN_OR
+			|| type == TOKEN_PIPE)
 			return (1);
-		else
-			return (0);
 	}
-	return (1);
+	if (option == 3)
+	{
+		if (type == TOKEN_REDIRECTIN || type == TOKEN_REDIRECTOUT
+			|| type == TOKEN_APPENDOUT || type == TOKEN_HEREDOC)
+			return (1);
+	}
+	if (option == 4)
+	{
+		if (type == TOKEN_OPENPAR || type == TOKEN_CLOSEPAR)
+			return (1);
+	}
+	return (0);
+}
+/* REGLER PROBLEME:
+1
+bash: syntax error near unexpected token '&&'
+Minishell> test (&&
+
+
+*/
+int		double_operator(t_token *c)
+{
+	if (!c->next)
+	{
+		if ((is_operator(c->type, 2) || is_operator(c->type, 3) || is_operator(c->type, 9)))
+		{
+			error_syntax(c, 5);
+			return (1);
+		}
+	}
+	else if (c->next)
+	{
+		if (c->type == TOKEN_HEREDOC && (c->next->type != WORD_LIMITER && c->next->type != WORD_SQLIMITER))
+		{
+			error_syntax(c->next, 1);
+			return (1);
+		}
+		if ((c->type == TOKEN_REDIRECTIN || c->type == TOKEN_REDIRECTOUT) && c->next->type != TOKEN_WORD)
+		{
+			error_syntax(c->next, 1);
+			return (1);
+		}
+		if (c->type == TOKEN_REDIRECTIN && c->next->type == TOKEN_REDIRECTOUT)
+		{
+			error_syntax(c, 5);
+			return (1);
+		}
+		if ((is_operator(c->type, 2) && (is_operator(c->next->type, 2)
+			|| is_operator(c->next->type, 4))) || (is_operator(c->type, 3)
+			&& ((is_operator(c->next->type, 3) || is_operator(c->next->type, 2)
+			|| is_operator(c->next->type, 4)))))
+		{
+			error_syntax(c->next, 1);
+			return (1);
+		}
+		if (c->next->next)
+		{
+			if ((c->type == TOKEN_REDIRECTIN || c->type == TOKEN_REDIRECTOUT) && c->next->type == TOKEN_WORD && c->next->next->type == TOKEN_OPENPAR)
+			{
+				error_syntax(c->next->next, 1);
+					return (1);
+			}
+		}
+	}
+	return (0);
 }
 
-int	while_of_check_double_syntax(t_token *current, int is_operator)
+int	check_first_token(t_token *c)
 {
-	while (current && (if_in_check_double_syntax(current, 1)))
+	if (c->type == TOKEN_PIPE || c->type == TOKEN_OR
+		|| c->type == TOKEN_AND)
 	{
-		if ((current && current->next) && (current->type == 12 && current->next->type == 13))
-			return (2);
-		current = current->next;
+		error_syntax(c, 1);
+			return (1);
 	}
-	if (current == NULL || current->next == NULL)
+	return (0);
+}
+
+bool 	check_syntax(t_token *current)
+{
+	int			skip;
+	t_syntax	syntax;
+	
+	skip = 0;
+	syntax.openpar = 0;
+	syntax.operator = 0;
+	if (!current)
 		return (0);
-	current = current->next;
-	while (current && is_operator == 1)
-	{
-		if (current && if_in_check_double_syntax(current, 2))
-		{
-			print_error_token(current);
-			return (1);
-		}
-		else if(current && current->type == TOKEN_WHITESPACE)
-			current = current ->next;
-		else if(current)
-		{
-			is_operator = 0;
-			current = current->next;
-		}
-	}
-	return (0);
-}
-
-bool	check_double_syntax(t_token **token_list)
-{
-	t_token	*current;
-	int is_operator;
-
-	is_operator = 1;
-	current = *token_list;
-	while(current && current->next)
-	{
-		if (while_of_check_double_syntax(current, is_operator) == 1)
-		{
-			return (1);
-		}
-		else if (while_of_check_double_syntax(current, is_operator) == 2)
-		{
-			print_error_token(current);
-			return (1);
-		}
-		else
-			return (0);
-	}
-	return (0);
-}
-
-bool check_operator_at_the_end(t_token **token_list)
-{
-	t_token	*current;
-	int is_operator;
-
-	is_operator = 0;
-	current = *token_list;
+	if (check_first_token(current) == 1)
+		return (1);
 	while (current)
 	{
-		if (current && if_in_check_double_syntax(current, 2))
-			is_operator = 1;
-		else if(current && current->type == TOKEN_WHITESPACE)
-			;
-		else if (current && if_in_check_double_syntax(current, 1))
-			is_operator = 0;
-		if (current->next == NULL)
-			break;
-		else
-			current = current->next;
-	}
-	if (is_operator == 1)
-	{
-		print_error_token_special(current->value);
-		return (1);
-	}
-	else
-		return (0);
-}
-
-bool check_if_first_operator(t_token **token_list)
-{
-	t_token	*current;
-
-	current = *token_list;
-	while ((current) && current->type == TOKEN_WHITESPACE)
-	{
-		current = current ->next;
-	}
-	if (current->type == TOKEN_AND || current->type == TOKEN_OR || current->type == TOKEN_PIPE)
-	{
-		print_error_token(current);
-		return (1);
-	}
-	else
-		return (0);
-}
-
-
-
-bool check_syntax(t_token **token_list)
-{
-	if (check_if_first_operator(token_list) == 1)
-	{
-		token_free(token_list);
-		return (1);
-	}
-	if (check_double_syntax(token_list) == 1)
-	{
-		token_free(token_list);
-		return (1);
-	}
-	if (check_operator_at_the_end(token_list) == 1)
-	{
-		token_free(token_list);
-		return (1);
+		if (double_operator(current) == 1)
+				return (1);
+		if (skip > 0)
+			skip--;
+		if (skip == 0 && (current->type == TOKEN_OPENPAR
+			|| current->type == TOKEN_CLOSEPAR))
+		{
+			if (check_parenthesis(current, syntax, &skip) == 1)
+				return (1);
+		}
+		current = current->next;
 	}
 	return (0);
 }
-

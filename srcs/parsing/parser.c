@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:24:04 by allan             #+#    #+#             */
-/*   Updated: 2024/07/02 15:15:46 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/10 16:24:20 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,18 @@
 /*
 
 TO DO:
--Finir / Corriger AST
--Builtins
+-Finir / Corriger AST OK
+-Builtins 
 -Check Leak
--Error Management de TOUT le code
+-Revoir Wildcard avec lstat
+-Error Management de TOUT le code: OK
 -Premier Tour de norminette
 -Execution
 -Cas $?
 -Test Google Doc
 
 */
+
 t_token	*duplicate_token(const t_token *token)
 {
 	t_token *dup;
@@ -73,46 +75,45 @@ t_token	*duplicate_token_list(const t_token *head)
 	return (new_head);
 }
 
-void parser(char *cmd_line, t_env *env) // a rajouter env quand expander fini
+//printf("test\n");
+int parser(char *cmd_line, t_env *env, t_ast **ast, t_all **p)
 {
 	t_token	*token_list;
 	t_word	word;
+	int		error;
+	int		sub_shell;
 	//t_token *dup_list;
 	
-	if (!cmd_line)
-		return ;
+	error = 0;
+	if (cmd_line[0] == '\0')
+		return (1);
 	token_list = malloc(sizeof(t_token));
 	if (!token_list)
-		return ;
-	token_init(token_list);
-	if (lexer(cmd_line, &token_list) == 1)
-		return ;
-	//printf("AFTER LEXER:\n");
-	//token_print_amazing(&token_list);
-	if (expander(&token_list, env) == 1)
-		return ;
-	if (check_syntax(&token_list) == 1)
-		return ;
-	//printf("\n\n\nAFTER EXPANDER AND SYNTAX:\n");
-	//token_print_amazing(&token_list);
+		return (1);
+	token_init(&token_list);
+	if (lexer(cmd_line, &token_list, error) == 1)
+		return (1);
+/* 	printf("AFTER LEXER:\n");
+	token_print(&token_list);
+	token_print_amazing(&token_list); */
+	if (check_syntax(token_list) == 1)
+	{
+		token_free(&token_list);
+		return (1);
+	}
+	here_doc(&token_list,p);
+	//printf("TESTT APRES HEREDOC\n");
 	init_t_word(&word);
-	if (define_word(&token_list, &word, env))
-		return ;
-	//printf("\n\n\nAFTER define word:\n");
-	//token_print_amazing(&token_list);
-	/* dup_list = duplicate_token_list(token_list);
-	if (!dup_list)
-		return ; */
-	t_ast *ast = parse_expression(&token_list);
-	printAST(ast,0);
-	//traverse_ast(ast, env);
-	//syntax_check(); // Ultime check structure de l'input
-	//ast(); // Tour de Controle de l'execution
+	if (define_word(&token_list, &word))
+		return (1);
+	/* printf("\n\nAFTER define word:\n");
+	token_print_amazing(&token_list); */
+	sub_shell = 0;
+	*ast = parse_expression(&token_list, sub_shell);
+	//printAST(*ast, 0);
 	//printf("AFTER EXPANDER:\n");
 	//token_print(&token_list);
-	free_ast(ast);
 	//token_free(&dup_list);
 	token_free(&token_list);
+	return (0);
 }
-
-
