@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/10 00:43:51 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/10 15:52:04 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -320,9 +320,9 @@ const char	*getToken_Class(t_token *current);
 //error
 void		error_lexer(int error);
 //here_doc
-char		*cleanbuffer(char *buffer);
+void		cleanbuffer(char *buffer);
 int			prev_valo(char *buffer);
-char		*hdoc_process(int fd, t_token *limiter, t_all **p);
+int			hdoc_process(int fd, t_token *limiter, t_all **p);
 int			fill_here_doc(t_token **current, int max, t_all **p, int *nb);
 void		here_doc(t_token **token_list, t_all **p);
 void		warning(char *str, int nb);

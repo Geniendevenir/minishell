@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:24:04 by allan             #+#    #+#             */
-/*   Updated: 2024/07/09 12:51:30 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/10 16:16:50 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,8 @@ int parser(char *cmd_line, t_env *env, t_ast **ast, t_all **p)
 	init_t_word(&word);
 	if (define_word(&token_list, &word))
 		return (1);
-	/* printf("\n\nAFTER define word:\n");
-	token_print_amazing(&token_list); */
+	printf("\n\nAFTER define word:\n");
+	token_print_amazing(&token_list);
 	sub_shell = 0;
 	*ast = parse_expression(&token_list, sub_shell);
 	printAST(*ast, 0);

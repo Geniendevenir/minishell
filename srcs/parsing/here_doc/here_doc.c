@@ -6,20 +6,19 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 14:57:22 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/10 00:57:00 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/10 16:07:23 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*cleanbuffer(char *buffer)
+void	cleanbuffer(char *buffer)
 {
 	if (buffer != NULL)
 	{
 		free(buffer);
 		buffer = NULL;
 	}
-	return (buffer);
 }
 
 int	prev_valo(char *buffer)
@@ -30,7 +29,7 @@ int	prev_valo(char *buffer)
 	return (0);
 }
 
-char	*hdoc_process(int fd, t_token *limiter, t_all **p)
+int	hdoc_process(int fd, t_token *limiter, t_all **p)
 {
 	extern int	sig_int;
 	char		*buffer;
@@ -44,30 +43,41 @@ char	*hdoc_process(int fd, t_token *limiter, t_all **p)
 			write(fd, "\n", 1);
 			free(buffer);
 		}
-		buffer = readline(">> ");
-		if (buffer == NULL && sig_int == 0 && (*p)->line_num == 1)
-		{
-			return (warning(limiter->value, (*p)->line_num), NULL);
-		}
-		else if (buffer == NULL && sig_int != 1)
+		buffer = readline("> ");
+		if (buffer == NULL && sig_int == 0)
 		{
 			warning(limiter->value, (*p)->line_num);
 			break ;
 		}
 		else if (ft_strcmp(buffer, limiter->value) == 0)
-		{
 			break ;
-		}
 		(*p)->line_num++;
 	}
-	return (cleanbuffer(buffer));
+	if (sig_int == 1)
+		return (cleanbuffer(buffer), -1);
+	return (cleanbuffer(buffer), 1);
+}
+
+int	which_limiter(int fd, t_token *current, t_all **p, int *nb)
+{
+	if ((current)->type == WORD_SQLIMITER)
+	{
+		if (hdoc_process(fd, current, p) == -1)
+			return (close (fd), quit_here_doc(1, *p, *nb));
+		
+	}
+	else if ((current)->type == WORD_LIMITER)//EXPAAAAAAAAAAAAAAAND
+	{
+		if (hdoc_process(fd, current, p) == -1)
+			return (close (fd), quit_here_doc(1, *p, *nb));
+	}
+	return (1);
 }
 
 int	fill_here_doc(t_token **current, int max, t_all **p, int *nb)
 {
 	extern int	sig_int;
 	int			fd;
-	char		*buffer;
 
 	if (*nb == max)
 		return ((*p)->here_doc[*nb] = NULL, 1);
@@ -77,13 +87,11 @@ int	fill_here_doc(t_token **current, int max, t_all **p, int *nb)
 		return (free((*p)->here_doc[*nb]), (*p)->here_doc[*nb] = NULL, -1);
 	if (signals_hdoc(0, p) == -1)
 		return (quit_here_doc(0, *p, *nb));
-	if ((*current)->type == WORD_SQLIMITER)
-		buffer = hdoc_process(fd, *current, p);
-	else if ((*current)->type == WORD_LIMITER)
-		buffer = hdoc_process(fd, *current, p);// expanddd
-	if (*nb + 1 == max && (buffer || !buffer))
-		buffer = get_next_line(-42);
-	(*current)->type = WORD_FILEIN;
+	if ((*current)->type == WORD_SQLIMITER || (*current)->type == WORD_SQLIMITER)
+	{
+		if(which_limiter(fd, (*current), p, nb) == -1)
+			return (-1);
+	}
 	free((*current)->value);
 	(*current)->value = ft_strdup((*p)->here_doc[*nb]);
 	(*nb)++;
@@ -109,7 +117,6 @@ void here_doc(t_token **token_list, t_all **p)
 		{
 			if (fill_here_doc(&current, max, p, &nb) == -1)
 			{
-				//write(1, "\n", 1);
 				free_here_docs((*p)->here_doc);
 				(*p)->here_doc = NULL;
 				break ;

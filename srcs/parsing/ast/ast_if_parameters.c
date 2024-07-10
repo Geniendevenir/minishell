@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 13:23:01 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/06 13:31:08 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/10 16:14:08 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ bool	is_redirect(t_token **tok)
 {
 	if ((*tok)->type == WORD_FILEIN
 		|| (*tok)->type == WORD_LIMITER || (*tok)->type == WORD_FILEOUT
-		|| (*tok)->type == WORD_FILEOUT_APPEND)
+		|| (*tok)->type == WORD_FILEOUT_APPEND 
+		|| (*tok)->type == WORD_SQLIMITER)
 		return (1);
 	else
 		return (0);

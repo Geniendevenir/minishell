@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 13:26:01 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/06 13:29:34 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/10 15:37:04 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	free_ast(t_ast *node)
 {
-	if (node == NULL)
+	if (node == NULL || !node)
 		return ;
 	free_ast(node->left);
 	free_ast(node->right);

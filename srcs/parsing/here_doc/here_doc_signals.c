@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 21:19:55 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/10 00:53:23 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/10 16:20:36 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,8 @@ void sighandler_hdoc(int signal)
 	{
 		sig_int = 1;
 		//printf("sigint");
+		rl_replace_line("", 0);
 		rl_done = 1;
-		write(1, "\n", 2);
-		rl_on_new_line();
 	}
 	return ;
 }
@@ -56,7 +55,6 @@ int	signals_hdoc(int opt, t_all **p)
 	{
 		if (stop_signals() == -1 || create_signal_here(p) == -1)
 		{
-			printf("signals hdoc opt 0\n");
 			return (-1);
 		}
 		return ((*p)->sig->p_status = 2, 0);
@@ -66,7 +64,6 @@ int	signals_hdoc(int opt, t_all **p)
 		(*p)->sig->p_status = 1;
 		if ( stop_signals() == 1 || create_signal() == -1)
 		{
-			printf("signals hdoc opt 1\n");
 			return (-1);
 		}
 		if (sig_int != 1)
@@ -77,30 +74,4 @@ int	signals_hdoc(int opt, t_all **p)
 		return (0);
 	}
 	return (-1);
-}
-
-
-void restaurer_signal_eof(void)
-{
-    // Restaurer le comportement par défaut du signal SIGINT
-    struct sigaction act;
-    act.sa_handler = SIG_DFL;
-    sigemptyset(&act.sa_mask);
-    act.sa_flags = 0;
-    sigaction(SIGINT, &act, NULL);
-}
-void bloquer_signal_eof(void)
-{
-    // Désactiver le caractère spécial EOF dans le terminal
-    struct termios term;
-    tcgetattr(STDIN_FILENO, &term);
-    term.c_cc[VEOF] = -1;
-    tcsetattr(STDIN_FILENO, TCSANOW, &term);
-
-    // Ignorer le signal SIGINT
-    struct sigaction act;
-    act.sa_handler = SIG_IGN;
-    sigemptyset(&act.sa_mask);
-    act.sa_flags = 0;
-    sigaction(SIGINT, &act, NULL);
 }
