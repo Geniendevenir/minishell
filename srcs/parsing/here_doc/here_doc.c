@@ -3,23 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 14:57:22 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/09 12:17:17 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/10 16:31:00 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*cleanbuffer(char *buffer)
+void	cleanbuffer(char *buffer)
 {
 	if (buffer != NULL)
 	{
 		free(buffer);
 		buffer = NULL;
 	}
-	return (buffer);
 }
 
 int	prev_valo(char *buffer)
@@ -30,45 +29,55 @@ int	prev_valo(char *buffer)
 	return (0);
 }
 
-char	*hdoc_process(int fd, t_token *limiter, t_all **p)
+int	hdoc_process(int fd, t_token *limiter, t_all **p)
 {
 	extern int	sig_int;
 	char		*buffer;
-	int			prev;
 
-	buffer = get_next_line(0);
-	if (limiter->value)
-		limiter->value = ft_strjoin_spe(limiter->value, "\n");
-	else if (!*limiter->value)
-		limiter->value = ft_strdup("\n");
-	if (buffer == NULL && sig_int != 1)
-		return (warning(limiter->value, (*p)->line_num), NULL);
-	prev = prev_valo(buffer);
-	(*p)->line_num = 1;
-	while (ft_strcmp(buffer, limiter->value) != 0 && sig_int == 0)
+	buffer = NULL;
+	while (1)
 	{
-		//printf("buffer = %slimiter = %s\n",buffer, limiter->value);
 		if (buffer != NULL)
+		{
 			write(fd, buffer, ft_strlen(buffer));
-		if (buffer != NULL)
+			write(fd, "\n", 1);
 			free(buffer);
-		buffer = (get_next_line(0));
-		(*p)->line_num++;
-		if (prev == 1 && buffer == NULL && sig_int != 1)
+		}
+		buffer = readline("> ");
+		if (buffer == NULL && sig_int == 0)
 		{
 			warning(limiter->value, (*p)->line_num);
 			break ;
 		}
-		prev = prev_valo(buffer);
+		else if (ft_strcmp(buffer, limiter->value) == 0)
+			break ;
+		(*p)->line_num++;
 	}
-	return (cleanbuffer(buffer));
+	if (sig_int == 1)
+		return (cleanbuffer(buffer), -1);
+	return (cleanbuffer(buffer), 1);
+}
+
+int	which_limiter(int fd, t_token *current, t_all **p, int *nb)
+{
+	if ((current)->type == WORD_SQLIMITER)
+	{
+		if (hdoc_process(fd, current, p) == -1)
+			return (close (fd), quit_here_doc(1, *p, *nb));
+		
+	}
+	else if ((current)->type == WORD_LIMITER)//EXPAAAAAAAAAAAAAAAND
+	{
+		if (hdoc_process(fd, current, p) == -1)
+			return (close (fd), quit_here_doc(1, *p, *nb));
+	}
+	return (1);
 }
 
 int	fill_here_doc(t_token **current, int max, t_all **p, int *nb)
 {
-	extern int sig_int;
-	int		fd;
-	char	*buffer;
+	extern int	sig_int;
+	int			fd;
 
 	if (*nb == max)
 		return ((*p)->here_doc[*nb] = NULL, 1);
@@ -78,13 +87,11 @@ int	fill_here_doc(t_token **current, int max, t_all **p, int *nb)
 		return (free((*p)->here_doc[*nb]), (*p)->here_doc[*nb] = NULL, -1);
 	if (signals_hdoc(0, p) == -1)
 		return (quit_here_doc(0, *p, *nb));
-	if ((*current)->type == WORD_SQLIMITER)
-		buffer = hdoc_process(fd, *current, p);
-	else if ((*current)->type == WORD_LIMITER)
-		buffer = hdoc_process(fd, *current, p);// expanddd
-	if (*nb + 1 == max && (buffer || !buffer))
-		buffer = get_next_line(-42);
-	(*current)->type = WORD_FILEIN;
+	if ((*current)->type == WORD_SQLIMITER || (*current)->type == WORD_LIMITER)
+	{
+		if(which_limiter(fd, (*current), p, nb) == -1)
+			return (-1);
+	}
 	free((*current)->value);
 	(*current)->value = ft_strdup((*p)->here_doc[*nb]);
 	(*nb)++;
@@ -96,7 +103,7 @@ int	fill_here_doc(t_token **current, int max, t_all **p, int *nb)
 
 void here_doc(t_token **token_list, t_all **p)
 {
-	t_token *current;
+	t_token	*current;
 	int		max;
 	int		nb;
 
@@ -112,13 +119,13 @@ void here_doc(t_token **token_list, t_all **p)
 			{
 				free_here_docs((*p)->here_doc);
 				(*p)->here_doc = NULL;
+				break ;
 			}
 		}
 		if (current->next)
-		{
 			current = current->next;
-		}
 		else
 			break;
 	}
+	create_signal();
 }

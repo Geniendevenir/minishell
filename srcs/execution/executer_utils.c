@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 18:39:42 by allan             #+#    #+#             */
-/*   Updated: 2024/07/08 11:58:11 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/10 14:51:12 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,5 +41,5 @@ void	set_pipe(t_exec *exec, int set_pipe)
 	else if (set_pipe == 2)
 		exec->pipe = 2;
 	else if (set_pipe == 3)
-		exec->pipe = 2;
+		exec->pipe = 3;
 }

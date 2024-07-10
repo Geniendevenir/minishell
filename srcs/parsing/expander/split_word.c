@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 17:54:19 by allan             #+#    #+#             */
-/*   Updated: 2024/07/10 10:16:06 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/10 14:00:55 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	word_management(t_ast **root, t_ast **current, t_token	*token_list)
 
 /* printf("AFTER EXPANDER:\n");
 	token_print(&token_list); */
-int split_word(t_ast **root, t_ast **current, t_env *env)
+int split_word(t_all *p, t_ast **current)
 {
 	size_t		i;
 	t_token		*token_list;
@@ -53,9 +53,9 @@ int split_word(t_ast **root, t_ast **current, t_env *env)
 			return (1);
 		}
 	}
-	if (expander(&token_list, env, error) == 1) //free token list automatiquement
+	if (expander(&token_list, p, error) == 1) //free token list automatiquement
 		return (1);
-	error = word_management(root, current, token_list);
+	error = word_management(&p->ast, current, token_list);
 	token_free(&token_list);
 	return (error);
 }

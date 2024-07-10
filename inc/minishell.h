@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/10 00:16:02 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/10 16:26:26 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,6 +187,9 @@ typedef struct s_all
 	char	*line;
 	int		line_num;
 	t_sig	*sig;
+	int		exit_status;
+	int		next_status;
+	int		error;
 }	t_all;
 
 typedef struct s_word
@@ -210,14 +213,13 @@ typedef struct s_exec
 
 
 //						EXECUTION                      //
-int			executer(t_ast **ast, t_env *env, int *exit_status);
+int			executer(t_all *p);
 //ast_explorer
-bool		left_expand(t_ast **ast, t_ast *current, t_env *env);
+t_ast		*left_expand(t_all *p, t_ast *current);
 
 //redirect
 int			assign_redirect(t_ast *current, t_exec *exec);
-int			command_size(t_ast *current);
-char 		**parse_command(t_ast *current, int size);
+void		redirect_pipe(t_ast *current, t_exec *exec);
 //parse_cmd
 int 		get_command(t_ast *current, t_exec *exec);
 int			command_size(t_ast *current);
@@ -324,9 +326,9 @@ bool		error_syntax(t_token *current, int error);
 void		error_expander(t_ast *current, int error);
 
 //here_doc
-char		*cleanbuffer(char *buffer);
+void		cleanbuffer(char *buffer);
 int			prev_valo(char *buffer);
-char		*hdoc_process(int fd, t_token *limiter, t_all **p);
+int			hdoc_process(int fd, t_token *limiter, t_all **p);
 int			fill_here_doc(t_token **current, int max, t_all **p, int *nb);
 void		here_doc(t_token **token_list, t_all **p);
 void		warning(char *str, int nb);
@@ -341,6 +343,8 @@ void		if_in_increment_base(size_t len, size_t *j, char *name);
 void		increment_base(char *name, size_t len_base);
 char		*generate_name(void);
 char		*ft_strjoin_spe(char *s1, char const *s2);
+void		bloquer_signal_eof(void);
+void		restaurer_signal_eof(void);
 
 
 /*								EXPANDER						*/
@@ -348,7 +352,7 @@ char		*ft_strjoin_spe(char *s1, char const *s2);
 t_ast		*replace_word(t_ast **root, t_ast *node, t_ast *new_node);
 void		delete_word(t_ast **root, t_ast **node);
 bool		modify_word(t_ast **node, t_token *token_list);
-int			split_word(t_ast **root, t_ast **current, t_env *env);
+int			split_word(t_all *p, t_ast **current);
 int			split_one(const char *cmd_line, size_t *i, t_token **token_list);
 int			split_two(const char *cmd_line, size_t *i, t_token **token_list);
 bool		limit_word(char c);
@@ -358,15 +362,17 @@ int			word_management(t_ast **root, t_ast **current, t_token	*token_list);
 int			handle_wildcard(t_ast **current, t_token **token_list);
 bool		insert_word(t_ast **node, t_token *token);
 
-bool		expander(t_token **token_list, t_env *env, int error);
+bool		expander(t_token **token_list, t_all *p, int error);
 
 //expand env
-int			expand_env(t_token **token_list, t_env **env);
-bool		find_first_env(t_token **current, t_env **env);
-bool		find_next_env(t_token **current, t_env **env);
+int			expand_env(t_token **token_list, t_env **env, int exit_status);
+bool		find_first_env(t_token **current, t_env **env, int exit_status);
+bool		find_next_env(t_token **current, t_env **env, int exit_status);
 void		remove_token(t_token **current, bool option);
 bool		replace_token(t_token *token,  char *new_value);
-void		remove_all_env(t_token **token_list);
+void		remove_all_env(t_token **token_list, int exit_status);
+bool		replace_exit_status(t_token *token, int exit_status);
+bool		expand_all_exit(t_token **token_list, int exit_status);
 
 //relink
 int			relink_token(t_token **token_list, t_token *current, int error);

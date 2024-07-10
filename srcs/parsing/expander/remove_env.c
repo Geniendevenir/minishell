@@ -6,17 +6,18 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 10:56:18 by allan             #+#    #+#             */
-/*   Updated: 2024/07/01 16:58:42 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/10 11:49:28 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	remove_all_env(t_token **token_list)
+void	remove_all_env(t_token **token_list, int exit_status)
 {
 	t_token	*current;
-
-	while (*token_list && ((*token_list)->type == TOKEN_ENV))
+	
+	expand_all_exit(token_list, exit_status);
+	while (*token_list && (*token_list)->type == TOKEN_ENV)
 		remove_token(token_list, 0);
 	if (!(*token_list) || !(*token_list)->next)
 		return ;
@@ -50,4 +51,30 @@ void	remove_token(t_token **current, bool option)
 		tmp->next = NULL;
 		token_free(&tmp);
 	}
+}
+
+bool	expand_all_exit(t_token **token_list, int exit_status)
+{
+	t_token	*current;
+
+	if (!(*token_list))
+		return (0);
+	if ((*token_list)->state == STATE_EXIT_STATUS)
+	{
+		if (replace_exit_status(*token_list, exit_status) == 1)
+			return (1);
+		(*token_list)->type = TOKEN_WORD;
+	}
+	current = *token_list;
+	while (current && current->next)
+	{
+		if (current->next->state == STATE_EXIT_STATUS)
+		{
+			if (replace_exit_status(current->next, exit_status) == 1)
+				return (1);
+			current->next->type = TOKEN_WORD;
+		}
+		current = current->next;
+	}
+	return (0);
 }

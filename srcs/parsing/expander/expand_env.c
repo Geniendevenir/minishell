@@ -6,19 +6,20 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 10:52:47 by allan             #+#    #+#             */
-/*   Updated: 2024/06/16 13:19:22 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/10 11:45:01 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		expand_env(t_token **token_list, t_env **env)
+//printf("test\n");
+int		expand_env(t_token **token_list, t_env **env, int exit_status)
 {
 	t_token	*current;
 
-	while (*token_list && ((*token_list)->type == TOKEN_ENV))
+	while (*token_list && (((*token_list)->type == TOKEN_ENV)))
 	{
-		if (find_first_env(token_list, env) == 1)
+		if (find_first_env(token_list, env, exit_status) == 1)
 			return (1);
 	}
 	if (!(*token_list) || !(*token_list)->next)
@@ -28,7 +29,7 @@ int		expand_env(t_token **token_list, t_env **env)
 	{
 		if (current->next->type == TOKEN_ENV)
 		{
-			if (find_next_env(&current, env) == 1)
+			if (find_next_env(&current, env, exit_status) == 1)
 				return (1);
 		}
 		else
@@ -37,11 +38,18 @@ int		expand_env(t_token **token_list, t_env **env)
 	return (0);
 }
 
-bool	find_first_env(t_token **current, t_env **env)
+bool	find_first_env(t_token **current, t_env **env, int exit_status)
 {
 	t_env	*find;
 
 	find = *env;
+	if ((*current)->state == STATE_EXIT_STATUS)
+	{
+		if (replace_exit_status(*current, exit_status) == 1)
+			return (1);
+		(*current)->type = TOKEN_WORD;
+		return (0);
+	}
 	while (find)
 	{
 		if (ft_strcmp((*current)->value, find->key) == 0)
@@ -57,11 +65,18 @@ bool	find_first_env(t_token **current, t_env **env)
 	return (0);
 }
 
-bool	find_next_env(t_token **current, t_env **env)
+bool	find_next_env(t_token **current, t_env **env, int exit_status)
 {
 	t_env	*find;
 
 	find = *env;
+	if ((*current)->next->state == STATE_EXIT_STATUS)
+	{
+		if (replace_exit_status((*current)->next, exit_status) == 1)
+			return (1);
+		(*current)->next->type = TOKEN_WORD;
+		return (0);
+	}
 	while (find)
 	{
 		if (ft_strcmp((*current)->next->value, find->key) == 0)
@@ -77,7 +92,7 @@ bool	find_next_env(t_token **current, t_env **env)
 	return (0);
 }
 
-bool	replace_token(t_token *token,  char *new_value)
+bool	replace_token(t_token *token, char *new_value)
 {
 	if (token->value == NULL)
 	{
@@ -93,6 +108,16 @@ bool	replace_token(t_token *token,  char *new_value)
 		if (!token->value)
 			return (1);
 	}
+	return (0);
+}
+
+bool	replace_exit_status(t_token *token,  int exit_status)
+{
+	if (token->value)
+		free(token->value);
+	token->value = ft_itoa(exit_status);
+	if (!token->value)
+		return (1);
 	return (0);
 }
 

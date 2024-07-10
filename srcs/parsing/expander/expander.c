@@ -6,20 +6,20 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 16:47:23 by allan             #+#    #+#             */
-/*   Updated: 2024/07/09 23:13:34 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/10 11:47:50 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 //CHECK ERROR ENTRE RELINK ET WILDCARD
-bool	expander(t_token **token_list, t_env *env, int error)
+bool	expander(t_token **token_list, t_all *p, int error)
 {
 	t_token	*current;
 
-	if (!env)
-		remove_all_env(token_list);
-	else if (expand_env(token_list, &env) == 1)
+	if (!p->env)
+		remove_all_env(token_list, p->exit_status); //add a exemption rule for $? that are still expanded
+	else if (expand_env(token_list, &p->env, p->exit_status) == 1)
 	{
 		error_lexer(1);
 		token_free(token_list);

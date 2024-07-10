@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 21:23:21 by allan             #+#    #+#             */
-/*   Updated: 2024/07/10 00:26:33 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/10 17:05:11 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,9 @@
 
 /*
 	TO DO
-	1 - Separate function split word
-	2 - Find a way to Include EXIT STATUS
+	1 - Separate function split word OK
+	2 - Find a way to Include EXIT STATUS OK
+	3 - CREATE THE ExIT_STATUS MAP
 	3 - Finish left_expand: Subshell, Exit Status, Set Pipe
 	4 - Theorize an algo to explore and execute the entire ast
  */
@@ -57,74 +58,123 @@ int		execute_cmd(t_exec	*exec, t_env *env)
 	return (0);
 }
 
-//printf("test\n");
-bool	left_expand(t_ast **ast, t_ast *current, t_env *env)
+int		create_subshell(t_all *p, t_ast *current, int subshell)
 {
-	int	error;
+	if (is_operator(current->type, 1) == 1 && current->subshell > subshell)
+	{
+		//find output redirect of the whole subshell
+		//open folders (Look at the permission depending on < or <<)
+		//fork
+		//Si dans l'enfant return (0) = Continuer left_expand;
+			//=> Se terminera quand on retournera a ce meme operateur et qu'on aura execute a gauche et a droite.
+		//Si dans le parent waitpid puis return (1) = quitter left expand et remonter jusqu'au root
+		//stock exit status
+	}
+	else if (current->type == TOKEN_PIPE)
+	{
+		
+	}
+}
 
-	error = 0;
+//printf("test\n");
+t_ast *left_expand(t_all *p, t_ast *current)
+{
+	p->error = 0;
 	while (current) //Down->Left : A CHAQUE DESCENTE LEFT OR RIHT EXPAND LES ENV POUR LES WORD ET LES HEREDOC DONT LE TYPE N'EST PAS SQ_LIMITER
 	{
 		//if (current->subshell == 1) fork
+		
 		if (current->state == STATE_WORD && current->type != WORD_SQLIMITER && current->type != WORD_LIMITER)
 		{
-			error = split_word(ast, &current, env);
-			if (error != 0 && error != -1)
-				return (1); //CHANGE RETURN AS IT ALSO TAKE INTO ACCOUNT EMPTY PROMTP AFTER EXPANDER
+			p->error = split_word(p, &current);
+			if (p->error != 0 && p->error != -1)
+				return (current); //CHANGE RETURN AS IT ALSO TAKE INTO ACCOUNT EMPTY PROMTP AFTER EXPANDER
 		}
-		if (error != -1)
+		if (p->error != -1)
 		{
 			if (!current->left)
-				return (0);
+				return (current);
 			current = current->left;
 		}
 	}
-	return (0);
+	return (current);
 }
 
-int		executer(t_ast **ast, t_env *env, int *exit_status)
+int		executer(t_all *p, int option)
 {
 	t_ast *current;
 	t_exec	exec;
 	int		result;
 
-	current = *ast;
+	current = p->ast;
 	exec_init(&exec);
 	//printf("test\n");
-	if (left_expand(ast, current, env) == 1)
+	//while(current->parent);
+	current = left_expand(p, current);
+	printf("p->error = %d\n", p->error);
+	if (p->error == 1)
 	{
 		exec_free(&exec);
 		return (1);
 	}
-	
-	/* while (current->parent && (current->parent->type == WORD_CMD || current->parent->type == WORD_OPTION || current->parent->type == WORD_BUILTIN)) //Up->Cmd
-		current = current->parent;
-	if (get_command(current, &exec) == 1) // Get cmd
+	if (!current)
+		//exit;
+	if (current)
 	{
-		printf("Get Command Error Malloc\n");
-		exec_free(&exec);
-		return (1);
+		while (current->parent && (current->parent->type == WORD_CMD || current->parent->type == WORD_OPTION || current->parent->type == WORD_BUILTIN)) //Up->Cmd
+			current = current->parent;
+		if (get_command(current, &exec) == 1) // Get cmd
+		{
+			printf("Get Command Error Malloc\n");
+			exec_free(&exec);
+			return (1);
+		}
+		printf("COMMAND:\n");
+		print_tab(exec.command);
+		// PERFECT
+
+		printf("REDIRECT\n");
+		//set_pipe(&exec, 1); add rule for 'in between pipe'
+		assign_redirect(current, &exec); //Assign Redirect Finir check pipe
+		/* result = execute_cmd(&exec, p->env); //execute
+		if (result != 0)
+		{
+			exec_free(&exec);
+			if (result == 1)
+				printf("execute_cmd Malloc Error\n");
+			return (1);
+		} */
 	}
-	printf("COMMAND:\n");
-	print_tab(exec.command);
-	printf("REDIRECT\n");
-	//set_pipe(&exec, 1);
-	assign_redirect(current, &exec); //Assign Redirect Finir check pipe
-	result = execute_cmd(&exec, env); //execute
-	if (result != 0)
-	{
-		exec_free(&exec);
-		if (result == 1)
-			printf("execute_cmd Malloc Error\n");
-		return (1);
-	}
-	printf("COMMAND:\n");
-	print_tab(exec.command); */
+	//remonter->parent et if (is_operator)
+	//recursif(option 2);
 	exec_free(&exec);
-	printAST(*ast, 0);
+	printAST(p->ast, 0);
 	return (0);
 }
 
+void	redirect_pipe(t_ast *current, t_exec *exec)
+{
+	if (exec->pipe == 1)
+	{
+		if (exec->out == NULL)
+		{
+			exec->out = current;
+			exec->redirectout = 1;
+		}
+		if (exec->in != NULL)
+		exec->redirectin = 1;
+	}
+	else if (exec->pipe == 3)
+	{
+		if (exec->in == NULL)
+		{
+			exec->in = current;
+			exec->redirectin = 1;
+		}
+		if (exec->out != NULL)
+		exec->redirectout = 1;
+	}
+}
 
 int		assign_redirect(t_ast *current, t_exec *exec)
 {
@@ -133,28 +183,7 @@ int		assign_redirect(t_ast *current, t_exec *exec)
 		if (is_operator(current->type, 2) == 1) //En remontant Si je croise un pipe, pipe 1 = gauche/ pipe 2 = millieu / pipe 3 = droite
 		{
 			if (current->type == TOKEN_PIPE)
-			{
-				if (exec->pipe == 1)
-				{
-					if (exec->out == NULL)
-					{
-						exec->out = current;
-						exec->redirectout = 1;
-					}
-					if (exec->in != NULL)
-					exec->redirectin = 1;
-				}
-				else if (exec->pipe == 3)
-				{
-					if (exec->in == NULL)
-					{
-						exec->in = current;
-						exec->redirectin = 1;
-					}
-					if (exec->out != NULL)
-					exec->redirectout = 1;
-				}
-			}
+				redirect_pipe(current, exec);
 			else
 			{
 				if (exec->in != NULL)
@@ -164,20 +193,13 @@ int		assign_redirect(t_ast *current, t_exec *exec)
 			}
 		}
 		if ((current->type == WORD_FILEIN || current->type == WORD_LIMITER) && exec->redirectin == 0)
-		{
-			printf("new in = %s\n", current->value);
 			exec->in = current;
-		}
 		else if ((current->type == WORD_FILEOUT || current->type == WORD_FILEOUT_APPEND) && exec->redirectout == 0)
-		{
-			printf("new out = %s\n", current->value);
 			exec->out = current;
-		}
 		if (!current->parent)
 			break;
 		current = current->parent;
 	}
-	printf("final node = %s\n", current->value);
 	if (exec->in)
 		printf("in = %s\n", exec->in->value);
 	else
@@ -188,9 +210,11 @@ int		assign_redirect(t_ast *current, t_exec *exec)
 		printf("out = NULL\n");
 	return (0);
 }
-
-
-
+	/*
+	printf("new in = %s\n", current->value);
+	printf("new out = %s\n", current->value);
+	printf("final node = %s\n", current->value);
+	 */
 /*
 ((> output-1.txt echo hello > output.txt lol && echo world > output2.txt > output3.txt) > output4.txt && < input.txt < input2.txt cat | > output5.txt grep hello > output6.txt) && env > final_output.txt
 

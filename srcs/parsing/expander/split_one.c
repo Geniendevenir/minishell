@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 21:53:15 by allan             #+#    #+#             */
-/*   Updated: 2024/07/08 22:51:55 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/10 11:13:58 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	env_special_token(t_token **token_list, int option)
 	if (option == 1)
 	{
 		current->type = TOKEN_ENV;
-		current->state = STATE_WORD;
+		current->state = STATE_EXIT_STATUS;
 	}
 	else if (option == 2)
 	{
