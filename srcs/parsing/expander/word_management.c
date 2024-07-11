@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   word_management.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 23:02:14 by allan             #+#    #+#             */
-/*   Updated: 2024/07/09 23:12:19 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/11 17:42:22 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ t_ast	*replace_word(t_ast **root, t_ast *node, t_ast *new_node)
 	}
 	if (new_node != NULL)
 		new_node->parent = node->parent;
-	if (node->parent == NULL)  // node is the root
+	if (node->parent == NULL)
 	{
 		*root = new_node;
 		return (new_node);
@@ -34,10 +34,10 @@ t_ast	*replace_word(t_ast **root, t_ast *node, t_ast *new_node)
 	return (node);
 }
 
-void delete_word(t_ast **root, t_ast **node)
+void	delete_word(t_ast **root, t_ast **node)
 {
 	t_ast	*temp;
-	
+
 	temp = *node;
 	if ((*node) == NULL)
 		return ;
@@ -52,7 +52,7 @@ void delete_word(t_ast **root, t_ast **node)
 bool insert_word(t_ast **node, t_token *token)
 {
 	t_ast	*new_node;
-	
+
 	new_node = create_node(token, (*node)->subshell);
 	if (!new_node)
 		return (1);
@@ -85,7 +85,7 @@ bool	modify_word(t_ast **node, t_token *token_list)
 
 int		handle_wildcard(t_ast **current, t_token **token_list)
 {
-	t_token *token;
+	t_token	*token;
 	int		error;
 
 	token = *token_list;
