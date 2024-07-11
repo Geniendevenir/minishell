@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/11 18:48:22 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/11 19:30:44 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -364,7 +364,7 @@ int			split_one(const char *cmd_line, size_t *i, t_token **token_list);
 int			split_two(const char *cmd_line, size_t *i, t_token **token_list);
 bool		limit_word(char c);
 int			word_management(t_ast **root, t_ast **current, t_token	*token_list);
-bool		in_if_envdquotes(char *tokenv, const char *cl, t_index *i, t_token **tl);
+bool		in_if_envdquotes(char *tokenv, t_token **tl);
 bool		end_of_env_dquotes(char *token_value, t_token **token_list, int option);
 
 //handle_wildcard
@@ -502,7 +502,7 @@ void		print_error_cmd_not_found(t_token *current);
 void		printAST(t_ast *node, int level);
 const char*	getAST_Class(t_ast *current);
 void		print_tab(char **command);
-bool		is_file(t_token *current);
+bool		is_file(t_ast *current);
 
 /*					BUILTINS				*/
 //ENV

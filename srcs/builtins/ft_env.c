@@ -6,14 +6,13 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:25:36 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/07 22:41:38 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/11 18:51:35 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
 //CHECK SI BESOIN DE GERER LE CAS: _=/usr/bin/env$
-
 t_env	*ft_envnew(char *key, char *value)
 {
 	t_env	*list;
@@ -46,6 +45,7 @@ t_env	*ft_envlast(t_env *lst)
 void	ft_env_add_back(t_env **lst, t_env *new)
 {
 	t_env	*tmp;
+	
 	if (!new)
 	{
 		printf("test add_back NULL\n");

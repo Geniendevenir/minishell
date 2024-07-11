@@ -40,6 +40,7 @@ SRCS 				=	srcs/free.c\
 						srcs/parsing/lexer/tokenizer_three.c\
 						srcs/parsing/lexer/tokenizer_four.c\
 						srcs/parsing/lexer/tokenizer_utils.c\
+						srcs/parsing/lexer/tokenizer_utils2.c\
 						srcs/parsing/lexer/limiter_utils.c\
 						srcs/parsing/error_management.c\
 						srcs/parsing/expander/split_word.c\

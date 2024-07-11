@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 21:53:41 by allan             #+#    #+#             */
-/*   Updated: 2024/07/11 18:45:43 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/11 19:29:12 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ bool	env_dquotes(const char *cmd_line, t_index *index, t_token **token_list)
 	option = 1;
 	if (index->j > *index->i)
 	{
-		if (in_if_envdquotes(token_value, cmd_line, index, token_list))
+		token_value = ft_substr(cmd_line, *index->i, (index->j - *index->i));
+		if (in_if_envdquotes(token_value, token_list))
 			return (1);
 	}
 	(*index->i) = index_foward(&index->j);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 12:53:21 by allan             #+#    #+#             */
-/*   Updated: 2024/07/02 14:51:34 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/11 18:52:38 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,9 @@ typedef struct s_env
 */
 
 //printf("test1\n");
-
-int	ft_export(char **new_env, t_env **env_list) //CHECK SYNTAX POUR VALUE (ex test=& > Error)
+/* //CHECK SYNTAX POUR VALUE (ex test=& > Error)
+*/
+int	ft_export(char **new_env, t_env **env_list)
 {
 	int		i;
 	int		len;
@@ -63,8 +64,7 @@ int	ft_export(char **new_env, t_env **env_list) //CHECK SYNTAX POUR VALUE (ex te
 	return (0);
 }
 
-
-int split_env(char *new_env, int len, t_env **env_list)
+int	split_env(char *new_env, int len, t_env **env_list)
 {
 	t_env *add_env;
 	int		i;
