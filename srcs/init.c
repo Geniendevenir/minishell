@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 22:57:28 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/10 13:20:08 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/10 23:08:59 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ t_all	*init_all(char **env)
 	p->ast = NULL;
 	p->line = NULL;
 	p->exit_status = 0;
-	p->next_status = 0;
+	p->max_pipe = 0;
+	p->curr_pipe = 0;
 	p->error = 0;
 	return (p);
 }

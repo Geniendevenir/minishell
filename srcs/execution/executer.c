@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 21:23:21 by allan             #+#    #+#             */
-/*   Updated: 2024/07/10 18:27:29 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/11 17:11:08 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,78 +20,57 @@
  */
 
 //RECHECK TOUS LES RETURNS / EXIT STATUS
-int		execute_cmd(t_exec	*exec, t_env *env)
-{
-	char	*path;
-	char	*temp;
-	int		error;
 
-	error = 0;
-	temp = NULL;
-	if (!exec->command || !exec->command[0])
-		return (1);
-	if (access(exec->command[0], X_OK) == -1) //check if not absolute path
+
+void	create_child(t_all *p, t_ast **token, int create_pipe)
+{
+	int	status;
+    pid_t pid;
+
+	status = 0;
+	 if (create_pipe <= 0)
+        return;
+	pid = fork();
+    if (pid < 0)
 	{
-		path = get_path(exec->command[0], env, &error);
-		if (error != 0)
-		{
-			printf("ERROR: get_path error\n");
-			if (path)
-				free (path);
-			return (1); //malloc error
-		}
-		if (!path)
-		{
-			write(1, exec->command[0], ft_strlen(exec->command[0]));
-			write(1, ": command not found\n", 20);
-			return (127);
-		}
-		temp = exec->command[0];
-		free(temp); // Ca sert a qqchose ?
-		exec->command[0] = path;
+		p->exit_status = -1;
+        error_executer(NULL, 5);
+        exit(EXIT_FAILURE); //Trouver un moyen de tout free avant d'exit
+    }
+    if (pid == 0)
+	{
+        // This is the child process
+		if ((*token)->left)
+			*token = (*token)->left;
+		p->curr_pipe += 2;
+        create_child(p, create_pipe - 1, token);  // Child forks another child
+    }
+	else
+	{
+        waitpid(pid, &status, 0);  // Wait for the child to complete
+		if (WIFEXITED(status))
+			p->exit_status = WEXITSTATUS(status);
 	}
-	return (0);
 }
 
-
-int		create_subshell(t_all *p, t_ast *current)
+int		pipe_management(t_all *p, t_ast **token)
 {
+	t_ast	*current;
+	int		pid1;
+	int		pid2;
 
-	int			pid1;
-	int			pid2;
-
-	if (!current->parent)
-	{
-		if (is_operator(current->type, 1) == 1 && current->subshell > 0)
-		{
-			pid1 = fork();
-			if (pid1 == -1)
-				error_executer(ERR_FORK);
-			else if (pid1 == 0)
-				return (-1);
-			else
-			{
-				waitpid(pid1, NULL, 0);
-				return (-2);
-			}
-			//fork
-			//Si dans l'enfant return (0) = Continuer left_expand;
-				//=> Se terminera quand on retournera a ce meme operateur et qu'on aura execute a gauche et a droite.
-			//Si dans le parent waitpid puis return (1) = quitter left expand et remonter jusqu'au root
-			//stock exit status
-		}
-	}
-	else if (current->parent)
-	{
-		if (is_operator(current->type, 1) == 1 && current->subshell > current->parent->subshell)
-		{
-
-		}
-	}
-	else if (current->type == TOKEN_PIPE)
-	{
-		
-	}
+	current = token;
+	while (current->type == TOKEN_PIPE)
+		p->max_pipe += 2;
+	create_child(p, p->max_pipe / 2, token);
+	
+	//
+	
+	//fork
+	//Si dans l'enfant return (0) = Continuer left_expand;
+		//=> Se terminera quand on retournera a ce meme operateur et qu'on aura execute a gauche et a droite.
+	//Si dans le parent waitpid puis return (1) = quitter left expand et remonter jusqu'au root
+	//stock exit status
 }
 
 //printf("test\n");
@@ -100,10 +79,12 @@ t_ast *left_expand(t_all *p, t_ast *current)
 	p->error = 0;
 	while (current) //Down->Left : A CHAQUE DESCENTE LEFT OR RIHT EXPAND LES ENV POUR LES WORD ET LES HEREDOC DONT LE TYPE N'EST PAS SQ_LIMITER
 	{
-		//if (current->subshell == 1) fork
-		p->error = create_subshell(p, current);
-		if (p->error == -2)
-			return (current); //father goes back up after his son died
+		/* if (current->type == TOKEN_PIPE)
+		{
+			p->error = pipe_management(p, &current);
+			if (p->error == -2)
+				return (current); //father goes back up after his son died 	
+		} */
 		if (current->state == STATE_WORD && current->type != WORD_SQLIMITER && current->type != WORD_LIMITER)
 		{
 			p->error = split_word(p, &current);
@@ -128,21 +109,17 @@ int		executer(t_all *p) //, int option
 
 	current = p->ast;
 	exec_init(&exec);
-	//printf("test\n");
-	//while(current->parent);
 	current = left_expand(p, current);
-	printf("p->error = %d\n", p->error);
 	if (p->error == 1)
 	{
 		exec_free(&exec);
 		return (1);
 	}
-	//if (!current)
-		//exit;
+	
 	// II - TROUVER CMD/ FIND REDIRECT / CREATE CMD / EXECUTE COMMAND
 	if (current)
 	{
-		while (current->parent && (current->parent->type == WORD_CMD || current->parent->type == WORD_OPTION || current->parent->type == WORD_BUILTIN)) //Up->Cmd
+		while (current->parent && (current->parent->type == WORD_CMD || current->parent->type == WORD_OPTION)) //Up->Cmd
 			current = current->parent;
 		if (get_command(current, &exec) == 1) // Get cmd
 		{
@@ -151,24 +128,44 @@ int		executer(t_all *p) //, int option
 			return (1);
 		}
 		// PERFECT
-
-		printf("REDIRECT\n");
+		/* 
+		if (p->curr_pipe == p->max_pipe)
+			set_pipe(&exec, 1); //pipe gauche
+		else if (p->curr_pipe == 1)
+			set_pipe(&exec, 3); //pipe milieu
+		else
+			set_pipe(&exec, 2); //pipe droite */
 		//set_pipe(&exec, 1); add rule for 'in between pipe'
 		
 		//
 		assign_redirect(current, &exec); //Assign Redirect Finir check pipe
-		result = execute_cmd(&exec, p->env);
-		if (result != 0)
+		p->exit_status = open_files(p, &exec);
+		if (p->exit_status != 0)
 		{
 			exec_free(&exec);
-			if (result == 1)
-				printf("execute_cmd Malloc Error\n");
-			return (1);
+			return (p->exit_status); // Peut return void si besoin nqiue norminette
+		}
+		p->exit_status = check_cmd(&exec, p->env);
+		if (p->exit_status != 0)
+		{
+			close_files(&exec);
+			exec_free(&exec);
+			if (p->exit_status == 1)
+				error_executer(NULL, 4);
+			return (1); // Peut return void si besoin nqiue norminette
 		}
 		printf("COMMAND:\n");
 		print_tab(exec.command);
 		//EXECUTE CMD
 	}
+	exec_free(&exec);
+	while (current->parent)
+	{
+		if (is_operator(current->type, 2))
+			executer(p);
+		current = current->parent;
+	}
+	
 	//remonter->parent et if (is_operator)
 	//recursif(option 2);
 	exec_free(&exec);
@@ -176,64 +173,6 @@ int		executer(t_all *p) //, int option
 	return (0);
 }
 
-void	redirect_pipe(t_ast *current, t_exec *exec)
-{
-	if (exec->pipe == 1)
-	{
-		if (exec->out == NULL)
-		{
-			exec->out = current;
-			exec->redirectout = 1;
-		}
-		if (exec->in != NULL)
-		exec->redirectin = 1;
-	}
-	else if (exec->pipe == 3)
-	{
-		if (exec->in == NULL)
-		{
-			exec->in = current;
-			exec->redirectin = 1;
-		}
-		if (exec->out != NULL)
-		exec->redirectout = 1;
-	}
-}
-
-int		assign_redirect(t_ast *current, t_exec *exec)
-{
-	while (current && (exec->redirectin == 0 || exec->redirectout == 0))
-	{
-		if (is_operator(current->type, 2) == 1) //En remontant Si je croise un pipe, pipe 1 = gauche/ pipe 2 = millieu / pipe 3 = droite
-		{
-			if (current->type == TOKEN_PIPE)
-				redirect_pipe(current, exec);
-			else
-			{
-				if (exec->in != NULL)
-					exec->redirectin = 1;
-				if (exec->out != NULL)
-					exec->redirectout = 1;
-			}
-		}
-		if ((current->type == WORD_FILEIN || current->type == WORD_LIMITER) && exec->redirectin == 0)
-			exec->in = current;
-		else if ((current->type == WORD_FILEOUT || current->type == WORD_FILEOUT_APPEND) && exec->redirectout == 0)
-			exec->out = current;
-		if (!current->parent)
-			break;
-		current = current->parent;
-	}
-	if (exec->in)
-		printf("in = %s\n", exec->in->value);
-	else
-		printf("in = NULL\n");
-	if (exec->out)
-		printf("out = %s\n", exec->out->value);
-	else
-		printf("out = NULL\n");
-	return (0);
-}
 	/*
 	printf("new in = %s\n", current->value);
 	printf("new out = %s\n", current->value);

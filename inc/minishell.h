@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/10 18:24:48 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/10 23:08:32 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,8 @@ typedef struct s_all
 	int		line_num;
 	t_sig	*sig;
 	int		exit_status;
-	int		next_status;
+	int		max_pipe;
+	int		curr_pipe;
 	int		error;
 }	t_all;
 
@@ -215,6 +216,8 @@ typedef struct s_exec
 	bool			redirectout;
 	struct s_ast 	*in;
 	struct s_ast 	*out;
+	int				filein;
+	int				fileout;
 	char 			**command;
 }				t_exec;
 
@@ -227,10 +230,17 @@ t_ast		*left_expand(t_all *p, t_ast *current);
 //redirect
 int			assign_redirect(t_ast *current, t_exec *exec);
 void		redirect_pipe(t_ast *current, t_exec *exec);
+int    		open_filein(t_exec *exec);
+int    		open_fileout(t_exec *exec);
+int			open_files(t_all *p, t_exec *exec);
+void		close_files(t_exec *exec);
+
 //parse_cmd
 int 		get_command(t_ast *current, t_exec *exec);
 int			command_size(t_ast *current);
 char 		**parse_command(t_ast *current, int size);
+int			check_cmd(t_exec	*exec, t_env *env);
+
 //path_cmd
 char		*find_path(t_env *env);
 char		*path_free(t_path *p, int *error, int option);
@@ -331,7 +341,7 @@ const char	*getToken_Class(t_token *current);
 void		error_lexer(int error);
 bool		error_syntax(t_token *current, int error);
 void		error_expander(t_ast *current, int error);
-void		error_executer(int error);
+void		error_executer(char *error, int option);
 
 //here_doc
 void		cleanbuffer(char *buffer);
@@ -523,7 +533,7 @@ bool		check_echo(char *str);
 int			ft_echo(char **cmd);
 
 int			main(int argc, char **argv, char **env);
-char		*minishell(t_all *p, int *exit_status);
+char		*minishell(t_all *p);
 
 //extern int	sig_int;
 /*						AST	TRY				*/

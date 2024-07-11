@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 13:58:59 by allan             #+#    #+#             */
-/*   Updated: 2024/07/10 18:24:40 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/10 23:46:41 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,21 @@ void	error_expander(t_ast *current, int error)
 	if (error == 5) */
 }
 
-void	error_executer(char *error)
+void	error_executer(char *error, int option)
 {
-	write(2, error, ft_strlen(error));
+	if (option == 1)
+	{
+		write(2, "bash: ", 6);
+		write(2, error, ft_strlen(error));
+		write(2, ": No such file or directory\n", 28);
+	}
+	else if (option == 2)
+		write(2, "Error: Output File Opening Failed\n", 34);
+	else if (option == 3)
+		write(2, "Error: Input File Opening Failed\n", 33);
+	else if (option == 4)
+		write(2, "Error: Malloc Allocation Failed\n", 32);
+	else if (option == 5)
+		write(2, "Error: Fork Failed\n", 19);
+	//write(2, error, ft_strlen(error));
 }

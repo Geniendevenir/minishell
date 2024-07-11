@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_parse_command.c                               :+:      :+:    :+:   */
+/*   parse_cmd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 18:37:43 by allan             #+#    #+#             */
-/*   Updated: 2024/07/07 20:20:19 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/10 22:07:45 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,39 @@ char **parse_command(t_ast *current, int size)
 	}
 	command[i] = 0;
 	return (command);
+}
+
+int		check_cmd(t_exec *exec, t_env *env)
+{
+	char	*path;
+	char	*temp;
+	int		error;
+
+	error = 0;
+	temp = NULL;
+	if (!exec->command || !exec->command[0])
+		return (0);
+	if (access(exec->command[0], X_OK) == -1) //check if not absolute path
+	{
+		if (check_builtin(exec->command[0]) == 1)
+			return (0);
+		path = get_path(exec->command[0], env, &error);
+		if (error != 0)
+		{
+			printf("ERROR: get_path error\n");
+			if (path)
+				free (path);
+			return (1); //malloc error
+		}
+		if (!path)
+		{
+			write(1, exec->command[0], ft_strlen(exec->command[0]));
+			write(1, ": command not found\n", 20);
+			return (127);
+		}
+		temp = exec->command[0];
+		free(temp); // Ca sert a qqchose ?
+		exec->command[0] = path;
+	}
+	return (0);
 }
