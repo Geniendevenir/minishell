@@ -1,41 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   hate_the_norm.c                                    :+:      :+:    :+:   */
+/*   split_two_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/01 19:33:11 by allan             #+#    #+#             */
-/*   Updated: 2024/07/11 17:47:20 by Matprod          ###   ########.fr       */
+/*   Created: 2024/07/11 18:26:14 by Matprod           #+#    #+#             */
+/*   Updated: 2024/07/11 18:45:52 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	wildcard_return(DIR **d)
+/*
+L23  //substr de i + 1 index->jusqu'a index->j
+*/
+bool	in_if_envdquotes(char *tokenv, const char *cl, t_index *i, t_token **tl)
 {
-	closedir(*d);
-	return (1);
-}
-bool	is_file(t_token *current)
-{
-	if ((current)->type == WORD_FILEOUT || (current)->type == WORD_FILEIN 
-		|| (current)->type == WORD_FILEOUT_APPEND)
+	tokenv = ft_substr(cl, *i->i, (i->j - *i->i));
+	if (!tokenv)
+		return (1);
+	if (dquote_add_token(tokenv, tl, 0) == 1)
 		return (1);
 	return (0);
 }
 
-void	index_init(t_index *index, size_t *i, int option)
+bool	end_of_env_dquotes(char *token_value, t_token **token_list, int option)
 {
-	if (option == 1)
-		index->j = *i;
-	index->i = i;
-	index->special = 0;
-	index->error = 0;
-}
-
-size_t	index_foward(size_t *j)
-{
-	*j += 1;
-	return (*j);
+	if (!token_value)
+		return (1);
+	if (dquote_add_token(token_value, token_list, option) == 1)
+		return (1);
+	return (0);
 }

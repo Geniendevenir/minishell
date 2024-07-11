@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_one.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 21:53:15 by allan             #+#    #+#             */
-/*   Updated: 2024/07/10 11:13:58 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/11 18:03:25 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	env_token(const char *cmd_line, size_t *i, t_token **token_list)
 {
-	t_token	*current;
-	char	*token_value;
+	t_token		*current;
+	char		*token_value;
 	size_t		j;
 
 	j = *i;
@@ -74,7 +74,7 @@ bool	wildcard_token(const char *cmd_line, size_t *i, t_token **token_list)
 	return (0);
 }
 
-bool word_token(const char *cmd_line, size_t *i, t_token **token_list)
+bool	word_token(const char *cmd_line, size_t *i, t_token **token_list)
 {
 	t_token	*current;
 	char	*token_value;

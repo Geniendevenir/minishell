@@ -45,6 +45,7 @@ SRCS 				=	srcs/free.c\
 						srcs/parsing/expander/split_word.c\
 						srcs/parsing/expander/split_one.c\
 						srcs/parsing/expander/split_two.c\
+						srcs/parsing/expander/split_two_utils.c\
 						srcs/parsing/expander/expander.c\
 						srcs/parsing/expander/remove_env.c\
 						srcs/parsing/expander/expander_utils.c\

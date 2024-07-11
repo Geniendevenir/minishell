@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   expand_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 10:52:47 by allan             #+#    #+#             */
-/*   Updated: 2024/07/10 11:45:01 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/11 18:30:03 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 //printf("test\n");
-int		expand_env(t_token **token_list, t_env **env, int exit_status)
+int	expand_env(t_token **token_list, t_env **env, int exit_status)
 {
 	t_token	*current;
 
@@ -111,7 +111,7 @@ bool	replace_token(t_token *token, char *new_value)
 	return (0);
 }
 
-bool	replace_exit_status(t_token *token,  int exit_status)
+bool	replace_exit_status(t_token *token, int exit_status)
 {
 	if (token->value)
 		free(token->value);
@@ -120,4 +120,3 @@ bool	replace_exit_status(t_token *token,  int exit_status)
 		return (1);
 	return (0);
 }
-

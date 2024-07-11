@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 23:02:14 by allan             #+#    #+#             */
-/*   Updated: 2024/07/11 17:42:22 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/11 18:48:34 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,10 @@ t_ast	*replace_word(t_ast **root, t_ast *node, t_ast *new_node)
 	return (node);
 }
 
+/*
+L49	// Case 2: (*Node) is a leaf
+L51	// Case 3: (*Node) has only left child
+*/
 void	delete_word(t_ast **root, t_ast **node)
 {
 	t_ast	*temp;
@@ -42,14 +46,14 @@ void	delete_word(t_ast **root, t_ast **node)
 	if ((*node) == NULL)
 		return ;
 	if ((*node)->left == NULL)
-		*node = replace_word(root, *node, NULL); // Case 2: (*Node) is a leaf
+		*node = replace_word(root, *node, NULL);
 	else
-		*node = replace_word(root, *node, (*node)->left); // Case 3: (*Node) has only left child
+		*node = replace_word(root, *node, (*node)->left);
 	free(temp->value);
 	free(temp);
 }
 
-bool insert_word(t_ast **node, t_token *token)
+bool	insert_word(t_ast **node, t_token *token)
 {
 	t_ast	*new_node;
 
@@ -73,7 +77,7 @@ bool insert_word(t_ast **node, t_token *token)
 
 bool	modify_word(t_ast **node, t_token *token_list)
 {
-	char *temp;
+	char	*temp;
 
 	temp = (*node)->value;
 	(*node)->value = ft_strdup(token_list->value);
@@ -83,14 +87,14 @@ bool	modify_word(t_ast **node, t_token *token_list)
 	return (0);
 }
 
-int		handle_wildcard(t_ast **current, t_token **token_list)
+int	handle_wildcard(t_ast **current, t_token **token_list)
 {
 	t_token	*token;
 	int		error;
 
 	token = *token_list;
 	error = 0;
-	if ((*current)->type == WORD_FILEOUT || (*current)->type == WORD_FILEIN || (*current)->type == WORD_FILEOUT_APPEND) //cas > *exits
+	if (is_file(*current))
 		error_expander(*current, 1);
 	else if ((*current)->type == WORD_CMD || (*current)->type == WORD_OPTION)
 	{

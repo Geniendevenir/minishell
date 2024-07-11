@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   remove_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 10:56:18 by allan             #+#    #+#             */
-/*   Updated: 2024/07/10 11:49:28 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/11 18:41:02 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	remove_all_env(t_token **token_list, int exit_status)
 {
 	t_token	*current;
-	
+
 	expand_all_exit(token_list, exit_status);
 	while (*token_list && (*token_list)->type == TOKEN_ENV)
 		remove_token(token_list, 0);
@@ -28,23 +28,27 @@ void	remove_all_env(t_token **token_list, int exit_status)
 			remove_token(&current, 1);
 		else
 			current = current->next;
-	} 
+	}
 }
 
+/*
+L44 //CASE First node of token_list is an ENV OK
+L51 //CASE Any middle node of token_list is an ENV OK
+*/
 void	remove_token(t_token **current, bool option)
 {
 	t_token	*tmp;
 
 	if (!current || !(*current))
 		return ;
-	if (option == 0) //CASE First node of token_list is an ENV OK
+	if (option == 0)
 	{
 		tmp = *current;
 		*current = (*current)->next;
 		tmp->next = NULL;
 		token_free(&tmp);
 	}
-	else if (option == 1)//CASE Any middle node of token_list is an ENV OK
+	else if (option == 1)
 	{
 		tmp = (*current)->next;
 		(*current)->next = (*current)->next->next;

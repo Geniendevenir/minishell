@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   relink_token.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 23:11:11 by allan             #+#    #+#             */
-/*   Updated: 2024/07/07 19:15:14 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/11 18:25:25 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		relink_token(t_token **token_list, t_token *current, int error)
+int	relink_token(t_token **token_list, t_token *c, int error)
 {
 	t_token	*new_list;
 
@@ -20,17 +20,17 @@ int		relink_token(t_token **token_list, t_token *current, int error)
 	if (!new_list)
 		return (1);
 	token_init(&new_list);
-	while (current)
+	while (c)
 	{
 		error = 1;
-		if ((current->state == STATE_WORD || current->state == STATE_EXIT_STATUS) 
-			&& (current->type != WORD_LIMITER && current->type != WORD_SQLIMITER))
-			current = relink_word(current, &new_list, &error);
+		if ((c->state == STATE_WORD || c->state == STATE_EXIT_STATUS)
+			&& (c->type != WORD_LIMITER && c->type != WORD_SQLIMITER))
+			c = relink_word(c, &new_list, &error);
 		else
 		{
-			error = relink_operator(current, &new_list);
-			if (current)
-				current = current->next;
+			error = relink_operator(c, &new_list);
+			if (c)
+				c = c->next;
 		}
 		if (error == 1)
 			return (token_free(&new_list));
@@ -40,33 +40,33 @@ int		relink_token(t_token **token_list, t_token *current, int error)
 	return (0);
 }
 
-t_token	*relink_word(t_token *current, t_token **new_list, int *error)
+t_token	*relink_word(t_token *c, t_token **new_list, int *error)
 {
 	char	*word;
 	char	*new_word;
 	int		wildcard;
 
 	relink_word_init(&word, &new_word, &wildcard);
-	while (current && (current->state == STATE_WORD || current->state == STATE_EXIT_STATUS))
+	while (c && (c->state == STATE_WORD || c->state == STATE_EXIT_STATUS))
 	{
-		if (current->state == STATE_EXIT_STATUS)
+		if (c->state == STATE_EXIT_STATUS)
 			wildcard = 2;
-		if (current->type == TOKEN_WILDCARD)
+		if (c->type == TOKEN_WILDCARD)
 			wildcard = 1;
 		if (!word)
-			new_word = ft_strdup(current->value);
+			new_word = ft_strdup(c->value);
 		else
-			new_word = ft_strjoin(word, current->value);
+			new_word = ft_strjoin(word, c->value);
 		free(word);
 		if (!new_word)
 			return (NULL);
 		word = new_word;
-		current = current->next;
+		c = c->next;
 	}
 	if (add_word(new_list, word, wildcard) == 1)
 		return (NULL);
 	*error = 0;
-	return (current);
+	return (c);
 }
 
 void	relink_word_init(char **word, char **new_word, int *wildcard)
@@ -78,7 +78,7 @@ void	relink_word_init(char **word, char **new_word, int *wildcard)
 
 bool	add_word(t_token **new_list, char *word, int option)
 {
-	t_token *last;
+	t_token	*last;
 
 	if (token_addback(new_list, word, 0) == 1)
 	{
@@ -106,7 +106,7 @@ bool	add_word(t_token **new_list, char *word, int option)
 
 bool	relink_operator(t_token *current, t_token **new_list)
 {
-	t_token *last;
+	t_token	*last;
 
 	if (current->state == STATE_OPERATOR)
 	{

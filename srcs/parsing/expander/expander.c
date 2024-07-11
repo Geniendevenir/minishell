@@ -3,22 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 16:47:23 by allan             #+#    #+#             */
-/*   Updated: 2024/07/10 11:47:50 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/11 18:46:47 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//CHECK ERROR ENTRE RELINK ET WILDCARD
+/*CHECK ERROR ENTRE RELINK ET WILDCARD
+L24 //add a exemption rule for $? that are still expanded
+*/
 bool	expander(t_token **token_list, t_all *p, int error)
 {
 	t_token	*current;
 
 	if (!p->env)
-		remove_all_env(token_list, p->exit_status); //add a exemption rule for $? that are still expanded
+		remove_all_env(token_list, p->exit_status);
 	else if (expand_env(token_list, &p->env, p->exit_status) == 1)
 	{
 		error_lexer(1);
@@ -41,5 +43,3 @@ bool	expander(t_token **token_list, t_all *p, int error)
 	}
 	return (0);
 }
-
-

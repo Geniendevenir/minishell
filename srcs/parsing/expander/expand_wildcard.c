@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_wildcard.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 21:24:08 by allan             #+#    #+#             */
-/*   Updated: 2024/07/09 23:05:20 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/11 18:29:38 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ printf("test 1\n");
 
 int	expand_wildcard(t_token **token_list, int *error)
 {
-	t_token *current;
+	t_token	*current;
 	char	*wildcard;
 
 	wildcard = NULL;
@@ -41,32 +41,32 @@ int	expand_wildcard(t_token **token_list, int *error)
 	return (0);
 }
 
-int find_wildcard(char *wildcard, t_token *current, int *error)
+int	find_wildcard(char *wildcard, t_token *current, int *error)
 {
 	DIR				*d;
-    struct dirent	*dir;
+	struct dirent	*dir;
 	t_wildcard		match;
 	bool			found;
 
-    d = opendir(".");
-    if (!d)
-		return (6); //check true error
+	d = opendir(".");
+	if (!d)
+		return (6);
 	found = 0;
-    while (1)
+	while (1)
 	{
 		dir = readdir(d);
 		if (dir == NULL)
 			break ;
 		match_init(wildcard, dir->d_name, &match);
-        if (file_match(match))
+		if (file_match(match))
 		{
-            *error = add_file(&current, dir->d_name, found);
+			*error = add_file(&current, dir->d_name, found);
 			if (*error == 1)
 				return (wildcard_return(&d));
 			found = 1;
 		}
-    }
-    closedir(d);
+	}
+	closedir(d);
 	return (0);
 }
 
@@ -80,29 +80,29 @@ void	match_init(char *wildcard, char *file_name, t_wildcard *match)
 
 bool	file_match(t_wildcard match)
 {
-    while (*match.file_name)
+	while (*match.file_name)
 	{
-        if (*match.wildcard == '*')
+		if (*match.wildcard == '*')
 		{
-            match.star = match.wildcard++;
-            match.backtrack = match.file_name;
-        }
+			match.star = match.wildcard++;
+			match.backtrack = match.file_name;
+		}
 		else if (*match.wildcard == *match.file_name || *match.wildcard == '?')
 		{
-            match.wildcard++;
-            match.file_name++;
-        }
+			match.wildcard++;
+			match.file_name++;
+		}
 		else if (match.star)
 		{
-            match.wildcard = match.star + 1;
-            match.file_name = ++match.backtrack;
-        }
+			match.wildcard = match.star + 1;
+			match.file_name = ++match.backtrack;
+		}
 		else
-            return (0);
-    }
-    while (*match.wildcard == '*')
+			return (0);
+	}
+	while (*match.wildcard == '*')
 		match.wildcard++;
-    return (!(*match.wildcard));
+	return (!(*match.wildcard));
 }
 
 bool	add_file(t_token **current, char *file_name, bool found)

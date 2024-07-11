@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_two.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 21:53:41 by allan             #+#    #+#             */
-/*   Updated: 2024/07/09 16:56:41 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/11 18:45:43 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,50 +37,51 @@ bool	dquotes_token(const char *cmd_line, size_t *i, t_token **token_list)
 	return (0);
 }
 
+/*
+L54  //Tokenize la string avant l'ENV
+L57 //Se positionne apres le $ (Norminette BS)
+L58 //Cas special "$?" A MODIFIER SE POSITIONNER A I--
+L65 //Tous les autres cas
+*/
 bool	env_dquotes(const char *cmd_line, t_index *index, t_token **token_list)
 {
 	char	*token_value;
 	int		option;
 
 	option = 1;
-	if (index->j > *index->i) //Tokenize la string avant l'ENV
+	if (index->j > *index->i)
 	{
-		token_value = ft_substr(cmd_line, *index->i, (index->j - *index->i));
-		if (!token_value)
-			return (1);
-		if (dquote_add_token(token_value, token_list, 0) == 1) //substr de i + 1 index->jusqu'a index->j
+		if (in_if_envdquotes(token_value, cmd_line, index, token_list))
 			return (1);
 	}
-	(*index->i) = index_foward(&index->j); //Se positionne apres le $ (Norminette BS)
-	if (cmd_line[index->j] == '?') //Cas special "$?" A MODIFIER SE POSITIONNER A I--
+	(*index->i) = index_foward(&index->j);
+	if (cmd_line[index->j] == '?')
 	{
 		index->j++;
 		option = 2;
 	}
 	else
 	{
-		while (is_valid_env(cmd_line[index->j]) == 0) //Tous les autres cas
+		while (is_valid_env(cmd_line[index->j]) == 0)
 			index->j++;
 	}
 	token_value = ft_substr(cmd_line, *index->i, (index->j - *index->i));
-	if (!token_value)
-		return (1);
-	if (dquote_add_token(token_value, token_list, option) == 1)
+	if (end_of_env_dquotes(token_value, token_list, option))
 		return (1);
 	(*index->i) = index->j;
 	return (0);
 }
 
-bool	dquotes_last_token(const char *cmd_line, t_index *index, t_token **token_list)
+bool	dquotes_last_token(const char *cmd_line, t_index *i, t_token **tl)
 {
 	char	*token_value;
-	
-	if (index->j > *index->i && cmd_line[*index->i] != '\"')
+
+	if (i->j > *i->i && cmd_line[*i->i] != '\"')
 	{
-		token_value = ft_substr(cmd_line, *index->i, (index->j - *index->i));
+		token_value = ft_substr(cmd_line, *i->i, (i->j - *i->i));
 		if (!token_value)
 			return (1);
-		if (dquote_add_token(token_value, token_list, 0) == 1)
+		if (dquote_add_token(token_value, tl, 0) == 1)
 			return (1);
 	}
 	return (0);
@@ -89,7 +90,7 @@ bool	dquotes_last_token(const char *cmd_line, t_index *index, t_token **token_li
 bool	dquote_add_token(char *token_value, t_token **token_list, int option)
 {
 	t_token	*current;
-	int	len;
+	int		len;
 
 	len = ft_strlen(token_value);
 	if (token_addback(token_list, token_value, 0) == 1)
@@ -114,10 +115,10 @@ bool	dquote_add_token(char *token_value, t_token **token_list, int option)
 	return (0);
 }
 
-bool squote_token(const char *cmd_line, size_t *i, t_token **token_list)
+bool	squote_token(const char *cmd_line, size_t *i, t_token **token_list)
 {
-	t_token	*current;
-	char	*token_value;
+	t_token		*current;
+	char		*token_value;
 	size_t		j;
 
 	j = *i + 1;
