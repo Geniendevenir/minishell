@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_four.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 19:29:39 by allan             #+#    #+#             */
-/*   Updated: 2024/07/09 16:55:39 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/11 16:42:20 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ bool	create_limiter(const char *cmd_line, t_index *index, char **token_value)
 	return (0);
 }
 
-bool limiter_token(const char *cmd_line, size_t *i, t_token **token_list)
+bool	limiter_token(const char *cmd_line, size_t *i, t_token **token_list)
 {
 	t_token	*current;
 	char	*token_value;
 	t_index	index;
-	
+
 	token_value = NULL;
 	index_init(&index, i, 1);
 	while (cmd_line[*index.i] && stop_limiter(cmd_line, index.i, 0) == 0)
@@ -62,10 +62,10 @@ bool limiter_token(const char *cmd_line, size_t *i, t_token **token_list)
 
 bool	limiter_squote(const char *cmd_line, t_index *index, char **token_value)
 {
-	(*index->i) = index_foward(&index->j); //j++ && i++
+	(*index->i) = index_foward(&index->j);
 	if (!cmd_line[index->j])
 		return (1);
-	if (cmd_line[index->j] == '\'') //Apres dernier '
+	if (cmd_line[index->j] == '\'')
 	{
 		(*index->i) = index_foward(&index->j);
 		return (0);
@@ -116,7 +116,6 @@ bool	limiter_dquote(const char *cmd_line, t_index *index, char **token_value)
 
 bool	limiter_word(const char *cmd_line, t_index *index, char **token_value)
 {
-
 	while (cmd_line[index->j] && stop_limiter(cmd_line, &index->j, 1) == 0)
 		index->j++;
 	if (!(*token_value))
@@ -133,4 +132,3 @@ bool	limiter_word(const char *cmd_line, t_index *index, char **token_value)
 	(*index->i) = index->j;
 	return (0);
 }
-

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   check_lexer.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:23:10 by allan             #+#    #+#             */
-/*   Updated: 2024/07/04 13:01:59 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/11 16:47:03 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int check_semicolon(char *cmd_line)
+int	check_semicolon(char *cmd_line)
 {
 	int	i;
 
@@ -34,12 +34,12 @@ int check_semicolon(char *cmd_line)
 	return (0);
 }
 
-int check_quotes(char *cmd_line)
+int	check_quotes(char *cmd_line)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(cmd_line[i])
+	while (cmd_line[i])
 	{
 		if (cmd_line[i] == '\"')
 		{

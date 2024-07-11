@@ -3,14 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   limiter_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 19:48:26 by allan             #+#    #+#             */
-/*   Updated: 2024/07/09 13:06:11 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/11 16:39:08 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	while_in_last_heredoc(int *heredoc, t_token **current)
+{
+	while ((*current) && *heredoc > 0)
+	{
+		if ((*current)->type == TOKEN_HEREDOC)
+			(*heredoc)--;
+		(*current) = (*current)->next;
+	}
+}
 
 bool	last_heredoc(t_token **token_list)
 {
@@ -28,12 +38,7 @@ bool	last_heredoc(t_token **token_list)
 	if (heredoc == 0)
 		return (0);
 	current = *token_list;
-	while (current && heredoc > 0)
-	{
-		if (current->type == TOKEN_HEREDOC)
-			heredoc--;
-		current = current->next;
-	}
+	while_in_last_heredoc(&heredoc, &current);
 	if (!current || !current->next)
 		return (1);
 	while (current && current->type == TOKEN_WHITESPACE)
@@ -45,8 +50,8 @@ bool	last_heredoc(t_token **token_list)
 
 bool	stop_limiter(const char *cmd_line, size_t *i, bool option)
 {
-	if (cmd_line[*i] == '&' || cmd_line[*i] == '|' || cmd_line[*i] == ' ' 
-		|| cmd_line[*i] == '>' || cmd_line[*i] == '<' 
+	if (cmd_line[*i] == '&' || cmd_line[*i] == '|' || cmd_line[*i] == ' '
+		|| cmd_line[*i] == '>' || cmd_line[*i] == '<'
 		|| cmd_line[*i] == '(' || cmd_line[*i] == ')')
 		return (1);
 	if (option == 1)
@@ -59,8 +64,8 @@ bool	stop_limiter(const char *cmd_line, size_t *i, bool option)
 
 bool	limiter_join(const char *cmd_line, t_index *index, char **token_value)
 {
-	char *temp;
-	char *join;
+	char	*temp;
+	char	*join;
 
 	join = NULL;
 	temp = NULL;

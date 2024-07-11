@@ -33,6 +33,8 @@ SRCS 				=	srcs/free.c\
 						srcs/parsing/lexer/check_lexer.c\
 						srcs/parsing/lexer/lexer.c\
 						srcs/parsing/lexer/token_management.c\
+						srcs/parsing/lexer/token_print.c\
+						srcs/parsing/lexer/token_free.c\
 						srcs/parsing/lexer/tokenizer_one.c\
 						srcs/parsing/lexer/tokenizer_two.c\
 						srcs/parsing/lexer/tokenizer_three.c\

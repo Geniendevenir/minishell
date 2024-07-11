@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_two.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:26:32 by allan             #+#    #+#             */
-/*   Updated: 2024/07/02 15:06:46 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/11 16:48:04 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int and_token(const char *cmd_line, size_t *i, t_token **token_list)
+int	and_token(const char *cmd_line, size_t *i, t_token **token_list)
 {
 	t_token	*current;
-	
+
 	if (cmd_line[*i + 1] != '&')
 	{
 		if (token_addback(token_list, "&", 2) == 1)
@@ -35,10 +35,10 @@ int and_token(const char *cmd_line, size_t *i, t_token **token_list)
 	return (0);
 }
 
-bool heredoc_token(size_t *i, t_token **token_list)
+bool	heredoc_token(size_t *i, t_token **token_list)
 {
 	t_token	*current;
-	
+
 	if (token_addback(token_list, "<<", 1) == 1)
 		return (1);
 	current = token_last(*token_list);
@@ -49,10 +49,10 @@ bool heredoc_token(size_t *i, t_token **token_list)
 	return (0);
 }
 
-bool inputre_token(size_t *i, t_token **token_list)
+bool	inputre_token(size_t *i, t_token **token_list)
 {
 	t_token	*current;
-	
+
 	if (token_addback(token_list, "<", 1) == 1)
 		return (1);
 	current = token_last(*token_list);
@@ -63,10 +63,10 @@ bool inputre_token(size_t *i, t_token **token_list)
 	return (0);
 }
 
-bool outputapp_token(size_t *i, t_token **token_list)
+bool	outputapp_token(size_t *i, t_token **token_list)
 {
 	t_token	*current;
-	
+
 	if (token_addback(token_list, ">>", 1) == 1)
 		return (1);
 	current = token_last(*token_list);
@@ -77,10 +77,10 @@ bool outputapp_token(size_t *i, t_token **token_list)
 	return (0);
 }
 
-bool outputre_token(size_t *i, t_token **token_list)
+bool	outputre_token(size_t *i, t_token **token_list)
 {
 	t_token	*current;
-	
+
 	if (token_addback(token_list, ">", 1) == 1)
 		return (1);
 	current = token_last(*token_list);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 10:19:15 by allan             #+#    #+#             */
-/*   Updated: 2024/07/08 22:13:10 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/11 16:45:24 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ bool	is_env(char c)
 
 bool	is_valid_env(char c)
 {
-	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c == '_') 
+	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c == '_')
 		|| (c >= '0' && c <= '9'))
 		return (0);
 	return (1);
@@ -42,27 +42,6 @@ bool	is_word(char c)
 	if (is_whitespace(c) == 1)
 		return (1);
 	return (0);
-}
-
-bool	limit_word(char c)
-{
-	if (c == '|' || c == '&' || c == '$' || c == '\'' || c == '\"'
-		|| c == '<' || c == '>' || c == '(' || c == ')')
-		return (1);
-	if (is_whitespace(c) == 1)
-		return (1);
-	return (0);
-}
-
-bool	is_wildcard(const char *cmd_line, int i)
-{
-	while (cmd_line[i] && (is_word(cmd_line[i]) == 0 || cmd_line[i] == '*'))
-	{
-		if (cmd_line[i] == '*')
-			return (0);
-		i++;
-	}
-	return (1);
 }
 
 bool	is_freeable(char *value, int option)

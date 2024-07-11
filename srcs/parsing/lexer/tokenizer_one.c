@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_one.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:26:32 by allan             #+#    #+#             */
-/*   Updated: 2024/07/09 13:04:02 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/11 16:26:05 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 bool	whitespace_token(const char *cmd_line, size_t *i, t_token **token_list)
 {
 	t_token	*current;
-	
+
 	if (token_addback(token_list, " ", 1) == 1)
 		return (1);
 	current = token_last(*token_list);
@@ -27,10 +27,10 @@ bool	whitespace_token(const char *cmd_line, size_t *i, t_token **token_list)
 	return (0);
 }
 
-bool inpar_token(size_t *i, t_token **token_list)
+bool	inpar_token(size_t *i, t_token **token_list)
 {
 	t_token	*current;
-	
+
 	if (token_addback(token_list, "(", 1) == 1)
 		return (1);
 	current = token_last(*token_list);
@@ -41,10 +41,10 @@ bool inpar_token(size_t *i, t_token **token_list)
 	return (0);
 }
 
-bool outpar_token(size_t *i, t_token **token_list)
+bool	outpar_token(size_t *i, t_token **token_list)
 {
 	t_token	*current;
-	
+
 	if (token_addback(token_list, ")", 1) == 1)
 		return (1);
 	current = token_last(*token_list);
@@ -55,10 +55,10 @@ bool outpar_token(size_t *i, t_token **token_list)
 	return (0);
 }
 
-bool or_token(size_t *i, t_token **token_list)
+bool	or_token(size_t *i, t_token **token_list)
 {
 	t_token	*current;
-	
+
 	if (token_addback(token_list, "||", 1) == 1)
 		return (1);
 	current = token_last(*token_list);
@@ -69,10 +69,10 @@ bool or_token(size_t *i, t_token **token_list)
 	return (0);
 }
 
-bool pipe_token(size_t *i, t_token **token_list)
+bool	pipe_token(size_t *i, t_token **token_list)
 {
 	t_token	*current;
-	
+
 	if (token_addback(token_list, "|", 1) == 1)
 		return (1);
 	current = token_last(*token_list);
