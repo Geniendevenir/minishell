@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/10 16:36:28 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/11 12:37:24 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ char	*minishell(t_all *p, int *exit_status)
 		//printf("next_status = %d\n", next_status);
 		if (next_status == 0)
 		{
-			next_status = executer(p);
+			// next_status = executer(p);
 			free_ast(p->ast);
 		}
 		add_history(p->line);

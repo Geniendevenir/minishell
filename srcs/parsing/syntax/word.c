@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:27:35 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/08 13:17:45 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/11 12:34:17 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ int	get_list_length(t_token *head)
 	}
 	return (len);
 }
+
 bool	if_define_word(t_token *current)
 {
 	if (current->type == 6 || current->type == 4 || current->type == 5)

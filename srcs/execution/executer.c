@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 21:23:21 by allan             #+#    #+#             */
-/*   Updated: 2024/07/10 17:48:42 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/11 12:36:56 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int		executer(t_all *p)
 		printf("REDIRECT\n");
 		//set_pipe(&exec, 1); add rule for 'in between pipe'
 		assign_redirect(current, &exec); //Assign Redirect Finir check pipe
-		result = check_cmd(&exec, p->env); //execute
+		//result = check_cmd(&exec, p->env); //execute
 		if (result != 0)
 		{
 			exec_free(&exec);

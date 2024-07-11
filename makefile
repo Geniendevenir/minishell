@@ -27,6 +27,7 @@ SRCS 				=	srcs/free.c\
 						srcs/parsing/syntax/check_word.c\
 						srcs/parsing/syntax/check_word_utils.c\
 						srcs/parsing/syntax/check_syntax.c\
+						srcs/parsing/syntax/check_syntax_norm.c\
 						srcs/parsing/syntax/check_parenthesis.c\
 						srcs/parsing/parser.c\
 						srcs/parsing/lexer/check_lexer.c\

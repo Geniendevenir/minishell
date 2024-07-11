@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/10 18:26:17 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/11 16:00:08 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,11 +126,11 @@ enum s_type{
 
 typedef struct s_token
 {
-	enum s_type type;
-	enum s_state state;
-	char *value;
-	long len;
-	struct s_token *next;
+	enum s_type		type;
+	enum s_state	state;
+	char			*value;
+	long			len;
+	struct s_token	*next;
 }				t_token;
 
 typedef struct s_wildcard {
@@ -467,6 +467,12 @@ bool		openpar_error(t_token *current, t_syntax syntax, int *skip);
 bool		is_parenthesis_error(t_token *current, t_syntax syntax, int option);
 bool		check_current_parenthesis(t_token *current, int option);
 
+bool		if_is_a_redirect(t_token *c);
+bool		condition_of_multiple_is_ope(t_token *c);
+bool		if_last_token_is_opearator(t_token *c);
+bool		redirect_and_word_next_and_parenthesis_next(t_token *c);
+int			triple_if_in_double_operator(t_token *c);
+
 /*					 ENV					*/
 
 
@@ -491,8 +497,8 @@ void 		print_env(t_env *env);
 void		print_error_token(t_token *current);
 void		print_error_token_special(char *value);
 void		print_error_cmd_not_found(t_token *current);
-void		printAST(t_ast* node, int level);
-const char* getAST_Class(t_ast *current);
+void		printAST(t_ast *node, int level);
+const char*	getAST_Class(t_ast *current);
 void		print_tab(char **command);
 
 /*					BUILTINS				*/
@@ -523,14 +529,4 @@ int			ft_echo(char **cmd);
 
 int			main(int argc, char **argv, char **env);
 char		*minishell(t_all *p, int *exit_status);
-
-//extern int	sig_int;
-/*						AST	TRY				*/
-
-#define PRECEDENCE_LOWEST 1
-#define PRECEDENCE_AND_OR 2
-#define PRECEDENCE_PIPE 3
-#define PRECEDENCE_REDIRECTION 4
-#define PRECEDENCE_HIGHEST 5
-
 #endif
