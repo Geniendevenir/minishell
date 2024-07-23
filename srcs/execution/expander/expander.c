@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 16:47:23 by allan             #+#    #+#             */
-/*   Updated: 2024/07/10 11:47:50 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/21 12:13:57 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ bool	expander(t_token **token_list, t_all *p, int error)
 	t_token	*current;
 
 	if (!p->env)
-		remove_all_env(token_list, p->exit_status); //add a exemption rule for $? that are still expanded
+		remove_all_env(token_list, p->exit_status);
 	else if (expand_env(token_list, &p->env, p->exit_status) == 1)
 	{
 		error_lexer(1);

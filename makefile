@@ -25,7 +25,6 @@ SRCS 				=	srcs/free.c\
 						srcs/utils.c\
 						srcs/hate_the_norm.c\
 						srcs/error_management.c\
-
 						srcs/parsing/parser.c\
 						srcs/parsing/lexer/check_lexer.c\
 						srcs/parsing/lexer/lexer.c\
@@ -35,19 +34,19 @@ SRCS 				=	srcs/free.c\
 						srcs/parsing/lexer/tokenizer_three.c\
 						srcs/parsing/lexer/tokenizer_four.c\
 						srcs/parsing/lexer/tokenizer_utils.c\
+						srcs/parsing/lexer/tokenizer_utils2.c\
 						srcs/parsing/lexer/limiter_utils.c\
-
+						srcs/parsing/lexer/token_free.c\
+						srcs/parsing/lexer/token_print.c\
 						srcs/parsing/here_doc/here_doc_name.c\
 						srcs/parsing/here_doc/here_doc_signals.c\
 						srcs/parsing/here_doc/here_doc_utils.c\
 						srcs/parsing/here_doc/here_doc.c\
-
 						srcs/parsing/syntax/word.c\
 						srcs/parsing/syntax/check_word.c\
 						srcs/parsing/syntax/check_word_utils.c\
 						srcs/parsing/syntax/check_syntax.c\
 						srcs/parsing/syntax/check_parenthesis.c\
-
 						srcs/parsing/ast/ast.c\
 						srcs/parsing/ast/ast_utils.c\
 						srcs/parsing/ast/ast_handle_builtin_and_cmd.c\
@@ -59,24 +58,19 @@ SRCS 				=	srcs/free.c\
 						srcs/parsing/ast/print_ast.c\
 						srcs/parsing/ast/ast_if_parameters.c\
 						srcs/parsing/ast/ast_free.c\
-						
 						srcs/builtins/ft_env.c\
 						srcs/builtins/ft_pwd.c\
 						srcs/builtins/ft_cd.c\
 						srcs/builtins/ft_export.c\
 						srcs/builtins/ft_exit.c\
 						srcs/builtins/ft_echo.c\
-
 						srcs/execution/executer.c\
 						srcs/execution/exec_cmd.c\
-						srcs/execution/exec_builtins.c\
 						srcs/execution/exec_file.c\
 						srcs/execution/exec_check_cmd.c\
 						srcs/execution/exec_get_path.c\
-						srcs/execution/exec_pipe.c\
 						srcs/execution/exec_redirect.c\
 						srcs/execution/exec_utils.c\
-
 						srcs/execution/expander/split_word.c\
 						srcs/execution/expander/split_one.c\
 						srcs/execution/expander/split_two.c\

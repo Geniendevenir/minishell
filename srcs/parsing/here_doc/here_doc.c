@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 14:57:22 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/10 16:31:00 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/11 12:21:22 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,6 @@ void	cleanbuffer(char *buffer)
 		free(buffer);
 		buffer = NULL;
 	}
-}
-
-int	prev_valo(char *buffer)
-{
-	if (buffer != NULL && ft_strlen(buffer) >= 1
-		&& buffer[ft_strlen(buffer) - 1] == '\n')
-		return (1);
-	return (0);
 }
 
 int	hdoc_process(int fd, t_token *limiter, t_all **p)
@@ -64,9 +56,8 @@ int	which_limiter(int fd, t_token *current, t_all **p, int *nb)
 	{
 		if (hdoc_process(fd, current, p) == -1)
 			return (close (fd), quit_here_doc(1, *p, *nb));
-		
 	}
-	else if ((current)->type == WORD_LIMITER)//EXPAAAAAAAAAAAAAAAND
+	else if ((current)->type == WORD_LIMITER)
 	{
 		if (hdoc_process(fd, current, p) == -1)
 			return (close (fd), quit_here_doc(1, *p, *nb));
@@ -89,7 +80,7 @@ int	fill_here_doc(t_token **current, int max, t_all **p, int *nb)
 		return (quit_here_doc(0, *p, *nb));
 	if ((*current)->type == WORD_SQLIMITER || (*current)->type == WORD_LIMITER)
 	{
-		if(which_limiter(fd, (*current), p, nb) == -1)
+		if (which_limiter(fd, (*current), p, nb) == -1)
 			return (-1);
 	}
 	free((*current)->value);
@@ -101,13 +92,13 @@ int	fill_here_doc(t_token **current, int max, t_all **p, int *nb)
 		return (close (fd), 1);
 }
 
-void here_doc(t_token **token_list, t_all **p)
+void	here_doc(t_token **token_list, t_all **p)
 {
 	t_token	*current;
 	int		max;
 	int		nb;
 
-	nb = 0;	
+	nb = 0;
 	max = here_doc_count(*token_list);
 	current = *token_list;
 	init_here_docs(*token_list, p);
@@ -125,7 +116,15 @@ void here_doc(t_token **token_list, t_all **p)
 		if (current->next)
 			current = current->next;
 		else
-			break;
+			break ;
 	}
 	create_signal();
 }
+
+/* int	prev_valo(char *buffer)
+{
+	if (buffer != NULL && ft_strlen(buffer) >= 1
+		&& buffer[ft_strlen(buffer) - 1] == '\n')
+		return (1);
+	return (0);
+} */

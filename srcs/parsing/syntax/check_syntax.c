@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_syntax.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 16:42:50 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/08 13:19:15 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/17 22:38:08 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,11 @@ int		double_operator(t_token *c)
 	}
 	else if (c->next)
 	{
+		if (c->type == TOKEN_WORD && c->next->type == TOKEN_OPENPAR)
+		{
+			error_syntax(c->next, 1);
+			return (1);
+		}
 		if (c->type == TOKEN_HEREDOC && (c->next->type != WORD_LIMITER && c->next->type != WORD_SQLIMITER))
 		{
 			error_syntax(c->next, 1);
@@ -94,10 +99,13 @@ int		double_operator(t_token *c)
 			error_syntax(c, 5);
 			return (1);
 		}
-		if ((is_operator(c->type, 2) && (is_operator(c->next->type, 2)
-			|| is_operator(c->next->type, 4))) || (is_operator(c->type, 3)
-			&& ((is_operator(c->next->type, 3) || is_operator(c->next->type, 2)
-			|| is_operator(c->next->type, 4)))))
+		if (is_operator(c->type, 2) && is_operator(c->next->type, 2))
+		{
+			error_syntax(c->next, 1);
+			return (1);
+		}
+		if (is_operator(c->type, 3) && ((is_operator(c->next->type, 3) || is_operator(c->next->type, 2)
+			|| is_operator(c->next->type, 4))))
 		{
 			error_syntax(c->next, 1);
 			return (1);
@@ -129,7 +137,7 @@ bool 	check_syntax(t_token *current)
 {
 	int			skip;
 	t_syntax	syntax;
-	
+
 	skip = 0;
 	syntax.openpar = 0;
 	syntax.operator = 0;

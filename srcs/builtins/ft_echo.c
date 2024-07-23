@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 16:29:27 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/05 11:37:58 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/21 11:59:23 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	ft_echo(char **cmd)
 	while (cmd[i] && check_echo(cmd[i]))
 	{
 		option = true;
-		i ++;
+		i++;
 	}
 	while (cmd[i])
 	{

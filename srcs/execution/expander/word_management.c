@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 23:02:14 by allan             #+#    #+#             */
-/*   Updated: 2024/07/09 23:12:19 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/21 14:14:20 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,16 @@
 
 t_ast	*replace_word(t_ast **root, t_ast *node, t_ast *new_node)
 {
-	if (node->type == WORD_CMD)
+	if (!new_node)
 	{
+		new_node = create_node(NULL, 0);
+		if (!new_node)
+			return (NULL); //add error malloc
+	}
+	if (node->type == WORD_CMD)
 		if (node->left)
 			node->left->type = WORD_CMD;
-	}
-	if (new_node != NULL)
+	if (new_node->value != NULL)
 		new_node->parent = node->parent;
 	if (node->parent == NULL)  // node is the root
 	{
@@ -29,6 +33,7 @@ t_ast	*replace_word(t_ast **root, t_ast *node, t_ast *new_node)
 	else if (node->parent->left == node)
 	{
 		node->parent->left = new_node;
+		new_node->parent = node->parent;
 		return (new_node);
 	}
 	return (node);
@@ -42,7 +47,11 @@ void delete_word(t_ast **root, t_ast **node)
 	if ((*node) == NULL)
 		return ;
 	if ((*node)->left == NULL)
+	{
 		*node = replace_word(root, *node, NULL); // Case 2: (*Node) is a leaf
+		if ((*node)->parent)
+			*node = (*node)->parent;	
+	}
 	else
 		*node = replace_word(root, *node, (*node)->left); // Case 3: (*Node) has only left child
 	free(temp->value);

@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 21:53:15 by allan             #+#    #+#             */
-/*   Updated: 2024/07/10 11:13:58 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/21 18:08:45 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,13 @@ int	env_token(const char *cmd_line, size_t *i, t_token **token_list)
 	size_t		j;
 
 	j = *i;
-	while (cmd_line[j + 1] && (is_valid_env(cmd_line[j + 1]) == 0))
+	if (cmd_line[j + 1] && ((cmd_line[j + 1] >= '0' && cmd_line[j + 1] <= '9') || cmd_line[j + 1] == '*'))
 		j++;
+	else
+	{
+		while (cmd_line[j + 1] && (is_valid_env(cmd_line[j + 1]) == 0))
+			j++;
+	}
 	token_value = ft_substr(cmd_line, (*i) + 1, (j - *i));
 	if (!token_value)
 		return (1);

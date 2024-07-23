@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 19:12:00 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/08 14:20:59 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/21 12:49:46 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,20 @@ t_ast	*create_node(t_token *token, int subshell)
 	node = (t_ast *)malloc(sizeof(t_ast));
 	if (!node)
 		return (NULL);
-	node->type = token->type;
-	node->state = token->state;
-	node->value = ft_strdup(token->value);
-	if (!node->value)
-		return (NULL);
+	if (token)
+	{
+		node->type = token->type;
+		node->state = token->state;
+		node->value = ft_strdup(token->value);
+		if (!node->value)
+			return (NULL);
+	}
+	else
+	{
+		node->type = 0;
+		node->state = 0;
+		node->value = NULL;
+	}
 	node->subshell = subshell;
 	node->exit_state = 0;
 	node->left = NULL;

@@ -6,37 +6,11 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 16:29:41 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/10 15:09:00 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/11 12:16:05 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*ft_strjoin_spe(char *s1, char const *s2)
-{
-	char	*dest;
-	size_t	i;
-	size_t	destlen;
-
-	i = 0;
-	destlen = ft_strlen(s1) + ft_strlen(s2);
-	dest = malloc(destlen + 1 * sizeof(char));
-	if (!dest)
-		return (NULL);
-	while (*(s1 + i))
-	{
-		*(dest + i) = *(s1 + i);
-		i++;
-	}
-	while (*s2)
-	{
-		*(dest + i) = *s2++;
-		i++;
-	}
-	*(dest + i) = '\0';
-	free(s1);
-	return (dest);
-}
 
 void	warning(char *str, int nb)
 {
@@ -65,7 +39,6 @@ int	quit_here_doc(int opt, t_all *p, int nb)
 	}
 	else if (opt == 1)
 	{
-		//unlink (p->here_doc[nb]);
 		free(p->here_doc[nb]);
 		p->here_doc[nb] = NULL;
 	}
@@ -88,9 +61,9 @@ void	free_here_docs(char **here_docs)
 	free(here_docs);
 }
 
-int here_doc_count(t_token *tok)
+int	here_doc_count(t_token *tok)
 {
-	int count;
+	int	count;
 
 	count = 0;
 	while (tok)
@@ -100,17 +73,16 @@ int here_doc_count(t_token *tok)
 		if (tok->next)
 			tok = tok->next;
 		else
-			break;
+			break ;
 	}
 	return (count);
 }
-
 
 void	init_here_docs(t_token *token_list, t_all **p)
 {
 	int		i;
 	int		count;
-	
+
 	i = 0;
 	count = here_doc_count(token_list);
 	if (count == 0)
@@ -127,3 +99,29 @@ void	init_here_docs(t_token *token_list, t_all **p)
 		i++;
 	}
 }
+
+/* char	*ft_strjoin_spe(char *s1, char const *s2)
+{
+	char	*dest;
+	size_t	i;
+	size_t	destlen;
+
+	i = 0;
+	destlen = ft_strlen(s1) + ft_strlen(s2);
+	dest = malloc(destlen + 1 * sizeof(char));
+	if (!dest)
+		return (NULL);
+	while (*(s1 + i))
+	{
+		*(dest + i) = *(s1 + i);
+		i++;
+	}
+	while (*s2)
+	{
+		*(dest + i) = *s2++;
+		i++;
+	}
+	*(dest + i) = '\0';
+	free(s1);
+	return (dest);
+} */

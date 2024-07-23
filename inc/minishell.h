@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/10 23:08:32 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/22 17:44:45 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,44 +224,43 @@ typedef struct s_exec
 
 //						EXECUTION                      //
 int			executer(t_all *p);
+
 //ast_explorer
 t_ast		*left_expand(t_all *p, t_ast *current);
 
-//redirect
-int			assign_redirect(t_ast *current, t_exec *exec);
-void		redirect_pipe(t_ast *current, t_exec *exec);
-int    		open_filein(t_exec *exec);
-int    		open_fileout(t_exec *exec);
+//exec_check_cmd
+int			get_command(t_ast *current, t_exec *exec);
+int			command_size(t_ast *current);
+char		**parse_command(t_ast *current, int size);
+int			check_cmd(t_exec *exec, t_env *env);
+
+//exec_cmd
+int			exec_builtin(char **cmd);
+int			exec_cmd(t_exec *exec);
+
+//exec_file
+int			open_filein(t_exec *exec);
+int			open_fileout(t_exec *exec);
 int			open_files(t_all *p, t_exec *exec);
 void		close_files(t_exec *exec);
 
-//parse_cmd
-int 		get_command(t_ast *current, t_exec *exec);
-int			command_size(t_ast *current);
-char 		**parse_command(t_ast *current, int size);
-int			check_cmd(t_exec	*exec, t_env *env);
-
-//path_cmd
+//exec_get_path
 char		*find_path(t_env *env);
 char		*path_free(t_path *p, int *error, int option);
 void		p_init(t_path *p);
 char		*get_path(const char *cmd, t_env *env, int *error);
 
+//exec_redirect
+int			assign_redirect(t_ast *current, t_exec *exec);
+void		redirect_pipe(t_ast *current, t_exec *exec);
+
 //exec_utils
 void		exec_init(t_exec *exec);
 void		exec_free(t_exec *exec);
 void		set_pipe(t_exec *exec, int set_pipe);
+int			array_size(char **arr);
+void		set_pipe(t_exec *exec, int set_pipe);
 
-void		traverse_ast(t_ast *root, t_env *env);
-int			exec_parent_node(t_ast *current, t_env *env);
-int			exec_operator(t_ast *current, t_env *env);
-int			exec_and(t_ast *current, t_env *env);
-int			exec_or(t_ast *current, t_env *env);
-int			exec_cmd_or_builtin(t_ast *current, t_all *env);
-int			exec_pipe(t_ast *current, t_env *env);
-int			exec_redirect(t_ast *current);
-bool		is_command_or_builtin_or_abspath(t_ast *current);
-bool		is_redirect_folder(t_ast *current);
 
 //////////////////////////////////////////////////////////
 
@@ -324,7 +323,7 @@ bool		limiter_join(const char *cmd_line, t_index *index, char **token_value);
 //utils
 bool		is_whitespace(char c);
 bool		is_word(char c);
-bool		is_env(char c);
+int			is_env(char c, int option);
 bool		is_valid_env(char c);
 bool		is_freeable(char *value, int option);
 bool		is_wildcard(const char *cmd_line, int i);
@@ -334,7 +333,7 @@ void		index_init(t_index *index, size_t *i, int option);
 void		token_print(t_token **token_list);
 void		token_print_amazing(t_token **token_list);
 void		amazing_printing(t_token *current, int i);
-const char* getToken_State(t_token *current);
+const char*	getToken_State(t_token *current);
 const char	*getToken_Class(t_token *current);
 
 //error_management
@@ -342,6 +341,7 @@ void		error_lexer(int error);
 bool		error_syntax(t_token *current, int error);
 void		error_expander(t_ast *current, int error);
 void		error_executer(char *error, int option);
+void		error_builtins(char *error, int option);
 
 //here_doc
 void		cleanbuffer(char *buffer);

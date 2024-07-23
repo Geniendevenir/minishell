@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 12:53:28 by allan             #+#    #+#             */
-/*   Updated: 2024/07/01 17:14:08 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/22 18:00:35 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,23 +43,23 @@ int	ft_cd(char *path)
 	
 	error = 1;
 	if (!path)
-		return (1); //add error
+		return (1); //no path
 	if (*path == '/')
 		error = chdir(path); //OK
 	else
 	{
-    	d = opendir(".");
-    	if (!d)
+		d = opendir(".");
+		if (!d)
 		{
-			perror("opendir error\n");	 //CHANGE ERROR NO PERROR
-			return (1); //add error
+			error_executer(NULL, 7);
+			return (1);
 		}
 		new_dir = relative_path(d, path, &error);
-    	closedir(d);
-		if (error != 0)
+		closedir(d);
+		if (!new_dir)
 			return (1);
 		error = chdir(new_dir);
-		free(new_dir);
+		//free(new_dir);
 	}
 	return(error);
 }
@@ -76,18 +76,18 @@ char	*relative_path(DIR	*d, char *path, int *error)
 	while (1)
 	{
 		try_dir = readdir(d);
-		if (try_dir == NULL)
+		if (!try_dir)
 			break ; 
-        if (ft_strcmp(try_dir->d_name, path) == 0)
+		else if (ft_strcmp(try_dir->d_name, path) == 0)
 		{
 			if (lstat(try_dir->d_name, &file_stat) != 0)
 			{
-				perror("lstat error\n");// CHANGE ERROR NO PERROR
+				error_builtins(NULL, 1);
 				return (NULL);
 			}
-			if (S_ISDIR(file_stat.st_mode) == 0)
+			if (S_ISDIR(file_stat.st_mode) != 0)
 			{
-				perror("bash: cd: file_name: Not a directory\n"); //CHANGE ERROR NO PERROR
+				error_builtins(try_dir->d_name, 1);
 				return (NULL);
 			}
 			new_dir = cd_match(cur_dir, try_dir->d_name, error);
@@ -99,7 +99,7 @@ char	*relative_path(DIR	*d, char *path, int *error)
 			}
 			break ;
 		}
-    }
+	}
 	*error = 0;
 	return (new_dir);
 }

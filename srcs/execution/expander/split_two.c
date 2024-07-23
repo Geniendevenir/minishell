@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 21:53:41 by allan             #+#    #+#             */
-/*   Updated: 2024/07/09 16:56:41 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/21 18:06:08 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ bool	dquotes_token(const char *cmd_line, size_t *i, t_token **token_list)
 	index.j = *index.i;
 	while (cmd_line[index.j] && cmd_line[index.j] != '\"')
 	{
-		if (cmd_line[index.j] == '$' && is_env(cmd_line[index.j + 1]) == 0)
+		if (cmd_line[index.j] == '$' && is_env(cmd_line[index.j + 1], 1) == 0)
 		{
 			if (env_dquotes(cmd_line, &index, token_list) == 1)
 				return (1);
 		}
-		if (cmd_line[*index.i] == '$' && is_env(cmd_line[*index.i + 1]) == 0)
+		if (cmd_line[*index.i] == '$' && is_env(cmd_line[*index.i + 1], 1) == 0)
 			(*index.i)++;
 		else if (cmd_line[index.j] != '\"')
 			index.j++;
@@ -57,6 +57,8 @@ bool	env_dquotes(const char *cmd_line, t_index *index, t_token **token_list)
 		index->j++;
 		option = 2;
 	}
+	else if ((cmd_line[index->j] >= '0' && cmd_line[index->j] <= '9') || cmd_line[index->j] == '*')
+		index->j++;
 	else
 	{
 		while (is_valid_env(cmd_line[index->j]) == 0) //Tous les autres cas
@@ -113,7 +115,7 @@ bool	dquote_add_token(char *token_value, t_token **token_list, int option)
 	}
 	return (0);
 }
-
+// '*'
 bool squote_token(const char *cmd_line, size_t *i, t_token **token_list)
 {
 	t_token	*current;
@@ -121,11 +123,6 @@ bool squote_token(const char *cmd_line, size_t *i, t_token **token_list)
 	size_t		j;
 
 	j = *i + 1;
-	if (cmd_line[j] == '\'')
-	{
-		(*i) += 2;
-		return (0);
-	}
 	while (cmd_line[j] && cmd_line[j] != '\'')
 		j++;
 	token_value = ft_substr(cmd_line, (*i) + 1, (j - *i) - 1);

@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 17:54:19 by allan             #+#    #+#             */
-/*   Updated: 2024/07/10 14:00:55 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/22 17:58:15 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,13 +67,18 @@ int	split_one(const char *cmd_line, size_t *i, t_token **token_list)
 	error = 0;
 	if (cmd_line[*i] == '$')
 	{
-		if (cmd_line[*i + 1] == '?') //A CHECK
+		if (cmd_line[*i + 1] == '?')
 		{
 			error = token_addback(token_list, "?", 2);
 			env_special_token(token_list, 1);
 			(*i) += 2;
 		}
-		else if (is_env(cmd_line[*i + 1]) == 1) //A CHECK
+		else if (is_env(cmd_line[*i + 1], 1) == 2)
+		{
+			(*i)++;
+			return (0);
+		}
+		else if (is_env(cmd_line[*i + 1], 1) == 1)
 		{
 			error = token_addback(token_list, "$", 2);
 			env_special_token(token_list, 2);
@@ -92,9 +97,7 @@ int	split_two(const char *cmd_line, size_t *i, t_token **token_list)
 	int	error;
 
 	error = 0;
-	if (cmd_line[*i] == '*' || is_wildcard(cmd_line, *i) == 0)
-		error = wildcard_token(cmd_line, i, token_list);
-	else if (cmd_line[*i] == '\"')
+	if (cmd_line[*i] == '\"')
 	{
 		if (cmd_line[*i + 1] == '\"')
 			*i += 2;
@@ -102,7 +105,14 @@ int	split_two(const char *cmd_line, size_t *i, t_token **token_list)
 			error = dquotes_token(cmd_line, i, token_list);
 	}
 	else if (cmd_line[*i] == '\'')
+	{
+		if (cmd_line[*i + 1] == '\'')
+			*i += 2;
+		else
 			error = squote_token(cmd_line, i, token_list);
+	}
+	else if (cmd_line[*i] == '*' || is_wildcard(cmd_line, *i) == 0)
+		error = wildcard_token(cmd_line, i, token_list);
 	else
 		error = word_token(cmd_line, i, token_list);
 	return (error);

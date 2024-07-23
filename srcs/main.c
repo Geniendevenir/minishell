@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/10 22:45:29 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/21 11:56:04 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ int	main(int argc, char **argv, char **env)
 	return (0);
 }
 
-
-
 char	*minishell(t_all *p)
 {
 	extern int	sig_int;
@@ -49,13 +47,12 @@ char	*minishell(t_all *p)
 	{
 		p->exit_status = parser(p->line, p->env, &p->ast, &p);
 		//printf("next_status = %d\n", next_status);
-		/* if (p->exit_status == 0)
+		if (p->exit_status == 0)
 		{
+			printAST(p->ast, 0);
 			p->exit_status = executer(p);
 			free_ast(p->ast);
-		} */
-		printAST(p->ast, 0);
-		free_ast(p->ast);
+		}
 		add_history(p->line);
 	}
 	sig_int = 0;

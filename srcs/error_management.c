@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 13:58:59 by allan             #+#    #+#             */
-/*   Updated: 2024/07/10 23:46:41 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/21 22:01:11 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,5 +137,21 @@ void	error_executer(char *error, int option)
 		write(2, "Error: Malloc Allocation Failed\n", 32);
 	else if (option == 5)
 		write(2, "Error: Fork Failed\n", 19);
+	else if (option == 6)
+		write(2, "bash: cd: too many arguments\n", 29);
+	else if (option == 7)
+		write(2, "Error: Opendir Error\n", 21);
 	//write(2, error, ft_strlen(error));
+}
+
+void	error_builtins(char *error, int option)
+{
+	if (option == 1)
+		write(2, "Error: lstat function Failed", 6);
+	else if (option == 2)
+	{
+		write(2, "bash: ", 6);
+		write(2, error, ft_strlen(error));
+		write(2, ": Not a directory\n", 18);
+	}
 }

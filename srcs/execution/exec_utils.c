@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 18:39:42 by allan             #+#    #+#             */
-/*   Updated: 2024/07/11 17:16:01 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/17 23:23:41 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,25 @@ void	exec_free(t_exec *exec)
 	if (exec->command)
 		free_array(exec->command);
 	exec->command = NULL;
+}
+
+void	set_pipe(t_exec *exec, int set_pipe)
+{
+	if (set_pipe == 1)
+		exec->pipe = 1;
+	else if (set_pipe == 2)
+		exec->pipe = 2;
+	else if (set_pipe == 3)
+		exec->pipe = 3;
+}
+
+int		array_size(char **arr)
+{
+	int	i;
+
+	i = 0;
+	while (arr[i])
+		i++;
+	return (i);
 }
 

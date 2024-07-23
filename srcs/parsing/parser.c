@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:24:04 by allan             #+#    #+#             */
-/*   Updated: 2024/07/10 16:24:20 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/21 15:20:05 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,9 +93,9 @@ int parser(char *cmd_line, t_env *env, t_ast **ast, t_all **p)
 	token_init(&token_list);
 	if (lexer(cmd_line, &token_list, error) == 1)
 		return (1);
-/* 	printf("AFTER LEXER:\n");
+	printf("AFTER LEXER:\n");
 	token_print(&token_list);
-	token_print_amazing(&token_list); */
+	token_print_amazing(&token_list);
 	if (check_syntax(token_list) == 1)
 	{
 		token_free(&token_list);

@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 16:31:00 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/08 12:19:20 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/11 12:40:51 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,17 @@ void	if_in_increment_base(size_t len, size_t *j, char *name)
 	while (*j > 0)
 	{
 		name[*j] = name[*j - 1];
-		(*j)--;	
+		(*j)--;
 	}
 	name[0] = BASE[0];
 	name[len + 1] = '\0';
+}
+
+static void	init_i_j_len_(size_t *i, size_t *j, size_t *len, char *name)
+{
+	*j = 0;
+	*len = 0;
+	*i = ft_strlen(name) - 1;
 }
 
 void	increment_base(char *name, size_t len_base)
@@ -39,9 +46,7 @@ void	increment_base(char *name, size_t len_base)
 	size_t	len;
 	char	*pos;
 
-	j = 0;
-	len = 0;
-	i = ft_strlen(name) - 1;
+	init_i_j_len_(&i, &j, &len, name);
 	while (i != (size_t)-1)
 	{
 		pos = ft_strchr(BASE, name[i]);

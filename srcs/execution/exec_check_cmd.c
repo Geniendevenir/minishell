@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_cmd.c                                        :+:      :+:    :+:   */
+/*   exec_check_cmd.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 18:37:43 by allan             #+#    #+#             */
-/*   Updated: 2024/07/10 22:07:45 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/21 13:03:45 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ int	command_size(t_ast *current)
 	size = 1;
 	while (current->left && (current->type == WORD_CMD || current->type == WORD_BUILTIN || current->type == WORD_OPTION))
 	{
+		if (!current->left->value)
+			break ;
 		size++;
 		current = current->left;
 	}

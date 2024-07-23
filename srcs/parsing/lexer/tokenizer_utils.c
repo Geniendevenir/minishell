@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 10:19:15 by allan             #+#    #+#             */
-/*   Updated: 2024/07/08 22:13:10 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/21 18:14:56 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,28 @@ bool	is_whitespace(char c)
 	return (0);
 }
 
-bool	is_env(char c)
+int		is_env(char c, int option)
 {
-	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_'
-		|| c == '?')
-		return (0);
+	if (option == 1)
+	{
+		if (c == '\"' || c == '\'')
+			return (2);
+		if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_'
+			|| c == '?' || (c >= '0' && c <= '9') || c == '*')
+			return (0);
+	}
+	else
+	{
+		if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_'
+			|| c == '?')
+			return (0);
+	}
 	return (1);
 }
 
 bool	is_valid_env(char c)
 {
-	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c == '_') 
+	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c == '_')
 		|| (c >= '0' && c <= '9'))
 		return (0);
 	return (1);
@@ -42,27 +53,6 @@ bool	is_word(char c)
 	if (is_whitespace(c) == 1)
 		return (1);
 	return (0);
-}
-
-bool	limit_word(char c)
-{
-	if (c == '|' || c == '&' || c == '$' || c == '\'' || c == '\"'
-		|| c == '<' || c == '>' || c == '(' || c == ')')
-		return (1);
-	if (is_whitespace(c) == 1)
-		return (1);
-	return (0);
-}
-
-bool	is_wildcard(const char *cmd_line, int i)
-{
-	while (cmd_line[i] && (is_word(cmd_line[i]) == 0 || cmd_line[i] == '*'))
-	{
-		if (cmd_line[i] == '*')
-			return (0);
-		i++;
-	}
-	return (1);
 }
 
 bool	is_freeable(char *value, int option)
