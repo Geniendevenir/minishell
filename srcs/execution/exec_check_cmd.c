@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 18:37:43 by allan             #+#    #+#             */
-/*   Updated: 2024/07/21 13:03:45 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/26 11:23:12 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,13 +69,9 @@ char **parse_command(t_ast *current, int size)
 int		check_cmd(t_exec *exec, t_env *env)
 {
 	char	*path;
-	char	*temp;
 	int		error;
 
 	error = 0;
-	temp = NULL;
-	if (!exec->command || !exec->command[0])
-		return (0);
 	if (access(exec->command[0], X_OK) == -1) //check if not absolute path
 	{
 		if (check_builtin(exec->command[0]) == 1)
@@ -94,9 +90,7 @@ int		check_cmd(t_exec *exec, t_env *env)
 			write(1, ": command not found\n", 20);
 			return (127);
 		}
-		temp = exec->command[0];
-		free(temp); // Ca sert a qqchose ?
-		exec->command[0] = path;
+		exec->path = path;
 	}
 	return (0);
 }

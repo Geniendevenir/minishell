@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 13:26:25 by allan             #+#    #+#             */
-/*   Updated: 2024/07/11 17:26:25 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/29 23:53:14 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ char	*path_free(t_path *p, int *error, int option)
 	else if (option == 3)
 	{
 		free_array(p->env_paths);
-		free(p->final_path);
+		/* if (p->final_path)
+			free(p->final_path); */
 		return (NULL);
 	}
 	*error = 1;
@@ -56,7 +57,7 @@ char	*get_path(const char *cmd, t_env *env, int *error)
 	t_path 	p;
 
 	p_init(&p);
-	if (!env) // If no ENV
+	if (!env) // If no ENV can be deleted
 		return (NULL);
 	p.path_value = find_path(env);
 	if (!p.path_value || !(*p.path_value))
@@ -64,7 +65,6 @@ char	*get_path(const char *cmd, t_env *env, int *error)
 	p.env_paths = ft_split(p.path_value, ':');
 	if (!p.env_paths)
 		return (path_free(&p, error, 4));
-	//print_tab(p.env_paths);
 	while (p.env_paths[p.i])
 	{
 		p.part_path = ft_strjoin(p.env_paths[p.i], "/");
@@ -76,6 +76,7 @@ char	*get_path(const char *cmd, t_env *env, int *error)
 			return (path_free(&p, error, 1));
 		if (access(p.final_path, X_OK) == 0)
 			return (path_free(&p, error, 2));
+		free(p.final_path);
 		p.i++;
 	}
 	path_free(&p, error, 3);

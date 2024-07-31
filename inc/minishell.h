@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/22 17:44:45 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/31 13:20:38 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,6 +198,9 @@ typedef struct s_all
 	int		max_pipe;
 	int		curr_pipe;
 	int		error;
+	int		std_in;
+	int		std_out;
+	int		option;
 }	t_all;
 
 typedef struct s_word
@@ -219,14 +222,16 @@ typedef struct s_exec
 	int				filein;
 	int				fileout;
 	char 			**command;
+	char			*path;
 }				t_exec;
 
 
 //						EXECUTION                      //
-int			executer(t_all *p);
+int			executer(t_all *p, t_ast *current, char **env);
 
 //ast_explorer
 t_ast		*left_expand(t_all *p, t_ast *current);
+t_ast		*get_next_operator(t_ast *current, t_ast	**prev);
 
 //exec_check_cmd
 int			get_command(t_ast *current, t_exec *exec);
@@ -236,13 +241,14 @@ int			check_cmd(t_exec *exec, t_env *env);
 
 //exec_cmd
 int			exec_builtin(char **cmd);
-int			exec_cmd(t_exec *exec);
+int			exec_cmd(t_exec *exec, int *exit_status, char **env);
+bool		is_builtin(char *cmd);
 
 //exec_file
 int			open_filein(t_exec *exec);
 int			open_fileout(t_exec *exec);
-int			open_files(t_all *p, t_exec *exec);
-void		close_files(t_exec *exec);
+int			open_files(t_exec *exec);
+int			close_files(t_exec *exec, int std_in, int std_out);
 
 //exec_get_path
 char		*find_path(t_env *env);
@@ -533,7 +539,7 @@ bool		check_echo(char *str);
 int			ft_echo(char **cmd);
 
 int			main(int argc, char **argv, char **env);
-char		*minishell(t_all *p);
+char		*minishell(t_all *p, char **env);
 
 //extern int	sig_int;
 /*						AST	TRY				*/

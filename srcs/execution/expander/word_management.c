@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 23:02:14 by allan             #+#    #+#             */
-/*   Updated: 2024/07/21 14:14:20 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/29 21:37:14 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,14 @@ t_ast	*replace_word(t_ast **root, t_ast *node, t_ast *new_node)
 			return (NULL); //add error malloc
 	}
 	if (node->type == WORD_CMD)
+	{
 		if (node->left)
 			node->left->type = WORD_CMD;
+	}
 	if (new_node->value != NULL)
+	{
 		new_node->parent = node->parent;
+	}
 	if (node->parent == NULL)  // node is the root
 	{
 		*root = new_node;

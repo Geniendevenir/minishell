@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 13:58:59 by allan             #+#    #+#             */
-/*   Updated: 2024/07/21 22:01:11 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/30 00:24:08 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,10 @@ void	error_executer(char *error, int option)
 		write(2, "bash: cd: too many arguments\n", 29);
 	else if (option == 7)
 		write(2, "Error: Opendir Error\n", 21);
+	else if (option == 8)
+		write(2, "Error: Fork Initialisation Failed\n", 34);
+	else if (option == 9)
+		write(2, "Error: Waitpid Initialisation Failed\n", 37);
 	//write(2, error, ft_strlen(error));
 }
 

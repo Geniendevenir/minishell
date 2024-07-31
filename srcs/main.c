@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/21 11:56:04 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/29 23:42:29 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,15 @@ int	main(int argc, char **argv, char **env)
 		return (EXIT_FAILURE);
 	while (p->line == NULL)
 	{
-		minishell(p);
+		minishell(p, env);
 	}
 	return (0);
 }
 
-char	*minishell(t_all *p)
+char	*minishell(t_all *p, char **env)
 {
 	extern int	sig_int;
+	t_ast 	*current;
 
 	rl_event_hook = event;
 	p->line = readline("\033[1;032mMinishell> \033[m");
@@ -45,12 +46,13 @@ char	*minishell(t_all *p)
 	//printf("sigquit = %d\n", p->sig->sig_quit);
 	if (sig_int == 0 && p->sig->sig_quit == 0)
 	{
-		p->exit_status = parser(p->line, p->env, &p->ast, &p);
+		p->error = parser(p->line, p->env, &p->ast, &p);
 		//printf("next_status = %d\n", next_status);
-		if (p->exit_status == 0)
+		if (p->error == 0)
 		{
 			printAST(p->ast, 0);
-			p->exit_status = executer(p);
+			current = p->ast;
+			executer(p, current, env);
 			free_ast(p->ast);
 		}
 		add_history(p->line);
