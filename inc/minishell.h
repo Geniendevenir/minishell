@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/31 13:20:38 by allan            ###   ########.fr       */
+/*   Updated: 2024/08/06 21:00:29 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,7 +240,7 @@ char		**parse_command(t_ast *current, int size);
 int			check_cmd(t_exec *exec, t_env *env);
 
 //exec_cmd
-int			exec_builtin(char **cmd);
+int	exec_builtin(char **cmd, t_env **env_list);
 int			exec_cmd(t_exec *exec, int *exit_status, char **env);
 bool		is_builtin(char *cmd);
 

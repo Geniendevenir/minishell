@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:24:24 by allan             #+#    #+#             */
-/*   Updated: 2024/07/31 23:59:50 by allan            ###   ########.fr       */
+/*   Updated: 2024/08/06 21:03:45 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ bool	is_builtin(char *cmd)
 	return (0);
 }
 
-int	exec_builtin(char **cmd)
+int	exec_builtin(char **cmd, t_env **env_list)
 {
 	int	result;
 	
@@ -47,11 +47,11 @@ int	exec_builtin(char **cmd)
 		}
 		result = ft_cd(cmd[1]);
 	}
-	/* else if (ft_strcmp(cmd[0], "pwd") == 0)
-		result = ft_pwd(cmd + 1); */
+	else if (ft_strcmp(cmd[0], "pwd") == 0)
+		result = ft_pwd(cmd[1]);
 	/*
 	else if (ft_strcmp(cmd[0], "export") == 0)
-		result = ft_export(cmd + 1);
+		result = ft_export(cmd + 1, env_list);
 	else if (ft_strcmp(cmd[0], "unset") == 0)
 		result = ft_unset(cmd + 1);
 	else if (ft_strcmp(cmd[0], "env") == 0 && cmd[1] == NULL)
@@ -75,7 +75,8 @@ int	exec_cmd(t_exec *exec, int *exit_status, char **env)
 	else if (pid == 0)
 	{
 		if (execve(exec->path, exec->command, env) == -1)
-			return (1);
+			write(2, "Error: Execve execution failed\n", 31);
+		return (-1);
 	}
 	else
 	{
@@ -84,8 +85,8 @@ int	exec_cmd(t_exec *exec, int *exit_status, char **env)
 			error_executer(NULL, 9);
 			return (-1);
 		}
-		printf("status = %d\n", status);
-		printf("WIFEXITED(status) = %d\n", WIFEXITED(status));
+		/* printf("status = %d\n", status);
+		printf("WIFEXITED(status) = %d\n", WIFEXITED(status)); */
 		if (WIFEXITED(status))
 			return (WEXITSTATUS(status));
 		return (status);

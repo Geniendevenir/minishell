@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:11:24 by allan             #+#    #+#             */
-/*   Updated: 2024/07/26 13:34:15 by allan            ###   ########.fr       */
+/*   Updated: 2024/08/01 10:59:16 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,10 @@ int    open_filein(t_exec *exec)
 	{
 		exec->filein = open(exec->in->value, O_RDONLY);
 		if (exec->filein == -1)
-			return (-1); // A fail a open
-		else if (exec->filein == 2)
-			return (2); // N'existe pas
+		{
+			exec->filein = 0;
+			return (-1); // Error -> errno set
+		}
 		return (0); // Tout est OK
 	}
 	return (1); // NULL
@@ -32,7 +33,6 @@ int    open_fileout(t_exec *exec)
 	{
 		if (exec->out->type == WORD_FILEOUT)
 		{
-			printf("test\n");
 			exec->fileout = open(exec->out->value, O_TRUNC | O_CREAT | O_RDWR, 0000644);
 			if (exec->fileout == -1)
 				return (-1);
@@ -40,7 +40,6 @@ int    open_fileout(t_exec *exec)
 		}
 		else if(exec->out->type == WORD_FILEOUT_APPEND)
 		{
-			printf("test 2\n");
 			exec->fileout = open(exec->out->value, O_APPEND | O_CREAT | O_RDWR, 0000644);
 			if (exec->fileout == -1)
 				return (-1);
@@ -59,29 +58,24 @@ int	open_files(t_exec *exec)
 	result = open_filein(exec);
 	printf("FILES:\n");
 	printf("result = %d\n", result);
-	if (result == 2 || result == -1)
+	if (result == -1)
 	{
-		if (result == 2)
-		{
+		printf("errno = %d\n", errno);
+		if (errno == 2)
 			error_executer(exec->in->value, 1);
-			result = 1;
-		}
-		else if (result == -1)
+		else
 			error_executer(exec->in->value, 3);
-		return (result); //correct
+		return (1); //correct
 	}
 	result2 = open_fileout(exec);
 	printf("result2 = %d\n", result2);
 	if (result2 == -1)
 	{
 		error_executer(exec->in->value, 2);
-		return (result2); //correct
+		return (1); //correct
 	}
 	if (result == 0)
-	{
 		dup2(exec->filein, STDIN_FILENO);
-		
-	}
 	if (result2 == 0)
 		dup2(exec->fileout, STDOUT_FILENO);
 	return (0);

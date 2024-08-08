@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 21:23:21 by allan             #+#    #+#             */
-/*   Updated: 2024/08/01 00:02:52 by allan            ###   ########.fr       */
+/*   Updated: 2024/08/08 22:22:44 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ t_ast *left_expand(t_all *p, t_ast *current)
 			if (p->error == -2)
 				return (current); //father goes back up after his son died 	
 		} */
+		if (current->value)
+			printf("value = %s\n", current->value);
 		if (is_operator(current->type, 2))
 			p->option = 0;
 		if (current->state == STATE_WORD && current->type != WORD_SQLIMITER && current->type != WORD_LIMITER)
@@ -99,10 +101,12 @@ t_ast *left_expand(t_all *p, t_ast *current)
 			/* printf("current = %s\n", current->value);
 			printf("current size = %ld\n", ft_strlen(current->value)); */
 			p->error = split_word(p, &current);
-			if (current->value == NULL)
+			if (!current || !current->value)
 				return (current);
-			if ((p->error != 0 && p->error != -1))
+			else if ((p->error != 0 && p->error != -1))
 				return (current); //CHANGE RETURN AS IT ALSO TAKE INTO ACCOUNT EMPTY PROMTP AFTER EXPANDER
+			else if (current->type == TOKEN_OR || current->type == TOKEN_AND)
+				return (current);
 		}
 		if (p->error != -1)
 		{
@@ -111,6 +115,7 @@ t_ast *left_expand(t_all *p, t_ast *current)
 			current = current->left;
 		}
 	}
+	printf("test 9\n");
 	return (current);
 }
 
@@ -130,7 +135,7 @@ int		executer(t_all *p, t_ast *current, char **env)
 	}
 	while (current->parent && (current->parent->type == WORD_CMD || current->parent->type == WORD_OPTION)) //Up->Cmd
 		current = current->parent;
-	if (current && current->value)
+	if (current && current->value && current->type == WORD_CMD)
 	{
 		if (get_command(current, &exec) == 1)
 		{
@@ -150,26 +155,14 @@ int		executer(t_all *p, t_ast *current, char **env)
 			else
 				set_pipe(&exec, 2); //pipe droite */
 			//set_pipe(&exec, 1); add rule for 'in between pipe'
-			assign_redirect(current, &exec); //Assign Redirect Finir check pipe
+			assign_redirect(current, &exec); //Add pipea
 			p->exit_status = open_files(&exec);
-			if (p->exit_status == 1)
-			{
-				exec_free(&exec);
-				return (p->exit_status); // Peut return void si besoin nqiue norminette
-			}
-			if (is_builtin(exec.command[0]) == 1)
-				p->exit_status = exec_builtin(exec.command);
-			else
+			printf("RESULT:\n");
+			if (is_builtin(exec.command[0]) == 1 && p->exit_status == 0)
+				p->exit_status = exec_builtin(exec.command, &p->env);
+			else if (p->exit_status == 0)
 			{
 				p->exit_status = check_cmd(&exec, p->env);
-				/* if (p->exit_status == 1 || p->exit_status == 127)
-				{
-					close_files(&exec, p->std_in, p->std_out);
-					exec_free(&exec);
-					if (p->exit_status == 1)
-						error_executer(NULL, 4);
-					return (1); // Peut return void si besoin nqiue norminette
-				} */
 				if (p->exit_status == 0)
 				{
 					printf("FULL CMD:\n");
@@ -177,18 +170,20 @@ int		executer(t_all *p, t_ast *current, char **env)
 					if (exec.path)
 						printf("path = %s\n", exec.path);
 					p->exit_status = exec_cmd(&exec, &p->exit_status, env);
-					printf("p->exit_status = %d\n", p->exit_status);
+					if (p->exit_status < 0)
+					{
+						write(2, "End child\n", 10);
+						close_files(&exec, p->std_in, p->std_out);
+						exec_free(&exec);
+						return (1);
+					}
 				}
 			}
 			//if (p->exit_status == 1) stop
 		}
 	}
-	/* if (current->value)
-		printf("current->value = %s\n", current->value); */
 	close_files(&exec, p->std_in, p->std_out);
 	exec_free(&exec);
-	prev = NULL;
-	//current = get_next_operator(current, &prev);
 	prev = current;
 	if (current->parent)
 	{
@@ -202,22 +197,49 @@ int		executer(t_all *p, t_ast *current, char **env)
 	if (current->right == prev)
 		return (0);
 	current = prev;
-	if (is_operator(current->type, 2) == 0)
+	if (current->value)
+		printf("current = %s\n", current->value);
+	printf("p->exit_status = %d\n", p->exit_status);
+	printf("p->option = %d\n", p->option);
+	if (is_operator(current->type, 2) == 0 || p->option == 1)
+	{
 		current = get_next_operator(current, &prev);
-	prev = current;
-	if (current->type == TOKEN_OR && p->exit_status == 0 && p->option == 0)
-	{
-			current = get_next_operator(current, &prev);
-			if (prev == current)
-				return (0);
-			p->option = 0;
+		p->option = 0;
 	}
-	else if (current->type == TOKEN_AND && p->exit_status != 0 && p->option == 0)
+	prev = current;
+	if (current->type == TOKEN_OR && p->exit_status == 0)
 	{
+		if (current->parent && (current->type == TOKEN_OR || prev == current->right))
+		{
 			current = get_next_operator(current, &prev);
 			if (prev == current)
 				return (0);
-			p->option = 0;
+		}
+		while (current->parent && (current->type == TOKEN_OR || prev == current->right))
+		{
+			current = get_next_operator(current, &prev);
+			prev = prev->parent;
+		}
+		if (current->type == TOKEN_OR || is_operator(current->type, 2) == 0)
+			return (0);
+		if ((!current->parent && p->option != 0) || (!current->parent && prev == current->right))
+			return (0);
+		p->option = 0;
+	}
+	//echo test && (echo hello || echo world && (echo oui || echo non))
+	else if (current->type == TOKEN_AND && p->exit_status != 0)
+	{
+		while (current->type == TOKEN_AND && current->parent)
+		{
+			current = get_next_operator(current, &prev);
+			if (prev == current)
+				return (0);
+		}
+		if (current->type == TOKEN_AND)
+			return (0);
+		if ((!current->parent && p->option != 0))
+			return (0);
+		p->option = 0;
 	}
 	if ((!current->parent && p->option != 0) || is_operator(current->type, 2) == 0)
 		return (0);
@@ -235,26 +257,13 @@ int		executer(t_all *p, t_ast *current, char **env)
 t_ast *get_next_operator(t_ast *current, t_ast	**prev)
 {
 	if (current->parent)
-	{
-		//*prev = current;	
 		current = current->parent;
-	}
 	while (current->parent)
 	{
 		if (is_operator(current->type, 2))
 			break ;
-		//*prev = current;
 		current = current->parent;
 	}
 	return (current);
 }
 
-/*
-	if (is_operator(current->right->type, 2))
-		executer(p, current->right, env);
-	else
-	{
-		p->option = 1;
-		executer(p, current->right, env);
-	}
-*/
