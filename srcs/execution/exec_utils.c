@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 18:39:42 by allan             #+#    #+#             */
-/*   Updated: 2024/07/26 13:30:43 by allan            ###   ########.fr       */
+/*   Updated: 2024/08/11 00:42:32 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,28 @@ void		exec_free(t_exec *exec)
 	exec->command = NULL;
 }
 
-void	set_pipe(t_exec *exec, int set_pipe)
+void	set_pipe(t_all *p, t_exec *exec)
 {
-	if (set_pipe == 1)
-		exec->pipe = 1;
-	else if (set_pipe == 2)
-		exec->pipe = 2;
-	else if (set_pipe == 3)
-		exec->pipe = 3;
+	if (p->max_pipe == 0)
+		return ;
+	if (p->curr_pipe == p->max_pipe)
+		exec->pipe = 1; //left pipe
+	else if (p->curr_pipe == 1)
+		exec->pipe = 3; //right pipe
+	else
+		exec->pipe = 2; //middle pipe
+}
+
+void	reset_pipe(t_all *p)
+{
+	if (p->max_pipe > 0)
+	{
+		if (p->curr_pipe <= 1)
+		{
+			p->max_pipe = 0;
+			p->curr_pipe = 0;
+		}
+	}
 }
 
 int		array_size(char **arr)

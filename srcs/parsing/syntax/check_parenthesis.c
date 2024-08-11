@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 13:31:07 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/06 13:31:34 by allan            ###   ########.fr       */
+/*   Updated: 2024/08/09 18:05:35 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 bool	check_parenthesis(t_token *current, t_syntax syntax, int *skip)
 {
 	*skip += 1;
+	if (current->type == TOKEN_PIPE)
+		return (error_syntax(current, 6));
 	if (is_operator(current->type, 1))
 	{
 		if (current->next)

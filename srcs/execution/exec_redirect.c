@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 20:32:13 by allan             #+#    #+#             */
-/*   Updated: 2024/07/11 17:13:27 by allan            ###   ########.fr       */
+/*   Updated: 2024/08/11 00:14:13 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int		assign_redirect(t_ast *current, t_exec *exec)
 {
 	while (current && (exec->redirectin == 0 || exec->redirectout == 0))
 	{
-		if (is_operator(current->type, 2) == 1) //En remontant Si je croise un pipe, pipe 1 = gauche/ pipe 2 = millieu / pipe 3 = droite
+		if (is_operator(current->type, 2) == 1) //pipe 1 = gauche/ pipe 2 = millieu / pipe 3 = droite
 		{
 			if (current->type == TOKEN_PIPE)
 				redirect_pipe(current, exec);

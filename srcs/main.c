@@ -6,13 +6,39 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/08/03 12:08:07 by allan            ###   ########.fr       */
+/*   Updated: 2024/08/11 18:02:37 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 int		sig_int = 0;
+
+void	testAST(t_ast* node, int option)
+{
+	if (option == 1)
+	{
+		while (node->left)
+			node = node->left;
+		printf("last left = %s\n", node->value);
+		while (node->parent)
+		{
+			printf("parent = %s\n", node->parent->value);
+			node = node->parent;
+		}
+	}
+	else if (option == 2)
+	{
+		while (node->right)
+			node = node->right;
+		printf("last right = %s\n", node->value);
+		while (node->parent)
+		{
+			printf("parent = %s\n", node->parent->value);
+			node = node->parent;
+		}
+	}
+}
 
 int	main(int argc, char **argv, char **env)
 {
@@ -51,6 +77,8 @@ char	*minishell(t_all *p, char **env)
 		if (p->error == 0)
 		{
 			printAST(p->ast, 0);
+			testAST(p->ast, 1);
+			testAST(p->ast, 2);
 			current = p->ast;
 			if (executer(p, current, env) == 1)
 			{

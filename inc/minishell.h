@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/08/06 21:00:29 by allan            ###   ########.fr       */
+/*   Updated: 2024/08/11 18:00:41 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,7 +231,7 @@ int			executer(t_all *p, t_ast *current, char **env);
 
 //ast_explorer
 t_ast		*left_expand(t_all *p, t_ast *current);
-t_ast		*get_next_operator(t_ast *current, t_ast	**prev);
+t_ast		*get_next_operator(t_all *p, t_ast *current, t_ast **prev);
 
 //exec_check_cmd
 int			get_command(t_ast *current, t_exec *exec);
@@ -263,9 +263,11 @@ void		redirect_pipe(t_ast *current, t_exec *exec);
 //exec_utils
 void		exec_init(t_exec *exec);
 void		exec_free(t_exec *exec);
-void		set_pipe(t_exec *exec, int set_pipe);
+void		set_pipe(t_all *p, t_exec *exec);
+void		reset_pipe(t_all *p);
 int			array_size(char **arr);
-void		set_pipe(t_exec *exec, int set_pipe);
+
+void	testAST(t_ast* node, int option);
 
 
 //////////////////////////////////////////////////////////

@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 21:23:21 by allan             #+#    #+#             */
-/*   Updated: 2024/08/08 22:22:44 by allan            ###   ########.fr       */
+/*   Updated: 2024/08/11 17:58:45 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,11 @@ t_ast *left_expand(t_all *p, t_ast *current)
 		} */
 		if (current->value)
 			printf("value = %s\n", current->value);
+		if (current->type == TOKEN_PIPE)
+		{
+			p->max_pipe += 2;
+			p->curr_pipe = p->max_pipe;
+		}
 		if (is_operator(current->type, 2))
 			p->option = 0;
 		if (current->state == STATE_WORD && current->type != WORD_SQLIMITER && current->type != WORD_LIMITER)
@@ -105,7 +110,7 @@ t_ast *left_expand(t_all *p, t_ast *current)
 				return (current);
 			else if ((p->error != 0 && p->error != -1))
 				return (current); //CHANGE RETURN AS IT ALSO TAKE INTO ACCOUNT EMPTY PROMTP AFTER EXPANDER
-			else if (current->type == TOKEN_OR || current->type == TOKEN_AND)
+			else if (is_operator(current->type, 2) == 1)
 				return (current);
 		}
 		if (p->error != -1)
@@ -128,6 +133,8 @@ int		executer(t_all *p, t_ast *current, char **env)
 	printf("TURN:\n");
 	exec_init(&exec);
 	current = left_expand(p, current);
+	printf("p->max_pipe = %d\n", p->max_pipe);
+	printf("p->curr_pipe = %d\n", p->curr_pipe);
 	if (p->error == 1)
 	{
 		exec_free(&exec);
@@ -147,16 +154,9 @@ int		executer(t_all *p, t_ast *current, char **env)
 		{
 			printf("CMD:\n");
 			print_tab(exec.command);
-			/* 
-			if (p->curr_pipe == p->max_pipe)
-				set_pipe(&exec, 1); //pipe gauche
-			else if (p->curr_pipe == 1)
-				set_pipe(&exec, 3); //pipe milieu
-			else
-				set_pipe(&exec, 2); //pipe droite */
-			//set_pipe(&exec, 1); add rule for 'in between pipe'
-			assign_redirect(current, &exec); //Add pipea
-			p->exit_status = open_files(&exec);
+			set_pipe(p, &exec);
+			assign_redirect(current, &exec); //Add pipe
+			/* p->exit_status = open_files(&exec);
 			printf("RESULT:\n");
 			if (is_builtin(exec.command[0]) == 1 && p->exit_status == 0)
 				p->exit_status = exec_builtin(exec.command, &p->env);
@@ -178,32 +178,61 @@ int		executer(t_all *p, t_ast *current, char **env)
 						return (1);
 					}
 				}
-			}
+			} */
 			//if (p->exit_status == 1) stop
 		}
 	}
+	//(ls || echo test) | $DONT: Fix dans check_syntax
+	//ls && echo test < output.txt: Fix dans is_finished
+	//ls | cat | cat
 	close_files(&exec, p->std_in, p->std_out);
 	exec_free(&exec);
+	reset_pipe(p);
+	/* while (current->parent)
+	{
+		if (is_operator(current->parent->type, 2) == 1)
+			break ;
+		current = current->parent;
+	} */
 	prev = current;
+	printf("begining current = %s\n", prev->value);
 	if (current->parent)
 	{
 		current = current->parent;
+		printf("a\n");
+		/* if (current->parent)
+			printf("middle current->parent = %s\n", current->parent->value);
+		if (current->right)
+			printf("middle curr->right = %s\n", current->right->value); */
+		
 		while (current->parent && current->right == prev)
 		{
+			printf("b\n");	
 			prev = current;
 			current = current->parent;
 		}
 	}
+	/* printf("ending current = %s\n", current->value);
+	printf("curr->right = %s\n", current->right->value);
+	printf("prev = %s\n", prev->value); */
 	if (current->right == prev)
+	{
+		printf("end 1\n");	
 		return (0);
+	}
 	current = prev;
 	if (current->value)
 		printf("current = %s\n", current->value);
 	printf("p->exit_status = %d\n", p->exit_status);
 	printf("p->option = %d\n", p->option);
+	if (current->type == TOKEN_PIPE)
+	{
+		if (p->max_pipe > 0)
+			p->curr_pipe--;
+	}
 	if (is_operator(current->type, 2) == 0 || p->option == 1)
 	{
-		current = get_next_operator(current, &prev);
+		current = get_next_operator(p, current, &prev);
 		p->option = 0;
 	}
 	prev = current;
@@ -211,13 +240,13 @@ int		executer(t_all *p, t_ast *current, char **env)
 	{
 		if (current->parent && (current->type == TOKEN_OR || prev == current->right))
 		{
-			current = get_next_operator(current, &prev);
+			current = get_next_operator(p, current, &prev);
 			if (prev == current)
 				return (0);
 		}
 		while (current->parent && (current->type == TOKEN_OR || prev == current->right))
 		{
-			current = get_next_operator(current, &prev);
+			current = get_next_operator(p, current, &prev);
 			prev = prev->parent;
 		}
 		if (current->type == TOKEN_OR || is_operator(current->type, 2) == 0)
@@ -226,12 +255,11 @@ int		executer(t_all *p, t_ast *current, char **env)
 			return (0);
 		p->option = 0;
 	}
-	//echo test && (echo hello || echo world && (echo oui || echo non))
 	else if (current->type == TOKEN_AND && p->exit_status != 0)
 	{
 		while (current->type == TOKEN_AND && current->parent)
 		{
-			current = get_next_operator(current, &prev);
+			current = get_next_operator(p, current, &prev);
 			if (prev == current)
 				return (0);
 		}
@@ -242,27 +270,43 @@ int		executer(t_all *p, t_ast *current, char **env)
 		p->option = 0;
 	}
 	if ((!current->parent && p->option != 0) || is_operator(current->type, 2) == 0)
+	{
+		printf("end 2\n");
 		return (0);
+	}
 	else if (p->option == 1)
-		current = get_next_operator(current, &prev);
+		current = get_next_operator(p, current, &prev);
 	if (current->right)
 	{
 		p->option = 1;
 		printf("\n\n");
 		executer(p, current->right, env);
 	}
+	printf("end 3\n");
 	return (0);
 }
 
-t_ast *get_next_operator(t_ast *current, t_ast	**prev)
+t_ast *get_next_operator(t_all *p, t_ast *current, t_ast **prev)
 {
 	if (current->parent)
+	{
 		current = current->parent;
+		if (current->type == TOKEN_PIPE)
+		{
+			if (p->max_pipe > 0)
+				p->curr_pipe--;
+		}
+	}
 	while (current->parent)
 	{
 		if (is_operator(current->type, 2))
 			break ;
 		current = current->parent;
+		if (current->type == TOKEN_PIPE)
+		{
+			if (p->max_pipe > 0)
+				p->curr_pipe--;
+		}
 	}
 	return (current);
 }
