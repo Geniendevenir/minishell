@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 20:32:13 by allan             #+#    #+#             */
-/*   Updated: 2024/08/11 00:14:13 by allan            ###   ########.fr       */
+/*   Updated: 2024/08/14 13:41:58 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void	redirect_pipe(t_ast *current, t_exec *exec)
 {
+	//pipe 1 = gauche/ pipe 2 = millieu / pipe 3 = droite
 	if (exec->pipe == 1)
 	{
 		if (exec->out == NULL)
@@ -23,6 +24,19 @@ void	redirect_pipe(t_ast *current, t_exec *exec)
 		}
 		if (exec->in != NULL)
 		exec->redirectin = 1;
+	}
+	else if (exec->pipe == 2)
+	{
+		if (exec->in == NULL)
+		{
+			exec->in = current;
+			exec->redirectin = 1;
+		}
+		if (exec->out == NULL)
+		{
+			exec->out = current;
+			exec->redirectout = 1;
+		}
 	}
 	else if (exec->pipe == 3)
 	{
@@ -40,7 +54,7 @@ int		assign_redirect(t_ast *current, t_exec *exec)
 {
 	while (current && (exec->redirectin == 0 || exec->redirectout == 0))
 	{
-		if (is_operator(current->type, 2) == 1) //pipe 1 = gauche/ pipe 2 = millieu / pipe 3 = droite
+		if (is_operator(current->type, 2) == 1)
 		{
 			if (current->type == TOKEN_PIPE)
 				redirect_pipe(current, exec);

@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/08/11 18:02:37 by allan            ###   ########.fr       */
+/*   Updated: 2024/08/14 13:26:40 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ char	*minishell(t_all *p, char **env)
 	{
 		p->error = parser(p->line, p->env, &p->ast, &p);
 		//printf("next_status = %d\n", next_status);
+		//printAST(p->ast, 0);
 		if (p->error == 0)
 		{
 			printAST(p->ast, 0);

@@ -3,32 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   ast_handle_pipe.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 20:38:03 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/08 14:20:59 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/08/14 13:10:42 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	if_no_last_ope(t_ast **new_node, t_ast_ptr **list)
+void    if_no_last_ope(t_ast **new_node, t_ast_ptr **list)
 {
-	if ((*list)->last_pipe)
-	{
-		(*new_node)->left = (*list)->last_pipe;
-		if ((*list)->root && ((*list)->root)->type
-			!= TOKEN_AND && ((*list)->root)->type != TOKEN_OR)
-			(*list)->root = *new_node;
-	}
-	else
-	{
-		(*list)->root->parent = *new_node;
-		(*new_node)->left = (*list)->root;
-		(*list)->root = *new_node;
-	}
-	(*list)->current = *new_node;
-	(*list)->last_pipe = *new_node;
+    if ((*list)->last_pipe)
+    {
+        (*list)->last_pipe->parent = *new_node;
+        (*new_node)->left = (*list)->last_pipe;
+        if ((*list)->root && ((*list)->root)->type
+            != TOKEN_AND && ((*list)->root)->type != TOKEN_OR)
+            (*list)->root = *new_node;
+    }
+    else
+    {
+        (*list)->root->parent = *new_node;
+        (*new_node)->left = (*list)->root;
+        (*list)->root = *new_node;
+    }
+    (*list)->current = *new_node;
+    (*list)->last_pipe = *new_node;
 }
 
 void	if_last_ope_exist(t_ast **new_node, t_ast_ptr **list)

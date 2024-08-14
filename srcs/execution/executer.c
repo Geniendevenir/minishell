@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 21:23:21 by allan             #+#    #+#             */
-/*   Updated: 2024/08/11 17:58:45 by allan            ###   ########.fr       */
+/*   Updated: 2024/08/14 13:49:26 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,8 +155,8 @@ int		executer(t_all *p, t_ast *current, char **env)
 			printf("CMD:\n");
 			print_tab(exec.command);
 			set_pipe(p, &exec);
-			assign_redirect(current, &exec); //Add pipe
-			/* p->exit_status = open_files(&exec);
+			assign_redirect(current, &exec);
+			p->exit_status = open_files(&exec);
 			printf("RESULT:\n");
 			if (is_builtin(exec.command[0]) == 1 && p->exit_status == 0)
 				p->exit_status = exec_builtin(exec.command, &p->env);
@@ -178,7 +178,7 @@ int		executer(t_all *p, t_ast *current, char **env)
 						return (1);
 					}
 				}
-			} */
+			}
 			//if (p->exit_status == 1) stop
 		}
 	}
@@ -188,38 +188,27 @@ int		executer(t_all *p, t_ast *current, char **env)
 	close_files(&exec, p->std_in, p->std_out);
 	exec_free(&exec);
 	reset_pipe(p);
-	/* while (current->parent)
+	while (current->parent)
 	{
 		if (is_operator(current->parent->type, 2) == 1)
 			break ;
 		current = current->parent;
-	} */
+	}
 	prev = current;
 	printf("begining current = %s\n", prev->value);
+	if (prev->parent)
+		printf("begining current->parent = %s\n", prev->parent->value);
 	if (current->parent)
 	{
 		current = current->parent;
-		printf("a\n");
-		/* if (current->parent)
-			printf("middle current->parent = %s\n", current->parent->value);
-		if (current->right)
-			printf("middle curr->right = %s\n", current->right->value); */
-		
 		while (current->parent && current->right == prev)
 		{
-			printf("b\n");	
 			prev = current;
 			current = current->parent;
 		}
 	}
-	/* printf("ending current = %s\n", current->value);
-	printf("curr->right = %s\n", current->right->value);
-	printf("prev = %s\n", prev->value); */
 	if (current->right == prev)
-	{
-		printf("end 1\n");	
 		return (0);
-	}
 	current = prev;
 	if (current->value)
 		printf("current = %s\n", current->value);
@@ -270,10 +259,7 @@ int		executer(t_all *p, t_ast *current, char **env)
 		p->option = 0;
 	}
 	if ((!current->parent && p->option != 0) || is_operator(current->type, 2) == 0)
-	{
-		printf("end 2\n");
 		return (0);
-	}
 	else if (p->option == 1)
 		current = get_next_operator(p, current, &prev);
 	if (current->right)
@@ -282,7 +268,6 @@ int		executer(t_all *p, t_ast *current, char **env)
 		printf("\n\n");
 		executer(p, current->right, env);
 	}
-	printf("end 3\n");
 	return (0);
 }
 

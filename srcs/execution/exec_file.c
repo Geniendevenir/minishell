@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:11:24 by allan             #+#    #+#             */
-/*   Updated: 2024/08/01 10:59:16 by allan            ###   ########.fr       */
+/*   Updated: 2024/08/14 14:12:57 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int    open_filein(t_exec *exec)
 {
-	if (exec->in)
+	if (exec->in && exec->in->type != TOKEN_PIPE)
 	{
 		exec->filein = open(exec->in->value, O_RDONLY);
 		if (exec->filein == -1)
@@ -29,7 +29,7 @@ int    open_filein(t_exec *exec)
 
 int    open_fileout(t_exec *exec)
 {
-	if (exec->out)
+	if (exec->out && exec->out->type != TOKEN_PIPE)
 	{
 		if (exec->out->type == WORD_FILEOUT)
 		{
@@ -48,6 +48,12 @@ int    open_fileout(t_exec *exec)
 	}
 	return (1);
 }
+
+/*
+1 - open redirection files
+2 - si au premier pipe creer le pipe
+3 - fork child -> faire les redirections -> executer
+*/
 
 int	open_files(t_exec *exec)
 {
