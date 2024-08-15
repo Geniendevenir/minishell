@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:34:27 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/23 14:08:05 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/24 11:48:39 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,10 @@ void	free_env(t_env *envp)
 
 void	free_all(t_all *p)
 {
+	close(p->std_in);
+	close(p->std_out);
 	free(p->line);
+	free_here_docs(p->here_doc);
 	free_env(p->env);
 	free(p->sig);
 	free(p);
@@ -49,13 +52,3 @@ void	free_array(char **array)
 	free(array);
 }
 
-void free_ast(t_ast *node) 
-{
-	if (node == NULL)
-		return ;
-	free_ast(node->left);
-	free_ast(node->right);
-	if (node->value)
-		free(node->value);
-	free(node);
-}

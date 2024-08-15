@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adebert <adebert@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 15:52:08 by allan             #+#    #+#             */
-/*   Updated: 2024/05/23 16:55:40 by adebert          ###   ########.fr       */
+/*   Updated: 2024/06/27 17:53:27 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int		count_word(char *str, char sep);
 void	ft_free(char **split);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strdup(const char *s);
+int		ft_strichr(char *str, char c);
 void	ft_striteri(char *s, void (*f)(unsigned int, char *));
 char	*ft_strjoin(char *s1, char const *s2);
 size_t	ft_strlen(const char *s);

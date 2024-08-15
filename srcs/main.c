@@ -6,35 +6,54 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/06/26 15:38:09 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/08/15 20:16:55 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./minishell.h"
+#include "minishell.h"
 
-t_sig	g_sig;
+int		sig_int = 0;
 
-char	*minishell(t_all *p)
+void	testAST(t_ast* node, int option)
 {
-	rl_event_hook = event;
-	p->line = readline("\033[1;032mMinishell> \033[m");
-	if (p->line == NULL)
+	if (option == 1)
 	{
-		printf("exit\n");
-		return (free(p->line), free_all(p), rl_clear_history(), exit(0), NULL);
+		while (node->left)
+			node = node->left;
+		printf("last left = %s\n", node->value);
+		while (node->parent)
+		{
+			printf("parent = %s\n", node->parent->value);
+			node = node->parent;
+		}
 	}
-	if (p->sig->sig_int == 0 && p->line[0] != '\0')
+	else if (option == 2)
 	{
-		parser(p->line, p->env);
-		add_history(p->line);
+		while (node->right)
+			node = node->right;
+		printf("last right = %s\n", node->value);
+		while (node->parent)
+		{
+			printf("parent = %s\n", node->parent->value);
+			node = node->parent;
+		}
 	}
-	p->sig->sig_int = 0;
-	free(p->line);
-	p->line = NULL;
-	return (p->line);
 }
 
-//valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --suppressions=./.readline.supp ./minishell
+void testCMD(t_ast *node)
+{
+	while (node->right)
+		node = node->right;
+	printf("last right = %s\n", node->value);
+	while(node->left)
+		node = node->left;
+	printf("node left = %s\n", node->value);	
+	while (node->parent)
+	{
+		printf("parent = %s\n", node->parent->value);
+		node = node->parent;
+	}
+}
 
 int	main(int argc, char **argv, char **env)
 {
@@ -47,7 +66,130 @@ int	main(int argc, char **argv, char **env)
 		return (EXIT_FAILURE);
 	while (p->line == NULL)
 	{
-		minishell(p);
+		minishell(p, env);
 	}
-	return (EXIT_SUCCESS);
+	return (0);
 }
+
+char	*minishell(t_all *p, char **env)
+{
+	extern int	sig_int;
+	t_ast 	*current;
+
+	rl_event_hook = event;
+	p->line = readline("\033[1;032mMinishell> \033[m");
+	if (p->line == NULL)
+	{
+		printf("exit\n");
+		p->exit_status = 0;
+		return (free(p->line), free_all(p), rl_clear_history(), exit(0), NULL);
+	}
+	//printf("sigquit = %d\n", p->sig->sig_quit);
+	if (sig_int == 0 && p->sig->sig_quit == 0)
+	{
+		p->error = parser(p->line, p->env, &p->ast, &p);
+		//printf("next_status = %d\n", next_status);
+		if (p->error == 0)
+		{
+			printAST(p->ast, 0);
+			testAST(p->ast, 1);
+			testAST(p->ast, 2);
+			//testCMD(p->ast);
+			current = p->ast;
+			/* if (executer(p, current, env) == 1)
+			{
+				printf("executor ended\n");
+				free_ast(p->ast);
+				return (free(p->line), free_all(p), rl_clear_history(), exit(0), NULL);
+			} */
+			free_ast(p->ast);
+		}
+		add_history(p->line);
+	}
+	sig_int = 0;
+	free(p->line);
+	p->line = NULL;
+	p->line_num++;
+	return (p->line);
+}
+
+//valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --suppressions=./.readline.supp ./minishell
+//ps -f --forest : see shell process tree
+
+
+//TEST MAIN
+
+/* 		TRUE MAIN
+
+t_all	*p;
+(void)argc;
+(void) **argv;
+p = init_all(env);
+if (!p || p == NULL)
+	return (EXIT_FAILURE);
+while (p->line == NULL)
+{
+	minishell(p);
+}
+return (EXIT_SUCCESS); */
+
+/* 	TEST PWD
+	int exit_status;
+	
+	if (argc < 2)
+		return (1);
+	exit_status = ft_pwd(argv[2]);
+	printf("exit_status = %d\n", exit_status);
+	return (1); */
+	
+/*	TEST EXIT 
+	int exit_status;
+	
+	if (argc < 3)
+		return (1);
+	exit_status = ft_exit(argv + 2, 1);
+	printf("exit_status = %d\n", exit_status);
+	return (1); */
+
+	
+	/* TEST EXPORT
+	
+	t_env	*env_list;
+	int error;
+	
+	if (argc < 3)
+		return (1);
+	env_list = env_to_struct(env);
+	printf("ORIGINAL ENV\n\n");
+	print_env(env_list);
+	error = ft_export(argv + 2, &env_list);
+	if (error == 1)
+	{
+		free_env(env_list);
+		return (1);
+	}
+	printf("NEW ENV\n\n");
+	print_env(env_list);
+	printf("return export = %d\n", error);
+	free_env(env_list);
+	return (0); */
+	
+	/* TEST CD
+	
+	if (argc != 3)
+		return (1);
+	int error;
+	error = ft_cd(*(argv + 2));
+	printf("return cd = %d\n", error);
+	return (0); */
+	
+	/* TEST ECHO 
+	
+	int exit_status;
+	
+	if (argc < 2)
+		return (1);
+	exit_status = ft_echo(argv + 2); //commence a la premiere option
+	printf("exit_status = %d\n", exit_status);
+	return (0);
+ */

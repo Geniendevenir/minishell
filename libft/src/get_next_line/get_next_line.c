@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 11:26:27 by allan             #+#    #+#             */
-/*   Updated: 2024/04/17 05:02:28 by allan            ###   ########.fr       */
+/*   Updated: 2024/07/08 12:24:28 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,13 @@ char	*get_next_line(int fd)
 	static char	*stash;
 	char		*display;
 
+	if (fd == -42)
+	{
+		if (stash && stash != NULL)
+			free(stash);
+		stash = NULL;
+		return (NULL);
+	}
 	if (fd < 0 && BUFFER_SIZE <= 0)
 		return (NULL);
 	stash = get_current_line(fd, stash);
