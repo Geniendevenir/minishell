@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/08/15 20:16:55 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/08/17 19:09:20 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,18 +96,18 @@ char	*minishell(t_all *p, char **env)
 			testAST(p->ast, 2);
 			//testCMD(p->ast);
 			current = p->ast;
-			/* if (executer(p, current, env) == 1)
+			if (executer(p, current, env) == 1)
 			{
 				printf("executor ended\n");
 				free_ast(p->ast);
 				return (free(p->line), free_all(p), rl_clear_history(), exit(0), NULL);
-			} */
+			}
+			printf("TESSSSSSSSSSSSSSSSST\n");
 			free_ast(p->ast);
 		}
 		add_history(p->line);
 	}
 	sig_int = 0;
-	free(p->line);
 	p->line = NULL;
 	p->line_num++;
 	return (p->line);

@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 16:29:41 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/11 12:16:05 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/08/23 19:15:33 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,29 +99,3 @@ void	init_here_docs(t_token *token_list, t_all **p)
 		i++;
 	}
 }
-
-/* char	*ft_strjoin_spe(char *s1, char const *s2)
-{
-	char	*dest;
-	size_t	i;
-	size_t	destlen;
-
-	i = 0;
-	destlen = ft_strlen(s1) + ft_strlen(s2);
-	dest = malloc(destlen + 1 * sizeof(char));
-	if (!dest)
-		return (NULL);
-	while (*(s1 + i))
-	{
-		*(dest + i) = *(s1 + i);
-		i++;
-	}
-	while (*s2)
-	{
-		*(dest + i) = *s2++;
-		i++;
-	}
-	*(dest + i) = '\0';
-	free(s1);
-	return (dest);
-} */

@@ -23,6 +23,7 @@ SRCS 				=	srcs/free.c\
 						srcs/print_utils.c \
 						srcs/signals.c\
 						srcs/utils.c\
+						srcs/sort_env.c\
 						srcs/hate_the_norm.c\
 						srcs/error_management.c\
 						srcs/parsing/parser.c\
@@ -62,6 +63,7 @@ SRCS 				=	srcs/free.c\
 						srcs/builtins/ft_pwd.c\
 						srcs/builtins/ft_cd.c\
 						srcs/builtins/ft_export.c\
+						srcs/builtins/export_utils.c\
 						srcs/builtins/ft_unset.c\
 						srcs/builtins/ft_exit.c\
 						srcs/builtins/ft_echo.c\

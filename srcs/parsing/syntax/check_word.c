@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 14:48:05 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/08 13:17:12 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/08/17 19:58:09 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,6 @@ int	check_builtin(char *word)
 	else if (ft_strcmp(word, "export") == 0)
 		return (1);
 	else if (ft_strcmp(word, "pwd") == 0)
-		return (1);
-	else if (ft_strcmp(word, "echo") == 0)
 		return (1);
 	else
 		return (0);

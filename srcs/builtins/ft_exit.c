@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 12:53:13 by allan             #+#    #+#             */
-/*   Updated: 2024/08/15 20:03:54 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/08/17 20:04:29 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,27 +113,33 @@ bool	full_digit(char *str)
 	int	i;
 
 	i = -1;
-	if (ft_strlen(str) > 1 && (str[0] == '-' || str[0] == '+'))
-		++i;
-	while (str[++i])
+	if (str)
 	{
-		if (!ft_isdigit(str[i]))
-			return (false);
+		if (ft_strlen(str) > 1 && (str[0] == '-' || str[0] == '+'))
+			++i;
+		while (str[++i])
+		{
+			if (!ft_isdigit(str[i]))
+				return (false);
+		}
 	}
 	return (true);
 }
 
 void	free_exit(t_all *p)
 {
+	close(p->std_in);
+	close(p->std_out);
 	free(p->line);
-	free_ast(p->ast);
-	free_env(p->env);
 	free_here_docs(p->here_doc);
+	free_env(p->env);
+	free(p->sig);
+	free_ast(p->ast);
 	free(p);
 	rl_clear_history();
 }
 
-void	ft_exit(t_all *p, char **cmd)
+void	ft_exit(t_all **p, char **cmd)
 {
 	int	nb;
 
@@ -155,6 +161,6 @@ void	ft_exit(t_all *p, char **cmd)
 	}
 	else
 		nb = 0;
-	free_exit(p);
+	free_exit(*p);
 	exit(nb);
 }

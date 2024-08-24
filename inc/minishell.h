@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/08/15 20:11:14 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/08/24 17:51:03 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -502,8 +502,10 @@ void		free_array(char **array);
 void		free_ast(t_ast *node);
 
 /*					 UTILS					*/
-
-
+bool		ft_is_in_env(t_env *env, char *str);
+void		change_value(t_env *env, char *key, char *value);
+void		change_value_equal(t_env *env, char *key);
+void		error_cd(char *str);
 char		*ft_strndup(char *str, int n);
 int			ft_strcmp(char *s1, char *s2);
 void 		print_env(t_env *env);
@@ -516,9 +518,15 @@ void		print_tab(char **command);
 
 /*					BUILTINS				*/
 //ENV
+
 t_env		*env_to_struct(char **env);
 void		ft_env_add_back(t_env **lst, t_env *new);
 int			ft_env(t_env *env);
+t_env		*ft_envnew(char *key, char *value);
+t_env		*ft_envlast(t_env *lst);
+void		ft_env_add_back(t_env **lst, t_env *new);
+t_env		*env_to_struct(char **env);
+
 //UNSET
 int			ft_unset(t_env *env, char **unset);
 //PWD
@@ -528,13 +536,15 @@ int			ft_cd(char *path);
 char		*relative_path(DIR	*d, char *path, int *error);
 char		*cd_match(char *cur_dir, char *try_dir, int *error);
 //EXPORT
-int			ft_export(char **new_env, t_env **env_list);
+char		*get_env_var(t_env *envp, char	*var);
+int			ft_export(t_env *env, char **cmd);
 int 		split_env(char *new_env, int len, t_env **env_list);
 t_env		*env_init(void);
 int			export_free(t_env **add_env, int option);
 int			valid_export(char *new_env);
+char		**sort_env(char **env);
 //EXIT
-void		ft_exit(t_all *p, char **cmd);
+void		ft_exit(t_all **p, char **cmd);
 /* int			ft_exit(char **commande, bool child);
 int			check_is_num(char *exit_status);
 int			check_size(long long int *exit_status);

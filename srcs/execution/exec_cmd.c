@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:24:24 by allan             #+#    #+#             */
-/*   Updated: 2024/08/15 20:11:06 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/08/24 18:28:08 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,13 +72,13 @@ int	exec_builtin(t_all **p, char **cmd, t_env **env_list)
 	else if (ft_strcmp(cmd[0], "pwd") == 0)
 		result = ft_pwd(cmd[1]);
 	else if (ft_strcmp(cmd[0], "export") == 0)
-		result = ft_export(cmd + 1, env_list);
+		result = ft_export(*env_list, cmd);
 	else if (ft_strcmp(cmd[0], "unset") == 0)
 		result = ft_unset(*env_list, cmd + 1);
 	else if (ft_strcmp(cmd[0], "env") == 0 && cmd[1] == NULL)
 		result = ft_env(*env_list);
 	else if (ft_strcmp(cmd[0], "exit") == 0)
-		ft_exit(p, cmd + 1); //TROUVER UN MOYEN DE set le CHILD
+		ft_exit(p, cmd);
 	return (result);
 }
 

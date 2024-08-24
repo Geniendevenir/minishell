@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:31:18 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/01 17:15:17 by allan            ###   ########.fr       */
+/*   Updated: 2024/08/23 19:15:58 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,30 @@ int	ft_strcmp(char *s1, char *s2)
 		s2++;
 	}
 	return (0);
+}
+
+char	*ft_strjoin_spe(char *s1, char const *s2)
+{
+	char	*dest;
+	size_t	i;
+	size_t	destlen;
+
+	i = 0;
+	destlen = ft_strlen(s1) + ft_strlen(s2);
+	dest = malloc(destlen + 1 * sizeof(char));
+	if (!dest)
+		return (NULL);
+	while (*(s1 + i))
+	{
+		*(dest + i) = *(s1 + i);
+		i++;
+	}
+	while (*s2)
+	{
+		*(dest + i) = *s2++;
+		i++;
+	}
+	*(dest + i) = '\0';
+	free(s1);
+	return (dest);
 }
