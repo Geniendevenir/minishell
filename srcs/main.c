@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/08/17 19:09:20 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/08/24 19:03:59 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,9 +92,9 @@ char	*minishell(t_all *p, char **env)
 		if (p->error == 0)
 		{
 			printAST(p->ast, 0);
-			testAST(p->ast, 1);
-			testAST(p->ast, 2);
-			//testCMD(p->ast);
+			//testAST(p->ast, 1);
+			//testAST(p->ast, 2);
+			testCMD(p->ast);
 			current = p->ast;
 			if (executer(p, current, env) == 1)
 			{
