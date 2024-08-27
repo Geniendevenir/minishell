@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 19:01:28 by Matprod           #+#    #+#             */
-/*   Updated: 2024/08/24 17:52:35 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/08/27 15:04:50 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,6 @@ char	**sort_env(char **env)
 	}
 	i = -1;
 	while (env[++i] != NULL)
-		printf("%s\n", env[i]);
+		printf("declare -x %s\n", env[i]);
 	return (free_array(env), NULL);
 }

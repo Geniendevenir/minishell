@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 12:53:21 by allan             #+#    #+#             */
-/*   Updated: 2024/08/24 19:01:13 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/08/27 14:59:17 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,9 @@ int	before(char *str)
 	i = 0;
 	if (!str)
 		return (-1);
+	if (!ft_isalpha(str[1]))
+		return (ft_putstr_fd(str, 2),
+			ft_putendl_fd(": not a valid identifier", 2), -1);
 	while (str[i])
 	{
 		if (str[i] == '+' && str[i + 1] == '=')
@@ -94,7 +97,7 @@ int	ft_export(t_env *env, char **cmd)
 	char	*key;
 	int		i;
 
-	//printf("CMD[1] = '%s'\n",cmd[1]);
+	printf("CMD[1] = '%s'\n",cmd[1]);
 	if (!cmd[1])
 		return (sort_env(env_to_char_export(env)), 0);
 	i = 0;

@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/08/24 17:51:03 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/08/27 15:00:46 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -526,7 +526,7 @@ t_env		*ft_envnew(char *key, char *value);
 t_env		*ft_envlast(t_env *lst);
 void		ft_env_add_back(t_env **lst, t_env *new);
 t_env		*env_to_struct(char **env);
-
+char		**env_to_char_export(t_env *env);
 //UNSET
 int			ft_unset(t_env *env, char **unset);
 //PWD
