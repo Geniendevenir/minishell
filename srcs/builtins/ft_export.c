@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 12:53:21 by allan             #+#    #+#             */
-/*   Updated: 2024/08/27 14:59:17 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/08/27 18:25:39 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,14 @@ int	before(char *str)
 	if (!str)
 		return (-1);
 	if (!ft_isalpha(str[1]))
-		return (ft_putstr_fd(str, 2),
-			ft_putendl_fd(": not a valid identifier", 2), -1);
+		return (ft_putstr_fd("bash: export: '", 2), ft_putstr_fd(str, 2),
+			ft_putendl_fd("': not a valid identifier", 2), -1);
 	while (str[i])
 	{
 		if (str[i] == '+' && str[i + 1] == '=')
 			break ;
 		else if (ft_isalpha(str[i]) == 0 && str[i] != '=')
-			return (ft_putstr_fd(str, 2),
+			return (ft_putstr_fd("bash: export: '", 2), ft_putstr_fd(str, 2),
 				ft_putendl_fd(": not a valid identifier", 2), -1);
 		else if (str[i] == '=')
 			break ;

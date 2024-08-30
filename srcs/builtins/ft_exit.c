@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 12:53:13 by allan             #+#    #+#             */
-/*   Updated: 2024/08/17 20:04:29 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/08/28 16:54:20 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,19 +139,19 @@ void	free_exit(t_all *p)
 	rl_clear_history();
 }
 
-void	ft_exit(t_all **p, char **cmd)
+void	ft_exit(t_all **p, t_exec *exec, char **cmd)
 {
 	int	nb;
 
 	if (array_size(cmd) > 1 && full_digit(cmd[1]) && cmd[2])
 		return (ft_putstr_fd("exit\n", 2),
-			ft_putendl_fd("exit: too many arguments", 2));
+			ft_putendl_fd("bash : exit: too many arguments", 2));
 	ft_putstr_fd("exit\n", 2);
 	if (cmd[1])
 	{
 		if (!full_digit(cmd[1]))
 		{
-			ft_putstr_fd("exit: ", 2);
+			ft_putstr_fd("bash: exit: ", 2);
 			ft_putstr_fd(cmd[1], 2);
 			ft_putendl_fd(": numeric argument required", 2);
 			nb = 2;
@@ -161,6 +161,7 @@ void	ft_exit(t_all **p, char **cmd)
 	}
 	else
 		nb = 0;
+	exec_free(exec);
 	free_exit(*p);
 	exit(nb);
 }

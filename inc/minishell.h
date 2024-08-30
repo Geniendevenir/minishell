@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/08/27 15:00:46 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/08/28 16:48:07 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,7 +240,7 @@ char		**parse_command(t_ast *current, int size);
 int			check_cmd(t_exec *exec, t_env *env);
 
 //exec_cmd
-int			exec_builtin(t_all **p, char **cmd, t_env **env_list);
+int			exec_builtin(t_all **p, t_exec *exec, char **cmd);
 int			exec_cmd(t_exec *exec, int *exit_status, char **env);
 bool		is_builtin(char *cmd);
 
@@ -455,8 +455,6 @@ bool		is_redirect(t_token **tok);
 bool		is_redirect_enum(enum s_type word);
 void		free_list_ptr(t_ast_ptr **list, t_ast **temp_free, int option);
 
-
-
 /*					SIGNALS					*/
 
 int			event(void);
@@ -544,7 +542,7 @@ int			export_free(t_env **add_env, int option);
 int			valid_export(char *new_env);
 char		**sort_env(char **env);
 //EXIT
-void		ft_exit(t_all **p, char **cmd);
+void		ft_exit(t_all **p, t_exec *exec, char **cmd);
 /* int			ft_exit(char **commande, bool child);
 int			check_is_num(char *exit_status);
 int			check_size(long long int *exit_status);

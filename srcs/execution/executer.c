@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 21:23:21 by allan             #+#    #+#             */
-/*   Updated: 2024/08/17 19:07:28 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/08/28 16:46:34 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,7 @@ int		executer(t_all *p, t_ast *current, char **env)
 			p->exit_status = open_files(&exec);
 			printf("RESULT:\n");
 			if (is_builtin(exec.command[0]) == 1 && p->exit_status == 0)
-				p->exit_status = exec_builtin(&p, exec.command, &p->env);
+				p->exit_status = exec_builtin(&p, &exec, exec.command);
 			else if (p->exit_status == 0)
 			{
 				p->exit_status = check_cmd(&exec, p->env);
