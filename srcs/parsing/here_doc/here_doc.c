@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 14:57:22 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/06 17:05:09 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/06 17:30:14 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	cleanbuffer(char *buffer)
 	}
 }
 
-int	hdoc_process(int fd, t_token *limiter, t_all **p)
+int	hdoc_process(int fd, t_token *limiter, t_all **p, int nb)
 {
 	extern int	sig_int;
 	char		*buffer;
@@ -46,7 +46,10 @@ int	hdoc_process(int fd, t_token *limiter, t_all **p)
 		(*p)->line_num++;
 	}
 	if (sig_int == 1)
+	{
+		unlink((*p)->here_doc[nb]);
 		return (cleanbuffer(buffer), -1);
+	}
 	return (cleanbuffer(buffer), 1);
 }
 
@@ -54,12 +57,12 @@ int	which_limiter(int fd, t_token *current, t_all **p, int *nb)
 {
 	if ((current)->type == WORD_SQLIMITER)
 	{
-		if (hdoc_process(fd, current, p) == -1)
+		if (hdoc_process(fd, current, p, *nb) == -1)
 			return (close (fd), quit_here_doc(1, *p, *nb));
 	}
 	else if ((current)->type == WORD_LIMITER)
 	{
-		if (hdoc_process(fd, current, p) == -1)
+		if (hdoc_process(fd, current, p, *nb) == -1)
 			return (close (fd), quit_here_doc(1, *p, *nb));
 	}
 	return (1);
