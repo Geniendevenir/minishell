@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/07 13:41:47 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/07 16:07:05 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -371,6 +371,7 @@ char		*generate_name(void);
 char		*ft_strjoin_spe(char *s1, char const *s2);
 void		bloquer_signal_eof(void);
 void		restaurer_signal_eof(void);
+void		write_hdoc(int fd, char *buffer);
 
 
 /*								EXPANDER						*/

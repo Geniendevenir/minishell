@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 16:29:27 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/07 15:13:47 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/07 15:22:40 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ bool	check_echo(char *str)
 			return (false);
 	return (true);
 }
-int echo_error(char **cmd)
+
+int	echo_error(char **cmd)
 {
 	if (write(1, "\0", 1) == -1)
 		if (errno == ENOSPC)
@@ -37,7 +38,7 @@ int echo_error(char **cmd)
 		write(1, "\n", 1);
 		return (1);
 	}
-	return(0);
+	return (0);
 }
 
 int	ft_echo(char **cmd)

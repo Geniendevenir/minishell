@@ -42,6 +42,7 @@ SRCS 				=	srcs/free.c\
 						srcs/parsing/here_doc/here_doc_name.c\
 						srcs/parsing/here_doc/here_doc_signals.c\
 						srcs/parsing/here_doc/here_doc_utils.c\
+						srcs/parsing/here_doc/here_doc_utils2.c\
 						srcs/parsing/here_doc/here_doc.c\
 						srcs/parsing/syntax/word.c\
 						srcs/parsing/syntax/check_word.c\
