@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:24:24 by allan             #+#    #+#             */
-/*   Updated: 2024/08/28 16:46:40 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/07 13:44:10 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	exec_builtin(t_all **p, t_exec *exec, char **cmd)
 			error_executer(NULL, 6);
 			return (1);	
 		}
-		result = ft_cd(cmd[1]);
+		result = ft_cd((*p)->env ,cmd);
 	}
 	else if (ft_strcmp(cmd[0], "pwd") == 0)
 		result = ft_pwd(cmd[1]);

@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/06 17:29:21 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/07 13:41:47 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -530,9 +530,7 @@ int			ft_unset(t_env *env, char **unset);
 //PWD
 int			ft_pwd(char *option);
 //CD
-int			ft_cd(char *path);
-char		*relative_path(DIR	*d, char *path, int *error);
-char		*cd_match(char *cur_dir, char *try_dir, int *error);
+int		ft_cd(t_env *env, char **cmd);
 //EXPORT
 char		*get_env_var(t_env *envp, char	*var);
 int			ft_export(t_env *env, char **cmd);
