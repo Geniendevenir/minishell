@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 21:23:21 by allan             #+#    #+#             */
-/*   Updated: 2024/08/14 13:49:26 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/07 19:16:04 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	create_child(t_all *p, t_ast **token, int create_pipe)
 	}
 }
 
-int		pipe_management(t_all *p, t_ast **token)
+/* int		pipe_management(t_all *p, t_ast **token)
 {
 	t_ast	*current;
 	int		pid1;
@@ -78,9 +78,9 @@ int		pipe_management(t_all *p, t_ast **token)
 	//Si dans le parent waitpid puis return (1) = quitter left expand et remonter jusqu'au root
 	//stock exit status
 	return (0);
-}
+} */
 
-//printf("test\n");
+//write(2, "test\n");
 t_ast *left_expand(t_all *p, t_ast *current)
 {
 	p->error = 0;
@@ -92,8 +92,8 @@ t_ast *left_expand(t_all *p, t_ast *current)
 			if (p->error == -2)
 				return (current); //father goes back up after his son died 	
 		} */
-		if (current->value)
-			printf("value = %s\n", current->value);
+		/* if (current->value)
+			write(2, "value = %s\n", current->value); */
 		if (current->type == TOKEN_PIPE)
 		{
 			p->max_pipe += 2;
@@ -103,8 +103,8 @@ t_ast *left_expand(t_all *p, t_ast *current)
 			p->option = 0;
 		if (current->state == STATE_WORD && current->type != WORD_SQLIMITER && current->type != WORD_LIMITER)
 		{
-			/* printf("current = %s\n", current->value);
-			printf("current size = %ld\n", ft_strlen(current->value)); */
+			/* write(2, "current = %s\n", current->value);
+			write(2, "current size = %ld\n", ft_strlen(current->value)); */
 			p->error = split_word(p, &current);
 			if (!current || !current->value)
 				return (current);
@@ -120,7 +120,6 @@ t_ast *left_expand(t_all *p, t_ast *current)
 			current = current->left;
 		}
 	}
-	printf("test 9\n");
 	return (current);
 }
 
@@ -130,34 +129,46 @@ int		executer(t_all *p, t_ast *current, char **env)
 	int		result;
 	t_ast	*prev;
 
-	printf("TURN:\n");
+	write(2, "TURN\n", 5);
 	exec_init(&exec);
 	current = left_expand(p, current);
-	printf("p->max_pipe = %d\n", p->max_pipe);
-	printf("p->curr_pipe = %d\n", p->curr_pipe);
+	/* write(2, "p->max_pipe = %d\n", p->max_pipe);
+	write(2, "p->curr_pipe = %d\n", p->curr_pipe); */
 	if (p->error == 1)
 	{
 		exec_free(&exec);
+		reset_pipe(p, 1);
 		return (1);
 	}
 	while (current->parent && (current->parent->type == WORD_CMD || current->parent->type == WORD_OPTION)) //Up->Cmd
 		current = current->parent;
 	if (current && current->value && current->type == WORD_CMD)
 	{
+		write(2, "current = \n", 11);
+		write(2, current->value, ft_strlen(current->value));
+		write(2, "\n", 1);
 		if (get_command(current, &exec) == 1)
 		{
-			printf("Get Command Error Malloc\n");
+			//write(2, "Get Command Error Malloc\n", 25);
 			exec_free(&exec);
 			return (1);
 		}
 		if (exec.command[0])
 		{
-			printf("CMD:\n");
+			//write(2, "CMD:\n", 5);
 			print_tab(exec.command);
 			set_pipe(p, &exec);
 			assign_redirect(current, &exec);
-			p->exit_status = open_files(&exec);
-			printf("RESULT:\n");
+			p->exit_status = open_files(p, &exec);
+			//write(2, "a\n", 2);
+			if (p->exit_status == 1)
+			{
+				close_files(&exec, p);
+				exec_free(&exec);
+				reset_pipe(p, 1);
+				return (1);
+			}
+			//write(2, "RESULT:\n", 8);
 			if (is_builtin(exec.command[0]) == 1 && p->exit_status == 0)
 				p->exit_status = exec_builtin(exec.command, &p->env);
 			else if (p->exit_status == 0)
@@ -165,16 +176,21 @@ int		executer(t_all *p, t_ast *current, char **env)
 				p->exit_status = check_cmd(&exec, p->env);
 				if (p->exit_status == 0)
 				{
-					printf("FULL CMD:\n");
+					//write(2, "FULL CMD:\n", 10);
 					print_tab(exec.command);
-					if (exec.path)
-						printf("path = %s\n", exec.path);
+					/* if (exec.path)
+					{
+						write(2, "exec.path = ", 12);
+						write(2, "exec.path\n", ft_strlen(exec.path));
+						write(2, "\n", 1);
+					} */
 					p->exit_status = exec_cmd(&exec, &p->exit_status, env);
 					if (p->exit_status < 0)
 					{
 						write(2, "End child\n", 10);
-						close_files(&exec, p->std_in, p->std_out);
+						close_files(&exec, p);
 						exec_free(&exec);
+						reset_pipe(p, 1);
 						return (1);
 					}
 				}
@@ -182,12 +198,16 @@ int		executer(t_all *p, t_ast *current, char **env)
 			//if (p->exit_status == 1) stop
 		}
 	}
+	//Pipe Deuxieme execution plante
 	//(ls || echo test) | $DONT: Fix dans check_syntax
-	//ls && echo test < output.txt: Fix dans is_finished
+	//ls && echo test < output.txt: Fix dans is_finished OK
 	//ls | cat | cat
-	close_files(&exec, p->std_in, p->std_out);
+	//Pipe when using non builtins
+	//Just Spaces: Fix dans check syntax
+	//Cat + Ctrl C ou Grep + Ctrl C ET Ctrl D
+	close_files(&exec, p);
 	exec_free(&exec);
-	reset_pipe(p);
+	reset_pipe(p, 0);
 	while (current->parent)
 	{
 		if (is_operator(current->parent->type, 2) == 1)
@@ -195,9 +215,9 @@ int		executer(t_all *p, t_ast *current, char **env)
 		current = current->parent;
 	}
 	prev = current;
-	printf("begining current = %s\n", prev->value);
+	/* write(2, "beggggining current = %s\n", prev->value);
 	if (prev->parent)
-		printf("begining current->parent = %s\n", prev->parent->value);
+		write(2, "BEGINING current->parent = %s\n", prev->parent->value); */
 	if (current->parent)
 	{
 		current = current->parent;
@@ -210,15 +230,10 @@ int		executer(t_all *p, t_ast *current, char **env)
 	if (current->right == prev)
 		return (0);
 	current = prev;
-	if (current->value)
-		printf("current = %s\n", current->value);
-	printf("p->exit_status = %d\n", p->exit_status);
-	printf("p->option = %d\n", p->option);
-	if (current->type == TOKEN_PIPE)
-	{
-		if (p->max_pipe > 0)
-			p->curr_pipe--;
-	}
+	/* if (current->value)
+		write(2, "current = %s\n", current->value);
+	write(2, "p->exit_status = %d\n", p->exit_status);
+	write(2, "p->option = %d\n", p->option); */
 	if (is_operator(current->type, 2) == 0 || p->option == 1)
 	{
 		current = get_next_operator(p, current, &prev);
@@ -265,7 +280,7 @@ int		executer(t_all *p, t_ast *current, char **env)
 	if (current->right)
 	{
 		p->option = 1;
-		printf("\n\n");
+		write(2, "\n\n", 2);
 		executer(p, current->right, env);
 	}
 	return (0);

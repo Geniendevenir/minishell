@@ -28,15 +28,15 @@ NULL
 AFTER
 LEXER:
 AFTER: command not found
-[1;032mMinishell> [mexample.txt->NULL
+[1;032mMinishell> [mls->NULL
 AFTER LEXER:
-example.txt-->>->NULL->NULL
+ls-->>->NULL->NULL
 
 
 ----------------------------------
 | Node: 0                        |
 ----------------------------------
-| Value: example.txt-                        
+| Value: ls-                        
 ----------------------------------
 | Type: TOKEN_WORD                        
 ----------------------------------
@@ -62,5 +62,5 @@ example.txt-->>->NULL->NULL
 ----------------------------------
 NULL
 |WORD_FILEOUT: NULL
-    |WORD_CMD: example.txt-
-example.txt-
+    |WORD_CMD: ls-
+ls-

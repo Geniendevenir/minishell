@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 20:32:13 by allan             #+#    #+#             */
-/*   Updated: 2024/08/14 13:41:58 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/07 19:11:14 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,13 +74,13 @@ int		assign_redirect(t_ast *current, t_exec *exec)
 			break;
 		current = current->parent;
 	}
-	if (exec->in)
+	/* if (exec->in)
 		printf("in = %s\n", exec->in->value);
 	else
 		printf("in = NULL\n");
 	if (exec->out)
 		printf("out = %s\n", exec->out->value);
 	else
-		printf("out = NULL\n");
+		printf("out = NULL\n"); */
 	return (0);
 }

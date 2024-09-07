@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/08/14 13:26:40 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/07 19:57:50 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,9 @@ void	testAST(t_ast* node, int option)
 	{
 		while (node->right)
 			node = node->right;
-		printf("last right = %s\n", node->value);
+		while (node->left)
+			node = node->left;
+		printf("last left right = %s\n", node->value);
 		while (node->parent)
 		{
 			printf("parent = %s\n", node->parent->value);
@@ -78,18 +80,34 @@ char	*minishell(t_all *p, char **env)
 		if (p->error == 0)
 		{
 			printAST(p->ast, 0);
-			testAST(p->ast, 1);
-			testAST(p->ast, 2);
+			/* testAST(p->ast, 1);
+			testAST(p->ast, 2); */
 			current = p->ast;
 			if (executer(p, current, env) == 1)
 			{
-				printf("executor ended\n");
+				dup2(p->std_in, STDIN_FILENO);
+				close(p->std_in);
+				dup2(p->std_out, STDOUT_FILENO);
+				close(p->std_out);
+				//printf("executor ended\n");
 				free_ast(p->ast);
 				return (free(p->line), free_all(p), rl_clear_history(), exit(0), NULL);
 			}
+			close(p->fd[0]);
+			close(p->fd[1]);
+			dup2(p->std_in, STDIN_FILENO);
+			close(p->std_in);
+			dup2(p->std_out, STDOUT_FILENO);
+			close(p->std_out);
 			free_ast(p->ast);
 		}
 		add_history(p->line);
+	}
+	if (p->line)
+	{
+		write(2, "p->line = ", 10);
+		write(2, p->line, ft_strlen(p->line));
+		write(2, "\n", 1);
 	}
 	sig_int = 0;
 	free(p->line);

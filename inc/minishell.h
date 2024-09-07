@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/08/11 18:00:41 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/04 16:20:39 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,23 +128,23 @@ enum s_type{
 
 typedef struct s_token
 {
-	enum s_type type;
-	enum s_state state;
-	char *value;
-	long len;
-	struct s_token *next;
+	enum		s_type type;
+	enum		s_state state;
+	char		*value;
+	long		len;
+	struct		s_token *next;
 }				t_token;
 
 typedef struct s_wildcard {
-	const char *file_name;
-    const char *wildcard;
-    const char *star;
-    const char *backtrack;
+	const char		*file_name;
+	const char		*wildcard;
+	const char		*star;
+	const char		*backtrack;
 }				t_wildcard;
 
 typedef struct s_ast {
-	int subshell;
-	int exit_state;
+	int			subshell;
+	int			exit_state;
 	enum s_type type;
 	enum s_state state;
 	char		*value;
@@ -194,13 +194,15 @@ typedef struct s_all
 	char	*line;
 	int		line_num;
 	t_sig	*sig;
-	int		exit_status;
-	int		max_pipe;
-	int		curr_pipe;
 	int		error;
+	int		option;
 	int		std_in;
 	int		std_out;
-	int		option;
+	int		max_pipe;
+	int		curr_pipe;
+	//int 	(*fd)[2];
+	int		fd[2];
+	int		exit_status;
 }	t_all;
 
 typedef struct s_word
@@ -247,8 +249,9 @@ bool		is_builtin(char *cmd);
 //exec_file
 int			open_filein(t_exec *exec);
 int			open_fileout(t_exec *exec);
-int			open_files(t_exec *exec);
-int			close_files(t_exec *exec, int std_in, int std_out);
+int			open_files(t_all *p, t_exec *exec);
+int			open_pipe(t_all *p, t_exec *exec);
+int			close_files(t_exec *exec, t_all *p);
 
 //exec_get_path
 char		*find_path(t_env *env);
@@ -264,7 +267,7 @@ void		redirect_pipe(t_ast *current, t_exec *exec);
 void		exec_init(t_exec *exec);
 void		exec_free(t_exec *exec);
 void		set_pipe(t_all *p, t_exec *exec);
-void		reset_pipe(t_all *p);
+void		reset_pipe(t_all *p, int option);
 int			array_size(char **arr);
 
 void	testAST(t_ast* node, int option);

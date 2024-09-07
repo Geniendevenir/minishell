@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 12:53:21 by allan             #+#    #+#             */
-/*   Updated: 2024/07/02 14:51:34 by allan            ###   ########.fr       */
+/*   Updated: 2024/08/28 15:52:42 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ int	ft_export(char **new_env, t_env **env_list) //CHECK SYNTAX POUR VALUE (ex te
 	}
 	return (0);
 }
-
 
 int split_env(char *new_env, int len, t_env **env_list)
 {

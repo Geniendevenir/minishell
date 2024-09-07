@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 13:58:59 by allan             #+#    #+#             */
-/*   Updated: 2024/08/09 18:05:49 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/03 01:21:38 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,8 @@ void	error_executer(char *error, int option)
 		write(2, "Error: Fork Initialisation Failed\n", 34);
 	else if (option == 9)
 		write(2, "Error: Waitpid Initialisation Failed\n", 37);
+	else if (option == 10)
+		write(2, "Error: Pipe Initialisation Failed\n", 34);
 	//write(2, error, ft_strlen(error));
 }
 

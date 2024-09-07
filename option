@@ -1,0 +1,53 @@
+RESULT:
+p-: command not found
+beggggining current = option
+current = option
+p->exit_status = 127
+p->option = 0
+[1;032mMinishell> [m32mMinishell> inc
+AFTER LEXER:
+32mMinishell->>->inc->NULL
+
+
+----------------------------------
+| Node: 0                        |
+----------------------------------
+| Value: 32mMinishell                        
+----------------------------------
+| Type: TOKEN_WORD                        
+----------------------------------
+| State: STATE_WORD                        
+----------------------------------
+----------------------------------
+| Node: 1                        |
+----------------------------------
+| Value: >                        
+----------------------------------
+| Type: TOKEN_REDIRECTOUT                        
+----------------------------------
+| State: STATE_OPERATOR                        
+----------------------------------
+----------------------------------
+| Node: 2                        |
+----------------------------------
+| Value: inc                        
+----------------------------------
+| Type: TOKEN_WORD                        
+----------------------------------
+| State: STATE_WORD                        
+----------------------------------
+NULL
+|WORD_FILEOUT: inc
+    |WORD_CMD: 32mMinishell
+value = inc
+value = 32mMinishell
+p->max_pipe = 0
+p->curr_pipe = 0
+cmd size = 1
+CMD:
+32mMinishell
+in = NULL
+out = inc
+FILES:
+result = 1
+result2 = -1
