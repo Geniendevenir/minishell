@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 14:57:22 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/07 17:22:11 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/07 17:22:41 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,7 @@ int	fill_here_doc(t_token **current, int max, t_all **p, int *nb)
 	free((*current)->value);
 	(*current)->value = ft_strdup((*p)->here_doc[*nb]);
 	(*nb)++;
-	if (signals_hdoc(1, p) == -1 || (*current)->value == NULL || sig_int == 1)
-		return (close (fd), quit_here_doc(1, *p, *nb));
-	else
-		return (close (fd), quit_here_doc(1, *p, *nb));
+	return (close (fd), quit_here_doc(1, *p, *nb));
 }
 
 void	here_doc(t_token **token_list, t_all **p)
