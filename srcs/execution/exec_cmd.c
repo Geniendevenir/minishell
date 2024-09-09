@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:24:24 by allan             #+#    #+#             */
-/*   Updated: 2024/09/07 13:44:10 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/09 17:37:32 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int	exec_cmd(t_exec *exec, int *exit_status, char **env)
 	{
 		if (execve(exec->path, exec->command, env) == -1)
 			write(2, "Error: Execve execution failed\n", 31);
-		return (-1);
+		exit(-1);
 	}
 	else
 	{

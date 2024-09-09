@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/06 16:56:49 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/09 17:35:41 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,21 @@ void testCMD(t_ast *node)
 	}
 }
 
+bool skip_whitespace(char *line)
+{
+	int	i;
+	
+	i = 0;
+	while(line[i])
+	{
+		if (is_whitespace(line[i]))
+			i++;
+		else
+			return (1);
+	}
+	return (0);
+}
+
 int	main(int argc, char **argv, char **env)
 {
 	t_all	*p;
@@ -86,7 +101,7 @@ char	*minishell(t_all *p, char **env)
 	}
 	//printf("sigquit = %d\n", p->sig->sig_quit);
 	//if (sig_int == 0 && p->sig->sig_quit == 0)
-	if (p->sig->sig_quit == 0)
+	if (p->sig->sig_quit == 0 && skip_whitespace(p->line))
 	{
 		p->error = parser(p->line, p->env, &p->ast, &p);
 		//printf("next_status = %d\n", next_status);
@@ -103,6 +118,7 @@ char	*minishell(t_all *p, char **env)
 				free_ast(p->ast);
 				return (free(p->line), free_all(p), rl_clear_history(), exit(0), NULL);
 			}
+			free_here_docs(p->here_doc);
 			free_ast(p->ast);
 		}
 		add_history(p->line);

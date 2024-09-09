@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:34:27 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/24 11:48:39 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/09 16:51:19 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ void	free_all(t_all *p)
 	close(p->std_in);
 	close(p->std_out);
 	free(p->line);
-	free_here_docs(p->here_doc);
 	free_env(p->env);
 	free(p->sig);
 	free(p);

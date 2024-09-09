@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redirect.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 20:32:13 by allan             #+#    #+#             */
-/*   Updated: 2024/08/11 00:14:13 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/09 16:39:01 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int		assign_redirect(t_ast *current, t_exec *exec)
 					exec->redirectout = 1;
 			}
 		}
-		if ((current->type == WORD_FILEIN || current->type == WORD_LIMITER) && exec->redirectin == 0)
+		if ((current->type == WORD_FILEIN || current->type == WORD_LIMITER || current->type == WORD_SQLIMITER) && exec->redirectin == 0)
 			exec->in = current;
 		else if ((current->type == WORD_FILEOUT || current->type == WORD_FILEOUT_APPEND) && exec->redirectout == 0)
 			exec->out = current;

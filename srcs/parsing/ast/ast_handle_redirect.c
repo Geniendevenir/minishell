@@ -6,11 +6,12 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 15:48:03 by Matprod           #+#    #+#             */
-/*   Updated: 2024/08/30 12:56:09 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/09 16:09:20 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 void	assign_parent_redirect(t_ast_ptr **list, t_ast **new_node)
 {
 	if ((*list)->current->left)

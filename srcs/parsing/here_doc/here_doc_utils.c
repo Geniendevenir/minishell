@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 16:29:41 by Matprod           #+#    #+#             */
-/*   Updated: 2024/08/23 19:15:33 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/09 17:36:53 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,21 @@ void	free_here_docs(char **here_docs)
 	i = 0;
 	if (here_docs == NULL)
 		return ;
-	while (here_docs[i] != NULL)
+	while (here_docs[i] != NULL && here_docs[i])
 	{
-		unlink(here_docs[i]);
-		free(here_docs[i]);
-		i++;
+		if (here_docs[i])
+		{
+			unlink(here_docs[i]);
+			free(here_docs[i]);
+			here_docs[i] = NULL;
+			i++;
+		}
 	}
-	free(here_docs);
+	if (here_docs)
+	{
+		print_tab(here_docs);
+		free(here_docs);
+	}
 }
 
 int	here_doc_count(t_token *tok)
