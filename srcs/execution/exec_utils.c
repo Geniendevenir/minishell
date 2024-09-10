@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 18:39:42 by allan             #+#    #+#             */
-/*   Updated: 2024/09/07 19:34:22 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/09 15:24:55 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	exec_init(t_exec *exec)
 	exec->out = NULL;
 	exec->command = NULL;
 	exec->path = NULL;
+	exec->next = NULL;
 }
 
 void		exec_free(t_exec *exec)
@@ -45,16 +46,16 @@ void	set_pipe(t_all *p, t_exec *exec)
 {
 	if (p->max_pipe > 0)
 	{
-		if (p->curr_pipe == p->max_pipe)
+		if (p->curr_pipe == 0)
 			exec->pipe = 1; //left pipe
-		else if (p->curr_pipe == 1)
+		else if (p->curr_pipe == p->max_pipe)
 			exec->pipe = 3; //right pipe
 		else
 			exec->pipe = 2; //middle pipe	
 	}
 }
 
-void	reset_pipe(t_all *p, int option)
+/* void	reset_pipe(t_all *p, int option)
 {
 	int	i;
 
@@ -65,16 +66,6 @@ void	reset_pipe(t_all *p, int option)
 		close(p->std_in);
 		dup2(p->std_out, STDOUT_FILENO);
 		close(p->std_out);
-		/* if (p->fd)
-		{
-			while (i < p->max_pipe / 2)
-			{
-				close(p->fd[i][0]);
-				close(p->fd[i][1]);
-				i++;
-			}
-			free(p->fd);
-		} */
 	}
 	else if (p->max_pipe > 0)
 	{
@@ -92,21 +83,9 @@ void	reset_pipe(t_all *p, int option)
 			dup2(p->std_out, STDOUT_FILENO);
 			close(p->std_out);
 			close(p->fd[1]);
-			/* close(p->fd[0]);
-			close(p->fd[1]); */
-			/* if (p->fd)
-			{
-				while (i < p->max_pipe / 2)
-				{
-					close(p->fd[i][0]);
-					close(p->fd[i][1]);
-					i++;
-				}
-				free(p->fd);
-			} */
 		}
 	}
-}
+} */
 
 int		array_size(char **arr)
 {

@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:34:27 by Matprod           #+#    #+#             */
-/*   Updated: 2024/08/22 18:56:09 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/10 11:46:44 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ void	free_all(t_all *p)
 	close(p->std_in);
 	close(p->std_out);
 	free(p->line);
-	free_here_docs(p->here_doc);
 	free_env(p->env);
 	free(p->sig);
 	free(p);

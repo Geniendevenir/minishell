@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:25:36 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/07 22:41:38 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/07 12:50:51 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ t_env	*ft_envlast(t_env *lst)
 void	ft_env_add_back(t_env **lst, t_env *new)
 {
 	t_env	*tmp;
+
 	if (!new)
 	{
-		printf("test add_back NULL\n");
 		return ;
 	}
 	if (*lst)
@@ -87,4 +87,10 @@ t_env	*env_to_struct(char **env)
 		env++;
 	}
 	return (env_struct);
+}
+
+int	ft_env(t_env *env)
+{
+	print_env(env);
+	return (1);
 }

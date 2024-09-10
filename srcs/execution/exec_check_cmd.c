@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 18:37:43 by allan             #+#    #+#             */
-/*   Updated: 2024/09/07 19:10:57 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/09 16:14:48 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,10 @@ int get_command(t_ast *current, t_exec *exec)
 	int	size;
 		
 	size = command_size(current);
+	printf("test 2\n");
 	//printf("cmd size = %d\n", size);
 	exec->command = parse_command(current, size);
+	printf("test 3\n");
 	if (!exec->command)
 		return (1);
 	return (0);

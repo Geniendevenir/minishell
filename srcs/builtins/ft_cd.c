@@ -3,132 +3,98 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/23 12:53:28 by allan             #+#    #+#             */
-/*   Updated: 2024/07/22 18:00:35 by allan            ###   ########.fr       */
+/*   Created: 2024/09/07 13:05:18 by Matprod           #+#    #+#             */
+/*   Updated: 2024/09/07 15:04:24 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include "minishell.h"
 
-/*
-A path is absolute if the first character is a /. Otherwise, it is a relative path.
-Absolute paths will take you to any directory, from any directory. Relative paths will only take you to directories below your current one.
-
-ABSOLUTE PATH: cd /
-	Used to look down from the root 
-	ex:	Dir1 -> If Dir1 is the root "/" will start from here and look down for any matching directory
-		Dir2
-		Dir3 -> Current Directory
-
-Relative PATH:
-	path that doesnt start with /, int that case cd will only look down from the Current directory NOT UP
-
-Special:	
-			cd . = 
-			cd .. = Move up one directory. cd ../.. = Moove up tw directories
-			cd / = Takes you to the root directory
-			cd /home = takes you to home directory 
-			cd /root = bash: cd: /root: Permission denied : Only accessible when logged in as root user, Should we tak care of it ???
-*/
-
-//CHECK SI BESOIN D'implementer OLDPWD=/home/allan/project/minishell
-
-int	ft_cd(char *path)
+static char	*get_in_env(t_env *env, char *key)
 {
-	DIR				*d;
-	char			*new_dir;
-	int				error;
-	
-	error = 1;
-	if (!path)
-		return (1); //no path
-	if (*path == '/')
-		error = chdir(path); //OK
+	if (!ft_is_in_env(env, key))
+		return (NULL);
+	while (ft_strncmp(env->key, key, ft_strlen(key)))
+		env = env->next;
+	return (env->value);
+}
+
+static void	update_env(t_env *env, char *old, char *new)
+{
+	if (ft_is_in_env(env, old))
+	{
+		while (ft_strcmp(env->key, old))
+			env = env->next;
+		free(env->value);
+		env->value = new;
+	}
+	else
+		free(new);
+}
+
+static void	update_pwd(t_env *env, char *oldpwd)
+{
+	char	buffer[1024];
+	char	*pwd;
+
+	if (getcwd(buffer, 1024))
+	{
+		pwd = ft_strdup(buffer);
+		if (!pwd)
+		{
+			free(oldpwd);
+			return ;
+		}
+		update_env(env, "PWD", pwd);
+	}
+	update_env(env, "OLDPWD", oldpwd);
+}
+
+char	*go_option(t_env *env, int flag)
+{
+	if (flag == 1)
+	{
+		if (ft_is_in_env(env, "HOME"))
+			return (get_in_env(env, "HOME"));
+		else
+			ft_putendl_fd("cd : HOME not set", 2);
+	}
 	else
 	{
-		d = opendir(".");
-		if (!d)
-		{
-			error_executer(NULL, 7);
-			return (1);
-		}
-		new_dir = relative_path(d, path, &error);
-		closedir(d);
-		if (!new_dir)
-			return (1);
-		error = chdir(new_dir);
-		//free(new_dir);
+		if (ft_is_in_env(env, "OLDPWD"))
+			return (get_in_env(env, "OLDPWD"));
+		else
+			ft_putendl_fd("cd : OLDPWD not set", 2);
 	}
-	return(error);
+	return (NULL);
 }
 
-char	*relative_path(DIR	*d, char *path, int *error)
+int	ft_cd(t_env *env, char **cmd)
 {
-	struct dirent	*try_dir;
-	struct stat 	file_stat;
-	char			cur_dir[1024];
-	char			*new_dir;
-	
-	if (getcwd(cur_dir, 1024) == NULL) //comment join avec 
-		return (NULL); //add error
-	while (1)
-	{
-		try_dir = readdir(d);
-		if (!try_dir)
-			break ; 
-		else if (ft_strcmp(try_dir->d_name, path) == 0)
-		{
-			if (lstat(try_dir->d_name, &file_stat) != 0)
-			{
-				error_builtins(NULL, 1);
-				return (NULL);
-			}
-			if (S_ISDIR(file_stat.st_mode) != 0)
-			{
-				error_builtins(try_dir->d_name, 1);
-				return (NULL);
-			}
-			new_dir = cd_match(cur_dir, try_dir->d_name, error);
-			if (*error != 0)
-			{
-				if (*error == 3)
-					free(new_dir);
-				return (NULL);
-			}
-			break ;
-		}
-	}
-	*error = 0;
-	return (new_dir);
-}
+	char	*oldpwd;
+	char	*pwd;
 
-char	*cd_match(char *cur_dir, char *try_dir, int *error)
-{
-	char	*full_path;
-	char	*new_dir;
-	
-	full_path = ft_strjoin(cur_dir, "/");
-	if (!full_path)
-	{
-		*error = 2;
-		return (NULL);
-	}
-	new_dir = ft_strjoin(full_path, try_dir);
-	free(full_path);
-	if (!new_dir)
-	{
-		*error = 3;
-		return (NULL);
-	}
-	*error = 0;
-	return (new_dir);
+	if (array_size(cmd) > 2)
+		return (ft_putendl_fd("cd : too many arguments", 2), 1);
+	if (ft_is_in_env(env, "PWD"))
+		oldpwd = ft_strdup(get_in_env(env, "PWD"));
+	else
+		oldpwd = ft_strdup("error");
+	if (!oldpwd)
+		return (1);
+	if (cmd[1] == NULL)
+		pwd = ft_strdup(go_option(env, 1));
+	else if (!ft_strcmp(cmd[1], "-"))
+		pwd = ft_strdup(go_option(env, 2));
+	else
+		pwd = ft_strdup(cmd[1]);
+	if (!pwd)
+		return (free(oldpwd), 1);
+	if (!chdir(pwd))
+		update_pwd(env, oldpwd);
+	else
+		return (free(oldpwd), error_cd(pwd), 1);
+	return (free(pwd), 0);
 }
-	
-	//ABSOLUT PATH: just use chdir
-	//RELATIVE PATH: opendir(.) -> Strcmp avec tous les fichiers -> Strdup -> closedir -> get cdw -> strjoin -> chdir -> free + return
-	
-	//get cwd
-	//stat
-	//chdir

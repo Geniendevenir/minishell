@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 17:32:39 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/01 17:14:19 by allan            ###   ########.fr       */
+/*   Updated: 2024/08/24 17:19:59 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,11 @@ int	ft_unset(t_env *env, char **unset)
 	unsigned int	i;
 
 	i = 0;
-	while (unset[++i])
+	while (unset[i])
 	{
 		if (ft_is_in_env(env, unset[i]))
 			ft_destroy(env, unset[i]);
+		i++;
 	}
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/07 19:57:50 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/10 11:46:24 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ char	*minishell(t_all *p, char **env)
 		return (free(p->line), free_all(p), rl_clear_history(), exit(0), NULL);
 	}
 	//printf("sigquit = %d\n", p->sig->sig_quit);
-	if (sig_int == 0 && p->sig->sig_quit == 0)
+	if (p->sig->sig_quit == 0  && skip_whitespace(p->line))
 	{
 		p->error = parser(p->line, p->env, &p->ast, &p);
 		//printf("next_status = %d\n", next_status);
@@ -85,30 +85,21 @@ char	*minishell(t_all *p, char **env)
 			current = p->ast;
 			if (executer(p, current, env) == 1)
 			{
-				dup2(p->std_in, STDIN_FILENO);
-				close(p->std_in);
-				dup2(p->std_out, STDOUT_FILENO);
-				close(p->std_out);
 				//printf("executor ended\n");
 				free_ast(p->ast);
 				return (free(p->line), free_all(p), rl_clear_history(), exit(0), NULL);
 			}
-			close(p->fd[0]);
-			close(p->fd[1]);
-			dup2(p->std_in, STDIN_FILENO);
-			close(p->std_in);
-			dup2(p->std_out, STDOUT_FILENO);
-			close(p->std_out);
+			free_here_docs(p->here_doc);
 			free_ast(p->ast);
 		}
 		add_history(p->line);
 	}
-	if (p->line)
+	/* if (p->line)
 	{
 		write(2, "p->line = ", 10);
 		write(2, p->line, ft_strlen(p->line));
 		write(2, "\n", 1);
-	}
+	} */
 	sig_int = 0;
 	free(p->line);
 	p->line = NULL;

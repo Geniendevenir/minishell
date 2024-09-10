@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 21:23:21 by allan             #+#    #+#             */
-/*   Updated: 2024/09/07 19:16:04 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/10 12:09:37 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,14 @@ void	create_child(t_all *p, t_ast **token, int create_pipe)
 	}
 }
 
-/* int		pipe_management(t_all *p, t_ast **token)
+/* int		pipe_management(t_all *p, t_ast *current)
 {
 	t_ast	*current;
 	int		pid1;
 	int		pid2;
+
+	//TOUT EXPAND
+		left_expand(p, current->right);
 
 	current = *token;
 	while (current->type == TOKEN_PIPE)
@@ -96,8 +99,9 @@ t_ast *left_expand(t_all *p, t_ast *current)
 			write(2, "value = %s\n", current->value); */
 		if (current->type == TOKEN_PIPE)
 		{
-			p->max_pipe += 2;
-			p->curr_pipe = p->max_pipe;
+			if (current->right)
+				left_expand(p, current->right);
+			p->max_pipe += 1;
 		}
 		if (is_operator(current->type, 2))
 			p->option = 0;
@@ -123,30 +127,35 @@ t_ast *left_expand(t_all *p, t_ast *current)
 	return (current);
 }
 
+t_ast	*up_to_cmd(t_ast *current)
+{
+	while (current->parent && (current->parent->type == WORD_CMD || current->parent->type == WORD_OPTION)) //Up->Cmd
+		current = current->parent;
+	return (current);
+}
+
 int		executer(t_all *p, t_ast *current, char **env)
 {
 	t_exec	exec;
-	int		result;
 	t_ast	*prev;
 
 	write(2, "TURN\n", 5);
 	exec_init(&exec);
 	current = left_expand(p, current);
-	/* write(2, "p->max_pipe = %d\n", p->max_pipe);
-	write(2, "p->curr_pipe = %d\n", p->curr_pipe); */
 	if (p->error == 1)
 	{
 		exec_free(&exec);
-		reset_pipe(p, 1);
+		//reset_pipe(p, 1);
 		return (1);
 	}
-	while (current->parent && (current->parent->type == WORD_CMD || current->parent->type == WORD_OPTION)) //Up->Cmd
-		current = current->parent;
+	if (p->max_pipe > 0)
+	{
+		piper(p, current, env);
+		return (0);
+	}
+	current = up_to_cmd(current);
 	if (current && current->value && current->type == WORD_CMD)
 	{
-		write(2, "current = \n", 11);
-		write(2, current->value, ft_strlen(current->value));
-		write(2, "\n", 1);
 		if (get_command(current, &exec) == 1)
 		{
 			//write(2, "Get Command Error Malloc\n", 25);
@@ -157,20 +166,20 @@ int		executer(t_all *p, t_ast *current, char **env)
 		{
 			//write(2, "CMD:\n", 5);
 			print_tab(exec.command);
-			set_pipe(p, &exec);
+			//set_pipe(p, &exec);
 			assign_redirect(current, &exec);
-			p->exit_status = open_files(p, &exec);
+			p->exit_status = open_files(&exec);
 			//write(2, "a\n", 2);
 			if (p->exit_status == 1)
 			{
 				close_files(&exec, p);
 				exec_free(&exec);
-				reset_pipe(p, 1);
+				//reset_pipe(p, 1);
 				return (1);
 			}
 			//write(2, "RESULT:\n", 8);
 			if (is_builtin(exec.command[0]) == 1 && p->exit_status == 0)
-				p->exit_status = exec_builtin(exec.command, &p->env);
+				p->exit_status = exec_builtin(&p, &exec, exec.command);
 			else if (p->exit_status == 0)
 			{
 				p->exit_status = check_cmd(&exec, p->env);
@@ -190,12 +199,12 @@ int		executer(t_all *p, t_ast *current, char **env)
 						write(2, "End child\n", 10);
 						close_files(&exec, p);
 						exec_free(&exec);
-						reset_pipe(p, 1);
+						//reset_pipe(p, 1);
 						return (1);
 					}
 				}
 			}
-			//if (p->exit_status == 1) stop
+				//if (p->exit_status == 1) stop
 		}
 	}
 	//Pipe Deuxieme execution plante
@@ -205,9 +214,10 @@ int		executer(t_all *p, t_ast *current, char **env)
 	//Pipe when using non builtins
 	//Just Spaces: Fix dans check syntax
 	//Cat + Ctrl C ou Grep + Ctrl C ET Ctrl D
+	//Pour child de l'execve mettre exit en cas d'erreur
 	close_files(&exec, p);
 	exec_free(&exec);
-	reset_pipe(p, 0);
+	//reset_pipe(p, 0);
 	while (current->parent)
 	{
 		if (is_operator(current->parent->type, 2) == 1)

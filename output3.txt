@@ -1,3 +1,1 @@
-FULL CMD:
-echo
-nuuuuul
+cat

@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:24:24 by allan             #+#    #+#             */
-/*   Updated: 2024/08/06 21:03:45 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/10 11:48:21 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ bool	is_builtin(char *cmd)
 	return (0);
 }
 
-int	exec_builtin(char **cmd, t_env **env_list)
+int	exec_builtin(t_all **p, t_exec *exec, char **cmd)
 {
 	int	result;
 	
@@ -45,19 +45,18 @@ int	exec_builtin(char **cmd, t_env **env_list)
 			error_executer(NULL, 6);
 			return (1);	
 		}
-		result = ft_cd(cmd[1]);
+		result = ft_cd((*p)->env ,cmd);
 	}
 	else if (ft_strcmp(cmd[0], "pwd") == 0)
 		result = ft_pwd(cmd[1]);
-	/*
 	else if (ft_strcmp(cmd[0], "export") == 0)
-		result = ft_export(cmd + 1, env_list);
+		result = ft_export((*p)->env, cmd);
 	else if (ft_strcmp(cmd[0], "unset") == 0)
-		result = ft_unset(cmd + 1);
+		result = ft_unset((*p)->env, cmd + 1);
 	else if (ft_strcmp(cmd[0], "env") == 0 && cmd[1] == NULL)
-		result = ft_env(cmd + 1);
+		result = ft_env((*p)->env);
 	else if (ft_strcmp(cmd[0], "exit") == 0)
-		result = ft_exit(cmd + 1, 0); //TROUVER UN MOYEN DE set le CHILD */
+		ft_exit(p, exec, cmd);
 	return (result);
 }
 
@@ -76,7 +75,7 @@ int	exec_cmd(t_exec *exec, int *exit_status, char **env)
 	{
 		if (execve(exec->path, exec->command, env) == -1)
 			write(2, "Error: Execve execution failed\n", 31);
-		return (-1);
+		exit(-1);
 	}
 	else
 	{

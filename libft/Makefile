@@ -28,6 +28,7 @@ LIBFT_DIR		=	$(SRC_DIR)ft_libft/ft_atoi.c \
 					$(SRC_DIR)ft_libft/ft_memmove.c \
 					$(SRC_DIR)ft_libft/ft_memset.c \
 					$(SRC_DIR)ft_libft/ft_putchar_fd.c \
+					$(SRC_DIR)ft_libft/ft_putstr_fd.c \
 					$(SRC_DIR)ft_libft/ft_putendl_fd.c \
 					$(SRC_DIR)ft_libft/ft_putnbr_fd.c \
 					$(SRC_DIR)ft_libft/ft_split.c \
