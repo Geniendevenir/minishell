@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 17:46:20 by allan             #+#    #+#             */
-/*   Updated: 2024/09/10 17:24:04 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/10 18:03:25 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ void	pipe_print(t_exec *exec)
 int	piper(t_all *p, t_ast *current, char **env)
 {
 	t_exec *exec;
+	int		*pid;
+	int		*status;
 /* 
 	close(p->std_in);
 	close(p->std_out); */
@@ -56,10 +58,12 @@ int	piper(t_all *p, t_ast *current, char **env)
 	pipe_print(exec);
 	p->curr_pipe = 0;
 	p->fd = malloc(sizeof(int[2]) * p->max_pipe);
+	pid = malloc(sizeof(int) * p->max_pipe + 1);
 	/* if (!p->fd)
 		add error
 	*/
-	pipe_exec(p, &exec, env);
+	pipe_exec(p, &exec, env, pid);
+	free(pid);
 	pipe_free(p, exec);
 	return (0);
 }

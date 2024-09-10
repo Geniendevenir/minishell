@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/10 12:05:36 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/10 18:03:01 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -286,7 +286,8 @@ void		pipe_addback(t_all *p, t_exec **exec, t_exec *new_node);
 t_exec		*pipe_last(t_exec *exec);
 
 //pipe_exec
-int			pipe_exec(t_all *p, t_exec **exec, char **env);
+int			wait_childs(t_all *p, int *pid);
+int			pipe_exec(t_all *p, t_exec **exec, char **env, int *pid);
 int			pipe_exec_child(t_all *p, t_exec *node, char **env);
 int			pipe_exec_parent(t_all *p, int pid, int status);
 

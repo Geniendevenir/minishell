@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 18:37:43 by allan             #+#    #+#             */
-/*   Updated: 2024/09/09 16:14:48 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/10 18:14:23 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,5 +94,7 @@ int		check_cmd(t_exec *exec, t_env *env)
 		}
 		exec->path = path;
 	}
+	else
+		exec->path = ft_strdup(exec->command[0]);
 	return (0);
 }
