@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 19:29:39 by allan             #+#    #+#             */
-/*   Updated: 2024/07/09 16:55:39 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/10 19:06:41 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,11 @@
 
 bool	create_limiter(const char *cmd_line, t_index *index, char **token_value)
 {
-	if (cmd_line[index->j] == '\'')
+	if (cmd_line[index->j] == '\'' || cmd_line[index->j] == '\"')
 	{
 		index->special = 1;
 		index->error = limiter_squote(cmd_line, index, token_value);
 	}
-	else if (cmd_line[index->j] == '\"')
-		index->error = limiter_dquote(cmd_line, index, token_value);
 	else
 		index->error = limiter_word(cmd_line, index, token_value);
 	if (index->error == 1)

@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 21:23:21 by allan             #+#    #+#             */
-/*   Updated: 2024/09/10 12:09:37 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/10 19:24:32 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,10 @@ t_ast *left_expand(t_all *p, t_ast *current)
 		}
 		if (is_operator(current->type, 2))
 			p->option = 0;
+		/* if (current->state == STATE_WORD && current->type == WORD_LIMITER)
+		{
+			//ICI
+		} */
 		if (current->state == STATE_WORD && current->type != WORD_SQLIMITER && current->type != WORD_LIMITER)
 		{
 			/* write(2, "current = %s\n", current->value);
@@ -208,11 +212,12 @@ int		executer(t_all *p, t_ast *current, char **env)
 		}
 	}
 	//Pipe Deuxieme execution plante
-	//(ls || echo test) | $DONT: Fix dans check_syntax
+	//(ls || echo test) | $DONT: Fix dans check_syntax OK
 	//ls && echo test < output.txt: Fix dans is_finished OK
-	//ls | cat | cat
-	//Pipe when using non builtins
-	//Just Spaces: Fix dans check syntax
+	//ls | cat | cat OK
+	//Pipe when using non builtins OK
+	//Just Spaces: Fix dans check syntax OK
+	
 	//Cat + Ctrl C ou Grep + Ctrl C ET Ctrl D
 	//Pour child de l'execve mettre exit en cas d'erreur
 	close_files(&exec, p);

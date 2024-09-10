@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 17:54:19 by allan             #+#    #+#             */
-/*   Updated: 2024/08/08 15:31:26 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/10 19:19:12 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,25 +67,25 @@ int	split_one(const char *cmd_line, size_t *i, t_token **token_list)
 	error = 0;
 	if (cmd_line[*i] == '$')
 	{
-		if (cmd_line[*i + 1] == '?')
+		if (cmd_line[*i + 1] == '?') //$?
 		{
 			error = token_addback(token_list, "?", 2);
 			env_special_token(token_list, 1);
 			(*i) += 2;
 		}
-		else if (is_env(cmd_line[*i + 1], 1) == 2)
+		else if (is_env(cmd_line[*i + 1], 1) == 2) //Is ENV valid ?
 		{
 			(*i)++;
 			return (0);
 		}
-		else if (is_env(cmd_line[*i + 1], 1) == 1)
+		else if (is_env(cmd_line[*i + 1], 1) == 1) //$$
 		{
 			error = token_addback(token_list, "$", 2);
 			env_special_token(token_list, 2);
 			(*i)++;
 		}
 		else
-			error = env_token(cmd_line, i, token_list);
+			error = env_token(cmd_line, i, token_list); //ENV $WORD
 	}
 	else
 		error = split_two(cmd_line, i, token_list);
