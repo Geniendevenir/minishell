@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 13:58:59 by allan             #+#    #+#             */
-/*   Updated: 2024/09/03 01:21:38 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/10 16:13:26 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,8 @@ bool	error_syntax(t_token *current, int error)
 		write(2, "bash: syntax error near unexpected token 'newline'\n", 51);
 	if (error == 6)
 		write(2, "bash: '|' token found in between parenthesis\n", 46);
+	if (error == 7)
+		write(2, "bash: '|' token found just after parenthesis\n", 45);
 	return (1);
 }
 

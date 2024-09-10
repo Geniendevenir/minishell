@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 22:57:28 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/09 13:47:13 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/10 17:20:29 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ t_all	*init_all(char **env)
 	p->max_pipe = 0;
 	p->curr_pipe = 0;
 	p->error = 0;
-	p->std_in = dup(STDIN_FILENO);
-	p->std_out = dup(STDOUT_FILENO);
+	/* p->std_in = dup(STDIN_FILENO);
+	p->std_out = dup(STDOUT_FILENO); */
 	p->option = 0;
 	p->fd = NULL;
 	return (p);

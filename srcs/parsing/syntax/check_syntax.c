@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 16:42:50 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/10 12:10:02 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/10 16:13:58 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int		double_operator(t_token *c)
 		}
 		if ((c->type == TOKEN_PIPE && c->next->type == TOKEN_OPENPAR) || (c->type == TOKEN_CLOSEPAR && c->next->type == TOKEN_PIPE))
 		{
-			error_syntax(c->next, 1);
+			error_syntax(c->next, 7);
 			return (1);
 		}
 		if (c->type == TOKEN_HEREDOC && (c->next->type != WORD_LIMITER && c->next->type != WORD_SQLIMITER))

@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 17:46:20 by allan             #+#    #+#             */
-/*   Updated: 2024/09/09 20:59:41 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/10 17:24:04 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ void	pipe_print(t_exec *exec)
 int	piper(t_all *p, t_ast *current, char **env)
 {
 	t_exec *exec;
-
+/* 
 	close(p->std_in);
-	close(p->std_out);
+	close(p->std_out); */
 	exec = malloc(sizeof(t_exec));
 	if (!exec)
 		//add error

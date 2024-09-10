@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:11:24 by allan             #+#    #+#             */
-/*   Updated: 2024/09/09 20:47:50 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/10 16:24:54 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,13 +97,13 @@ int		open_pipe(t_all *p, t_exec *exec)
 		{
 			dup2(p->fd[p->curr_pipe - 1][0], STDIN_FILENO);
 			close(p->fd[p->curr_pipe - 1][1]);
-			//close(p->fd[p->curr_pipe - 1][0]);
+			close(p->fd[p->curr_pipe - 1][0]);
 		}
 		if (exec->out && exec->out->type == TOKEN_PIPE)
 		{
 			dup2(p->fd[p->curr_pipe][1], STDOUT_FILENO);
 			close(p->fd[p->curr_pipe][0]);
-			//close(p->fd[p->curr_pipe][1]);
+			close(p->fd[p->curr_pipe][1]);
 		}
 	}
 	//last

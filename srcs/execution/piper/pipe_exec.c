@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:26:52 by allan             #+#    #+#             */
-/*   Updated: 2024/09/10 12:08:14 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/10 17:23:54 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,11 +93,17 @@ int	pipe_exec_parent(t_all *p, int pid, int status)
 		error_executer(NULL, 9);
 		return (-1);
 	}
-	if (p->curr_pipe > 0)
+	if (p->curr_pipe == 0)
+		close(p->fd[p->curr_pipe - 1][1]);
+	else if (p->curr_pipe > 0 && p->curr_pipe < p->max_pipe)
 	{
-        close(p->fd[p->curr_pipe - 1][0]);
-        close(p->fd[p->curr_pipe - 1][1]);
-    }
+		close(p->fd[p->curr_pipe - 1][0]);
+		close(p->fd[p->curr_pipe][1]);
+	}
+	else if (p->curr_pipe == p->max_pipe)
+	{
+		close(p->fd[p->curr_pipe - 1][0]);
+	}
 	/* printf("status = %d\n", status);
 	printf("WIFEXITED(status) = %d\n", WIFEXITED(status)); */
 	if (WIFEXITED(status))
