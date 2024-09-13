@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print_ast.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 19:49:03 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/06 20:37:02 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/12 14:19:47 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,12 @@ const char* getAST_Class(t_ast *current) //a enlever
 		"|WORD_CMD",
 		"|WORD_OPTION",
 		"|WORD_LIMITER",
+		"|WORD_SQLIMITER",
 		"|WORD_STRING",
 		"|WORD_ERROR",
 		"|WORD_WTF",
 	};
-    if (current->type >= 0 && current->type < 28) {
+    if (current->type >= 0 && current->type < 30) {
         return Token_Class[current->type];
     } else {
         return "NULL";

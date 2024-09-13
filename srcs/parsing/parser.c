@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:24:04 by allan             #+#    #+#             */
-/*   Updated: 2024/07/21 15:20:05 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/13 18:36:44 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,18 +102,13 @@ int parser(char *cmd_line, t_env *env, t_ast **ast, t_all **p)
 		return (1);
 	}
 	here_doc(&token_list,p);
-	//printf("TESTT APRES HEREDOC\n");
+	if (here_doc_check_file(*p, token_list) == 1)
+		return (1);
 	init_t_word(&word);
 	if (define_word(&token_list, &word))
 		return (1);
-	/* printf("\n\nAFTER define word:\n");
-	token_print_amazing(&token_list); */
 	sub_shell = 0;
 	*ast = parse_expression(&token_list, sub_shell);
-	//printAST(*ast, 0);
-	//printf("AFTER EXPANDER:\n");
-	//token_print(&token_list);
-	//token_free(&dup_list);
 	token_free(&token_list);
 	return (0);
 }

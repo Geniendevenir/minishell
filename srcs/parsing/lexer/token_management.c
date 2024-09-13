@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:22:12 by allan             #+#    #+#             */
-/*   Updated: 2024/07/11 16:54:15 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/13 16:14:27 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ void	token_addback_two(t_token **token_list, t_token *token)
 {
 	t_token	*last_token;
 
+	/* if (!*token_list)
+		return ; */
 	if ((*token_list)->value == NULL)
 	{
 		last_token = *token_list;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:41:06 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/06 18:00:20 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/13 17:41:58 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,21 @@ void	print_tab(char **command)
 		printf("%s\n", command[i]);
 		i++;
 	}
+}
+
+void print_folder(char *fd_src, int fd)
+{
+	char *line;
+
+	line = "not NULL";
+	fd = open(fd_src, O_RDONLY);
+	while (line)
+	{
+		line = get_next_line(fd);
+		if (!line)
+			break;
+		ft_putstr(line);
+		free(line);
+	}
+	close(fd);
 }

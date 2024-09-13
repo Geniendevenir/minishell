@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/13 14:59:40 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/13 18:54:44 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ char	*minishell(t_all *p, char **env)
 	sig_int = 0;
 	free(p->line);
 	p->line = NULL;
+	p->int_here_doc = 0;
 	p->line_num++;
 	return (p->line);
 }

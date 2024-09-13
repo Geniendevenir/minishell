@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_four.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 19:29:39 by allan             #+#    #+#             */
-/*   Updated: 2024/09/12 14:12:18 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/12 17:59:01 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ bool	create_limiter(const char *cmd_line, t_index *index, char **token_value)
 		index->special = 1;
 		if (cmd_line[index->j] == '\'')
 			index->error = limiter_squote(cmd_line, index, token_value);
-		else if (cmd_line[index->j] == '\"')
+		if (cmd_line[index->j] == '\"')
 			index->error = limiter_dquote(cmd_line, index, token_value);
 	}
 	else

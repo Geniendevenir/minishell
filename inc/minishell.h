@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/13 12:33:33 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/13 19:05:31 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@
 # define BASE "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 # define BASE_LENGTH 62
 # define MAX_FILENAME_LENGTH 165
+# define TAILLE_BUFFER 1024
 
 //DONT CHANGE THE NUMBER
 # define ERROR_MALLOC 1
@@ -191,6 +192,7 @@ typedef struct s_all
 	t_env	*env;
 	t_ast	*ast;
 	char	**here_doc;
+	int		int_here_doc;
 	char	*line;
 	int		line_num;
 	t_sig	*sig;
@@ -320,7 +322,7 @@ bool 		lexer(char *cmd_line, t_token **token_list, int error);
 int			tokenizer_one(const char *cmd_line, size_t *i, t_token **token_list);
 int			tokenizer_two(const char *cmd_line, size_t *i, t_token **token_list);
 int			tokenizer_three(const char *cmd_line, size_t *i, t_token **token_list);
-int			tokenizer_four(const char *cmd_line, size_t *i, t_token **token_list);
+//int			tokenizer_four(const char *cmd_line, size_t *i, t_token **token_list);
 
 //token_management
 void 		token_init(t_token **token_list);
@@ -343,7 +345,7 @@ bool		inputre_token(size_t *i, t_token **token_list);
 bool		outputapp_token(size_t *i, t_token **token_list);
 bool		outputre_token(size_t *i, t_token **token_list);
 bool		lexical_token(const char *cmd_line, size_t *i, t_token **token_list);
-bool		word_token(const char *cmd_line, size_t *i, t_token **token_list); //split
+bool		word_token(const char *cmd_line, size_t *i, t_token **token_list, int option); //split
 int			env_token(const char *cmd_line, size_t *i, t_token **token_list);
 void		env_special_token(t_token **token_list, int option);
 bool		wildcard_token(const char *cmd_line, size_t *i, t_token **token_list);
@@ -406,7 +408,11 @@ char		*ft_strjoin_spe(char *s1, char const *s2);
 void		bloquer_signal_eof(void);
 void		restaurer_signal_eof(void);
 void		write_hdoc(int fd, char *buffer);
-
+bool		here_doc_check_file(t_all *p, t_token *token_list);
+void		copy_folder(char *src, char *dest);
+char		*ft_strdup_spe(char *s);
+void		expand_heredoc(t_all *p);
+int			get_token_list(t_all *p, t_token **token, char *line);
 
 /*								EXPANDER						*/
 //split_word
@@ -416,7 +422,7 @@ bool		modify_word(t_ast **node, t_token *token_list);
 int			split_word(t_all *p, t_ast **current);
 int			split_one(const char *cmd_line, size_t *i, t_token **token_list, int option);
 int			split_two(const char *cmd_line, size_t *i, t_token **token_list, int option);
-bool		limit_word(char c);
+bool		limit_word(char c, int option);
 int			word_management(t_ast **root, t_ast **current, t_token	*token_list);
 
 //handle_wildcard
@@ -552,6 +558,7 @@ void		print_error_cmd_not_found(t_token *current);
 void		printAST(t_ast* node, int level);
 const char* getAST_Class(t_ast *current);
 void		print_tab(char **command);
+void		print_folder(char *fd_src, int fd);
 
 /*					BUILTINS				*/
 //ENV

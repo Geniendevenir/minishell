@@ -85,6 +85,8 @@ SRCS 				=	srcs/free.c\
 						srcs/execution/expander/relink_token.c\
 						srcs/execution/expander/expand_wildcard.c\
 						srcs/execution/expander/word_management.c\
+						srcs/execution/expander/expand_here_doc.c\
+						srcs/execution/expander/expand_here_doc_utils.c\
 						srcs/execution/piper/pipe_exec.c\
 						srcs/execution/piper/pipe_free.c\
 						srcs/execution/piper/pipe_parser.c\

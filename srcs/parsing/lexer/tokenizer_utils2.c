@@ -6,19 +6,27 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 16:43:01 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/11 16:45:43 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/13 17:25:22 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	limit_word(char c)
+bool	limit_word(char c, int option)
 {
-	if (c == '|' || c == '&' || c == '$' || c == '\'' || c == '\"'
-		|| c == '<' || c == '>' || c == '(' || c == ')')
-		return (1);
-	if (is_whitespace(c) == 1)
-		return (1);
+	if (option == 0)
+	{
+		if (c == '|' || c == '&' || c == '$' || c == '\'' || c == '\"'
+			|| c == '<' || c == '>' || c == '(' || c == ')')
+			return (1);
+		if (is_whitespace(c) == 1)
+			return (1);
+	}
+	else if (option == 1)
+	{
+		if (c == '$' || c == '?' || is_env(c, 1) == 0)
+			return (1);
+	}
 	return (0);
 }
 

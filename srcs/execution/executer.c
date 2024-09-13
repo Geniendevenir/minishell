@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 21:23:21 by allan             #+#    #+#             */
-/*   Updated: 2024/09/11 18:56:54 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/13 18:43:59 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,8 @@ t_ast *left_expand(t_all *p, t_ast *current, int option)
 		}
 		if (is_operator(current->type, 2))
 			p->option = 0;
-		/* if (current->state == STATE_WORD && current->type == WORD_LIMITER)
-		{
-			//ICI
-		} */
+		if (current->state == STATE_WORD && current->type == WORD_LIMITER)
+			expand_heredoc(p);
 		if (current->state == STATE_WORD && current->type != WORD_SQLIMITER && current->type != WORD_LIMITER)
 		{
 			/* write(2, "current = %s\n", current->value);
