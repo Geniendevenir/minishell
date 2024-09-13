@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   limiter_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 19:48:26 by allan             #+#    #+#             */
-/*   Updated: 2024/07/11 16:39:08 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/12 18:41:33 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,13 @@ void	while_in_last_heredoc(int *heredoc, t_token **current)
 	{
 		if ((*current)->type == TOKEN_HEREDOC)
 			(*heredoc)--;
+		if (!(*current)->next)
+			break ;
 		(*current) = (*current)->next;
 	}
 }
+//<< a cat
+//<< space LIM space CAT
 
 bool	last_heredoc(t_token **token_list)
 {
@@ -33,17 +37,23 @@ bool	last_heredoc(t_token **token_list)
 	{
 		if (current->type == TOKEN_HEREDOC)
 			heredoc++;
+		if (!current->next)
+			break ;
 		current = current->next;
 	}
 	if (heredoc == 0)
 		return (0);
 	current = *token_list;
 	while_in_last_heredoc(&heredoc, &current);
-	if (!current || !current->next)
-		return (1);
 	while (current && current->type == TOKEN_WHITESPACE)
+	{
+		if (!current->next)
+			break ;
 		current = current->next;
+	}
 	if (!current)
+		return (1);
+	if (((current->type == TOKEN_WHITESPACE || current->type == TOKEN_HEREDOC) && !current->next))
 		return (1);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/10 18:03:01 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/13 12:33:33 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,6 +202,7 @@ typedef struct s_all
 	int		std_out;
 	int		option;
 	int		(*fd)[2];
+	int		skip;
 }	t_all;
 
 typedef struct s_word
@@ -232,7 +233,7 @@ typedef struct s_exec
 int			executer(t_all *p, t_ast *current, char **env);
 
 //ast_explorer
-t_ast		*left_expand(t_all *p, t_ast *current);
+t_ast		*left_expand(t_all *p, t_ast *current, int option);
 t_ast		*up_to_cmd(t_ast *current);
 t_ast		*get_next_operator(t_all *p, t_ast *current, t_ast **prev);
 
@@ -251,7 +252,7 @@ bool		is_builtin(char *cmd);
 int			open_filein(t_exec *exec);
 int			open_fileout(t_exec *exec);
 int			open_files(t_exec *exec);
-int			open_pipe(t_all *p, t_exec *exec);
+int			open_pipe(t_all *p, t_exec *exec, int option);
 int			close_files(t_exec *exec, t_all *p);
 
 //exec_get_path
@@ -276,26 +277,32 @@ void		testAST(t_ast* node, int option);
 //						PIPER                      //
 //piper
 int			piper(t_all *p, t_ast *current, char **env);
-int			pipe_allocation(t_all *p);
 void		pipe_print(t_exec *exec);
+int			pipe_analyser(t_all *p, t_exec *exec);
 
 //pipe_parser
 int			pipe_parser(t_all *p, t_ast *current, t_exec **exec, int option);
 void		pipe_parser_next(t_all *p, t_ast *current, t_exec **exec);
 void		pipe_addback(t_all *p, t_exec **exec, t_exec *new_node);
+int			pipe_addempty(t_all *p, t_exec **exec);
 t_exec		*pipe_last(t_exec *exec);
 
 //pipe_exec
-int			wait_childs(t_all *p, int *pid);
+int			wait_childs(t_all *p, int *pid, t_exec *exec);
 int			pipe_exec(t_all *p, t_exec **exec, char **env, int *pid);
-int			pipe_exec_child(t_all *p, t_exec *node, char **env);
+int			pipe_exec_child(t_all *p, t_exec *node, char **env, int option);
 int			pipe_exec_parent(t_all *p, int pid, int status);
+int			pipe_exec_last(t_all *p, t_exec *node, char **env, int *pid);
 
 //pipe_free
-void		pipe_free(t_all *p, t_exec *exec);
+void		pipe_free(t_all *p, t_exec *exec, int *pid);
 void		pipe_free_exec(t_exec **exec);
 void		pipe_free_fd(t_all *p);
-void		pipe_close_fd(t_all *p);
+void		pipe_close_fd(t_all *p, int option);
+
+//pipe_utils
+int			is_command(t_ast *current);
+t_exec *	last_command(t_exec *exec);
 
 //////////////////////////////////////////////////////////
 
@@ -407,8 +414,8 @@ t_ast		*replace_word(t_ast **root, t_ast *node, t_ast *new_node);
 void		delete_word(t_ast **root, t_ast **node);
 bool		modify_word(t_ast **node, t_token *token_list);
 int			split_word(t_all *p, t_ast **current);
-int			split_one(const char *cmd_line, size_t *i, t_token **token_list);
-int			split_two(const char *cmd_line, size_t *i, t_token **token_list);
+int			split_one(const char *cmd_line, size_t *i, t_token **token_list, int option);
+int			split_two(const char *cmd_line, size_t *i, t_token **token_list, int option);
 bool		limit_word(char c);
 int			word_management(t_ast **root, t_ast **current, t_token	*token_list);
 

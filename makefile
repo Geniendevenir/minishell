@@ -89,6 +89,7 @@ SRCS 				=	srcs/free.c\
 						srcs/execution/piper/pipe_free.c\
 						srcs/execution/piper/pipe_parser.c\
 						srcs/execution/piper/piper.c\
+						srcs/execution/piper/pipe_utils.c\
 
 # Apply the pattern substitution to each source file in SRC and produce a corresponding list of object files in the OBJ_DIR
 OBJ 				= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))

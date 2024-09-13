@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:11:24 by allan             #+#    #+#             */
-/*   Updated: 2024/09/10 16:24:54 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/13 14:55:43 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,15 @@ int	open_files(t_exec *exec)
 		return (1); //correct
 	}
 	if (result == 0)
+	{
 		dup2(exec->filein, STDIN_FILENO);
+		close(exec->filein);
+	}
 	if (result2 == 0)
+	{
 		dup2(exec->fileout, STDOUT_FILENO);
+		close(exec->fileout);
+	}
 	//open_pipe(p, exec);
 	return (0);
 }
@@ -81,37 +87,70 @@ int    open_fileout(t_exec *exec)
 	return (1);
 }
 
-int		open_pipe(t_all *p, t_exec *exec)
+int		open_pipe(t_all *p, t_exec *exec, int option)
 {
-	//first
-	if (p->curr_pipe == 0 && exec->out && exec->out->type == TOKEN_PIPE)
+	int	fd_null;
+	if (p->curr_pipe == 0)
 	{
-		dup2(p->fd[p->curr_pipe][1], STDOUT_FILENO);
+		printf("pipe 1\n");
+		if (p->skip == 1 && exec->in && exec->in->type == TOKEN_PIPE)
+		{
+			printf("SPACIAL DUP\n");
+			fd_null = open("/dev/null", O_RDONLY);
+			 if (fd_null < 0)
+			{
+				perror("Error opening /dev/null");
+				exit(1);
+			}
+			if (dup2(fd_null, STDIN_FILENO) < 0)
+			{
+				perror("Error redirecting stdin to /dev/null");
+				close(fd_null);
+				exit(1);
+			}
+			close(fd_null);
+		}
+		if (exec->out && exec->out->type == TOKEN_PIPE)
+			dup2(p->fd[p->curr_pipe][1], STDOUT_FILENO);
 		close(p->fd[p->curr_pipe][0]);
 		close(p->fd[p->curr_pipe][1]);
 	}
-	//middle
 	else if (p->curr_pipe > 0 && p->curr_pipe < p->max_pipe)
 	{
+		printf("pipe 2\n");
 		if (exec->in && exec->in->type == TOKEN_PIPE)
-		{
 			dup2(p->fd[p->curr_pipe - 1][0], STDIN_FILENO);
-			close(p->fd[p->curr_pipe - 1][1]);
-			close(p->fd[p->curr_pipe - 1][0]);
-		}
+		pipe_close_fd(p, 1);
 		if (exec->out && exec->out->type == TOKEN_PIPE)
-		{
 			dup2(p->fd[p->curr_pipe][1], STDOUT_FILENO);
-			close(p->fd[p->curr_pipe][0]);
-			close(p->fd[p->curr_pipe][1]);
-		}
+		close(p->fd[p->curr_pipe][0]);
+		close(p->fd[p->curr_pipe][1]);
 	}
-	//last
 	else if (p->curr_pipe == p->max_pipe && exec->in && exec->in->type == TOKEN_PIPE)
 	{
-		dup2(p->fd[p->curr_pipe - 1][0], STDIN_FILENO);
-		close(p->fd[p->curr_pipe - 1][1]);
-		close(p->fd[p->curr_pipe - 1][0]);
+		printf("pipe 3\n");
+		if (option == 1 && exec->in && exec->in->type == TOKEN_PIPE)
+		{
+			printf("SPACIAL DUP\n");
+			fd_null = open("/dev/null", O_RDONLY);
+			 if (fd_null < 0)
+			{
+				perror("Error opening /dev/null");
+				exit(1);
+			}
+			if (dup2(fd_null, STDIN_FILENO) < 0)
+			{
+				perror("Error redirecting stdin to /dev/null");
+				close(fd_null);
+				exit(1);
+			}
+			close(fd_null);
+		}
+		else
+		{
+			dup2(p->fd[p->curr_pipe - 1][0], STDIN_FILENO);
+			pipe_close_fd(p, 1);
+		}
 	}
 	return (0);
 }

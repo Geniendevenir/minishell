@@ -6,31 +6,12 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 17:54:19 by allan             #+#    #+#             */
-/*   Updated: 2024/09/10 19:19:12 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/13 16:54:35 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	word_management(t_ast **root, t_ast **current, t_token	*token_list)
-{
-	if (!token_list->value || !*token_list->value)
-	{
-		delete_word(root, current);
-		return (-1); //check valeur non utilise par exit status
-	}
-	else if (token_list->next)
-	{
-		if (handle_wildcard(current, &token_list) == 1)
-			return (1);
-	}
-	else if (ft_strcmp((*current)->value, token_list->value) != 0)
-		return (modify_word(current, token_list));
-	return (0);
-}
-
-/* printf("AFTER EXPANDER:\n");
-	token_print(&token_list); */
 int split_word(t_all *p, t_ast **current)
 {
 	size_t		i;
@@ -45,7 +26,7 @@ int split_word(t_all *p, t_ast **current)
 	i = 0;
 	while (i < ft_strlen((*current)->value))
 	{
-		error = split_one((*current)->value, &i, &token_list);
+		error = split_one((*current)->value, &i, &token_list, 0);
 		if (error != 0)
 		{
 			token_free(&token_list);
@@ -60,7 +41,7 @@ int split_word(t_all *p, t_ast **current)
 	return (error);
 }
 		
-int	split_one(const char *cmd_line, size_t *i, t_token **token_list)
+int	split_one(const char *cmd_line, size_t *i, t_token **token_list, int option)
 {
 	int	error;
 
@@ -88,32 +69,54 @@ int	split_one(const char *cmd_line, size_t *i, t_token **token_list)
 			error = env_token(cmd_line, i, token_list); //ENV $WORD
 	}
 	else
-		error = split_two(cmd_line, i, token_list);
+		error = split_two(cmd_line, i, token_list, option);
 	return (error);
 }
 
-int	split_two(const char *cmd_line, size_t *i, t_token **token_list)
+int	split_two(const char *cmd_line, size_t *i, t_token **token_list, int option)
 {
 	int	error;
 
 	error = 0;
-	if (cmd_line[*i] == '\"')
+	if (option == 0)
 	{
-		if (cmd_line[*i + 1] == '\"')
-			*i += 2;
+		if (cmd_line[*i] == '\"')
+		{
+			if (cmd_line[*i + 1] == '\"')
+				*i += 2;
+			else
+				error = dquotes_token(cmd_line, i, token_list);
+		}
+		else if (cmd_line[*i] == '\'')
+		{
+			if (cmd_line[*i + 1] == '\'')
+				*i += 2;
+			else
+				error = squote_token(cmd_line, i, token_list);
+		}
+		else if (cmd_line[*i] == '*' || is_wildcard(cmd_line, *i) == 0)
+			error = wildcard_token(cmd_line, i, token_list);
 		else
-			error = dquotes_token(cmd_line, i, token_list);
+			error = word_token(cmd_line, i, token_list);
 	}
-	else if (cmd_line[*i] == '\'')
-	{
-		if (cmd_line[*i + 1] == '\'')
-			*i += 2;
-		else
-			error = squote_token(cmd_line, i, token_list);
-	}
-	else if (cmd_line[*i] == '*' || is_wildcard(cmd_line, *i) == 0)
-		error = wildcard_token(cmd_line, i, token_list);
 	else
 		error = word_token(cmd_line, i, token_list);
 	return (error);
+}
+
+int	word_management(t_ast **root, t_ast **current, t_token	*token_list)
+{
+	if (!token_list->value || !*token_list->value)
+	{
+		delete_word(root, current);
+		return (-1); //check valeur non utilise par exit status
+	}
+	else if (token_list->next)
+	{
+		if (handle_wildcard(current, &token_list) == 1)
+			return (1);
+	}
+	else if (ft_strcmp((*current)->value, token_list->value) != 0)
+		return (modify_word(current, token_list));
+	return (0);
 }
