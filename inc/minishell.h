@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/13 16:53:06 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/13 18:37:37 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,6 +229,11 @@ typedef struct s_exec
 }				t_exec;
 
 //						MERGE							//
+# define TAILLE_BUFFER 1024
+void		print_folder(char *fd_src, int fd);
+bool		here_doc_check_file(t_all *p, t_token *token_list);//go copier coller tout le here doc
+void		copy_folder(char *src, char *dest);
+char		*ft_strdup_spe(char *s);
 void		expand_heredoc(t_all *p);
 int			get_token_list(t_all *p, t_token **token, char *line);
 

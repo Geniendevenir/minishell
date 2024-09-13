@@ -6,108 +6,11 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 12:18:13 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/13 17:15:14 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/13 17:43:53 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-#define TAILLE_BUFFER 1024
-
-void print_folder(char *fd_src, int fd)
-{
-	char *line;
-
-	line = "not NULL";
-	fd = open(fd_src, O_RDONLY);
-	while (line)
-	{
-		line = get_next_line(fd);
-		if (!line)
-			break;
-		ft_putstr(line);
-		free(line);
-	}
-	close(fd);
-}
-
-void	copy_folder(char *src, char *dest)
-{
-	char	*line;
-	int		fd_src;
-	int		fd_dest;
-
-	line = "not NULL";
-	fd_src = open(src, O_RDONLY);
-	if (fd_src == -1)
-	{
-		ft_putstr_fd("Erreur lors de l'ouverture du fichier src", 2);
-		return;
-	}	
-	fd_dest = open(dest, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd_dest == -1)
-	{
-		ft_putstr_fd("Erreur lors de l'ouverture du fichier dest", 2);
-		close(fd_src);
-		return;
-	}
-	while (line)
-	{
-		line = get_next_line(fd_src);
-		if (!line)
-			break;
-		ft_putstr_fd(line, fd_dest);
-		free(line);
-	}
-	close(fd_src);
-	close(fd_dest);
-	print_folder(dest, fd_dest);
-	unlink(src);
-}
-
-char	*ft_strdup_spe(char *s)
-{
-	char			*dup_str;
-	unsigned int	index;
-	unsigned int	length;
-
-	if (!s)
-		return (NULL);
-	length = ft_strlen(s);
-	dup_str = malloc((length + 3) * sizeof(char)); //a cehck
-	if (!dup_str)
-		return (NULL);
-	index = 0;
-	while (index < length)
-	{
-		dup_str[index] = s[index];
-		index ++;
-	}
-	dup_str[index] = '\0';
-	free(s);
-	return (dup_str);
-}
-
-int get_nb_line(t_all *p)
-{
-	int		fd;
-	int		nb;
-	char	*line;
-
-	nb = 0;
-	line = "not NULL";
-	fd = open(p->here_doc[p->int_here_doc], O_RDONLY);
-	if (fd == -1)
-		return (ft_putstr_fd("error openfd1\n", 2), 0);
-	while (line != NULL)
-	{
-		line = get_next_line(fd);
-		nb++;
-		free(line);
-	}
-	close(fd);
-	return (nb);
-}
 
 int get_token_list(t_all *p, t_token **token, char *line)
 {
@@ -177,7 +80,10 @@ void expand_heredoc(t_all *p)
 		return;
 	fd = open(p->here_doc[p->int_here_doc], O_RDONLY);
 	if (fd == -1)
+	{
+		close(fd);
 		return (ft_putstr_fd("error openfd1\n", 2));
+	}
 	fd2 = open("fd2", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd2 == -1)
 	{
@@ -190,9 +96,7 @@ void expand_heredoc(t_all *p)
 		line = get_next_line(fd);
 		if (line == NULL)
 			break;
-		printf("line before expand line = %s\n", line);
 		line = ft_strdup_spe(expand_line(p, line));
-		printf("line after expand line = %s\n", line);
 		write(fd2, line, ft_strlen(line));
 		write(fd2, "\n", 1);
 		free(line);
