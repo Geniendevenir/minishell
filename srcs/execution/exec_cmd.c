@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:24:24 by allan             #+#    #+#             */
-/*   Updated: 2024/09/09 17:37:32 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/10 11:48:21 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,28 +28,6 @@ bool	is_builtin(char *cmd)
 		return (1);
 	if (ft_strcmp(cmd, "exit") == 0)
 		return (1);
-	return (0);
-}
-
-
-int	path_comp_builtins(char **cmd)
-{
-	if (cmd == NULL || cmd[0] == NULL)
-		return (0);
-	else if (ft_strcmp(cmd[0], "echo") == 0)
-		return (1);
-	else if (ft_strcmp(cmd[0], "cd") == 0)
-		return (2);
-	else if (ft_strcmp(cmd[0], "pwd") == 0)
-		return (3);
-	else if (ft_strcmp(cmd[0], "export") == 0)
-		return (4);
-	else if (ft_strcmp(cmd[0], "unset") == 0)
-		return (5);
-	else if (ft_strcmp(cmd[0], "env") == 0 && cmd[1] == NULL)
-		return (6);
-	else if (ft_strcmp(cmd[0], "exit") == 0)
-		return (7);
 	return (0);
 }
 

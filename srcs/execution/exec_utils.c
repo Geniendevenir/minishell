@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 18:39:42 by allan             #+#    #+#             */
-/*   Updated: 2024/08/11 00:42:32 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/09 15:24:55 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	exec_init(t_exec *exec)
 	exec->out = NULL;
 	exec->command = NULL;
 	exec->path = NULL;
+	exec->next = NULL;
 }
 
 void		exec_free(t_exec *exec)
@@ -43,27 +44,48 @@ void		exec_free(t_exec *exec)
 
 void	set_pipe(t_all *p, t_exec *exec)
 {
-	if (p->max_pipe == 0)
-		return ;
-	if (p->curr_pipe == p->max_pipe)
-		exec->pipe = 1; //left pipe
-	else if (p->curr_pipe == 1)
-		exec->pipe = 3; //right pipe
-	else
-		exec->pipe = 2; //middle pipe
-}
-
-void	reset_pipe(t_all *p)
-{
 	if (p->max_pipe > 0)
 	{
-		if (p->curr_pipe <= 1)
-		{
-			p->max_pipe = 0;
-			p->curr_pipe = 0;
-		}
+		if (p->curr_pipe == 0)
+			exec->pipe = 1; //left pipe
+		else if (p->curr_pipe == p->max_pipe)
+			exec->pipe = 3; //right pipe
+		else
+			exec->pipe = 2; //middle pipe	
 	}
 }
+
+/* void	reset_pipe(t_all *p, int option)
+{
+	int	i;
+
+	i = 0;
+	if (option == 1)
+	{
+		dup2(p->std_in, STDIN_FILENO);
+		close(p->std_in);
+		dup2(p->std_out, STDOUT_FILENO);
+		close(p->std_out);
+	}
+	else if (p->max_pipe > 0)
+	{
+		dup2(p->std_out, STDOUT_FILENO);
+		if (p->curr_pipe == 3)
+			p->curr_pipe = 1;
+		else if (p->curr_pipe <= 1)
+		{
+			write(2, "RESET\n", 6);
+			p->max_pipe = 0;
+			p->curr_pipe = 0;
+			dup2(p->std_in, STDIN_FILENO);
+			close(p->std_in);
+			close(p->fd[0]);
+			dup2(p->std_out, STDOUT_FILENO);
+			close(p->std_out);
+			close(p->fd[1]);
+		}
+	}
+} */
 
 int		array_size(char **arr)
 {

@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 17:22:12 by allan             #+#    #+#             */
-/*   Updated: 2024/07/11 16:54:15 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/12 17:42:01 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,15 +64,23 @@ void	token_addback_two(t_token **token_list, t_token *token)
 {
 	t_token	*last_token;
 
+	printf("a\n");
+	/* if (!*token_list)
+		return ; */
 	if ((*token_list)->value == NULL)
 	{
+		printf("b\n");
 		last_token = *token_list;
+		printf("c\n");
 		*token_list = token;
+		printf("d\n");
 		free(last_token);
 	}
 	else
 	{
+		printf("e\n");
 		last_token = token_last(*token_list);
+		printf("f\n");
 		last_token->next = token;
 	}
 }

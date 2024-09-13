@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:41:06 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/08 18:06:47 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/07/06 18:00:20 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,14 @@
 
 void print_env(t_env *env)
 {
-	t_env *current;
+    t_env *current;
 
-	current = env;
-	while (current != NULL)
-	{
-		if (current->value)
-		{
-			printf("%s=%s\n", current->key, current->value);
-		}
-		current = current->next;
-	}
+    current = env;
+    while (current != NULL)
+    {
+        printf("%s=%s\n", current->key, current->value);
+        current = current->next;
+    }
 }
 
 void	print_error_token_special(char *value)

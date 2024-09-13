@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/09 17:35:41 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/13 12:34:31 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,43 +31,15 @@ void	testAST(t_ast* node, int option)
 	{
 		while (node->right)
 			node = node->right;
-		printf("last right = %s\n", node->value);
+		while (node->left)
+			node = node->left;
+		printf("last left right = %s\n", node->value);
 		while (node->parent)
 		{
 			printf("parent = %s\n", node->parent->value);
 			node = node->parent;
 		}
 	}
-}
-
-void testCMD(t_ast *node)
-{
-	while (node->right)
-		node = node->right;
-	printf("last right = %s\n", node->value);
-	while(node->left)
-		node = node->left;
-	printf("node left = %s\n", node->value);	
-	while (node->parent)
-	{
-		printf("parent = %s\n", node->parent->value);
-		node = node->parent;
-	}
-}
-
-bool skip_whitespace(char *line)
-{
-	int	i;
-	
-	i = 0;
-	while(line[i])
-	{
-		if (is_whitespace(line[i]))
-			i++;
-		else
-			return (1);
-	}
-	return (0);
 }
 
 int	main(int argc, char **argv, char **env)
@@ -100,8 +72,7 @@ char	*minishell(t_all *p, char **env)
 		return (free(p->line), free_all(p), rl_clear_history(), exit(0), NULL);
 	}
 	//printf("sigquit = %d\n", p->sig->sig_quit);
-	//if (sig_int == 0 && p->sig->sig_quit == 0)
-	if (p->sig->sig_quit == 0 && skip_whitespace(p->line))
+	if (p->sig->sig_quit == 0  && skip_whitespace(p->line))
 	{
 		p->error = parser(p->line, p->env, &p->ast, &p);
 		//printf("next_status = %d\n", next_status);
@@ -109,12 +80,12 @@ char	*minishell(t_all *p, char **env)
 		if (p->error == 0)
 		{
 			printAST(p->ast, 0);
-			testAST(p->ast, 1);
-			testAST(p->ast, 2);
+			/* testAST(p->ast, 1);
+			testAST(p->ast, 2); */
 			current = p->ast;
 			if (executer(p, current, env) == 1)
 			{
-				printf("executor ended\n");
+				//printf("executor ended\n");
 				free_ast(p->ast);
 				return (free(p->line), free_all(p), rl_clear_history(), exit(0), NULL);
 			}
@@ -123,9 +94,16 @@ char	*minishell(t_all *p, char **env)
 		}
 		add_history(p->line);
 	}
+	/* if (p->line)
+	{
+		write(2, "p->line = ", 10);
+		write(2, p->line, ft_strlen(p->line));
+		write(2, "\n", 1);
+	} */
 	sig_int = 0;
 	free(p->line);
 	p->line = NULL;
+	p->int_here_doc = 0;
 	p->line_num++;
 	return (p->line);
 }

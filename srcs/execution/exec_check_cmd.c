@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 18:37:43 by allan             #+#    #+#             */
-/*   Updated: 2024/07/26 11:23:12 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/10 18:14:23 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,10 @@ int get_command(t_ast *current, t_exec *exec)
 	int	size;
 		
 	size = command_size(current);
-	printf("cmd size = %d\n", size);
+	printf("test 2\n");
+	//printf("cmd size = %d\n", size);
 	exec->command = parse_command(current, size);
+	printf("test 3\n");
 	if (!exec->command)
 		return (1);
 	return (0);
@@ -79,7 +81,7 @@ int		check_cmd(t_exec *exec, t_env *env)
 		path = get_path(exec->command[0], env, &error);
 		if (error != 0)
 		{
-			printf("ERROR: get_path error\n");
+			write(2, "ERROR: get_path error\n", 22);
 			if (path)
 				free (path);
 			return (1); //malloc error
@@ -92,5 +94,7 @@ int		check_cmd(t_exec *exec, t_env *env)
 		}
 		exec->path = path;
 	}
+	else
+		exec->path = ft_strdup(exec->command[0]);
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_word.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 17:54:19 by allan             #+#    #+#             */
-/*   Updated: 2024/08/08 15:31:26 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/11 20:33:28 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int split_word(t_all *p, t_ast **current)
 	i = 0;
 	while (i < ft_strlen((*current)->value))
 	{
-		error = split_one((*current)->value, &i, &token_list);
+		error = split_one((*current)->value, &i, &token_list, 0);
 		if (error != 0)
 		{
 			token_free(&token_list);
@@ -60,59 +60,64 @@ int split_word(t_all *p, t_ast **current)
 	return (error);
 }
 		
-int	split_one(const char *cmd_line, size_t *i, t_token **token_list)
+int	split_one(const char *cmd_line, size_t *i, t_token **token_list, int option)
 {
 	int	error;
 
 	error = 0;
 	if (cmd_line[*i] == '$')
 	{
-		if (cmd_line[*i + 1] == '?')
+		if (cmd_line[*i + 1] == '?') //$?
 		{
 			error = token_addback(token_list, "?", 2);
 			env_special_token(token_list, 1);
 			(*i) += 2;
 		}
-		else if (is_env(cmd_line[*i + 1], 1) == 2)
+		else if (is_env(cmd_line[*i + 1], 1) == 2) //Is ENV valid ?
 		{
 			(*i)++;
 			return (0);
 		}
-		else if (is_env(cmd_line[*i + 1], 1) == 1)
+		else if (is_env(cmd_line[*i + 1], 1) == 1) //$$
 		{
 			error = token_addback(token_list, "$", 2);
 			env_special_token(token_list, 2);
 			(*i)++;
 		}
 		else
-			error = env_token(cmd_line, i, token_list);
+			error = env_token(cmd_line, i, token_list); //ENV $WORD
 	}
 	else
-		error = split_two(cmd_line, i, token_list);
+		error = split_two(cmd_line, i, token_list, option);
 	return (error);
 }
 
-int	split_two(const char *cmd_line, size_t *i, t_token **token_list)
+int	split_two(const char *cmd_line, size_t *i, t_token **token_list, int option)
 {
 	int	error;
 
 	error = 0;
-	if (cmd_line[*i] == '\"')
+	if (option == 0)
 	{
-		if (cmd_line[*i + 1] == '\"')
-			*i += 2;
+		if (cmd_line[*i] == '\"')
+		{
+			if (cmd_line[*i + 1] == '\"')
+				*i += 2;
+			else
+				error = dquotes_token(cmd_line, i, token_list);
+		}
+		else if (cmd_line[*i] == '\'')
+		{
+			if (cmd_line[*i + 1] == '\'')
+				*i += 2;
+			else
+				error = squote_token(cmd_line, i, token_list);
+		}
+		else if (cmd_line[*i] == '*' || is_wildcard(cmd_line, *i) == 0)
+			error = wildcard_token(cmd_line, i, token_list);
 		else
-			error = dquotes_token(cmd_line, i, token_list);
+			error = word_token(cmd_line, i, token_list);
 	}
-	else if (cmd_line[*i] == '\'')
-	{
-		if (cmd_line[*i + 1] == '\'')
-			*i += 2;
-		else
-			error = squote_token(cmd_line, i, token_list);
-	}
-	else if (cmd_line[*i] == '*' || is_wildcard(cmd_line, *i) == 0)
-		error = wildcard_token(cmd_line, i, token_list);
 	else
 		error = word_token(cmd_line, i, token_list);
 	return (error);

@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/07 16:07:05 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/12 16:36:40 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,31 +120,31 @@ enum s_type{
 	WORD_CMD,
 	WORD_OPTION, // option / argument d'une commande
 	WORD_LIMITER,
+	WORD_SQLIMITER, //dans le cas ou j'ai oublie un cas
 	WORD_STRING,
 	WORD_ERROR, //ERREUR (le WORD n'est pas classifie)
 	WORD_WTF,
-	WORD_SQLIMITER, //dans le cas ou j'ai oublie un cas
 };
 
 typedef struct s_token
 {
-	enum s_type type;
-	enum s_state state;
-	char *value;
-	long len;
-	struct s_token *next;
+	enum		s_type type;
+	enum		s_state state;
+	char		*value;
+	long		len;
+	struct		s_token *next;
 }				t_token;
 
 typedef struct s_wildcard {
-	const char *file_name;
-    const char *wildcard;
-    const char *star;
-    const char *backtrack;
+	const char		*file_name;
+	const char		*wildcard;
+	const char		*star;
+	const char		*backtrack;
 }				t_wildcard;
 
 typedef struct s_ast {
-	int subshell;
-	int exit_state;
+	int			subshell;
+	int			exit_state;
 	enum s_type type;
 	enum s_state state;
 	char		*value;
@@ -191,6 +191,7 @@ typedef struct s_all
 	t_env	*env;
 	t_ast	*ast;
 	char	**here_doc;
+	int		int_here_doc;
 	char	*line;
 	int		line_num;
 	t_sig	*sig;
@@ -201,6 +202,7 @@ typedef struct s_all
 	int		std_in;
 	int		std_out;
 	int		option;
+	int		(*fd)[2];
 }	t_all;
 
 typedef struct s_word
@@ -223,14 +225,19 @@ typedef struct s_exec
 	int				fileout;
 	char 			**command;
 	char			*path;
+	struct s_exec	*next;
 }				t_exec;
 
+//						MERGE							//
+void		expand_heredoc(t_all *p);
+int			get_token_list(t_all *p, t_token **token, char *line);
 
 //						EXECUTION                      //
 int			executer(t_all *p, t_ast *current, char **env);
 
 //ast_explorer
 t_ast		*left_expand(t_all *p, t_ast *current);
+t_ast		*up_to_cmd(t_ast *current);
 t_ast		*get_next_operator(t_all *p, t_ast *current, t_ast **prev);
 
 //exec_check_cmd
@@ -248,7 +255,8 @@ bool		is_builtin(char *cmd);
 int			open_filein(t_exec *exec);
 int			open_fileout(t_exec *exec);
 int			open_files(t_exec *exec);
-int			close_files(t_exec *exec, int std_in, int std_out);
+int			open_pipe(t_all *p, t_exec *exec);
+int			close_files(t_exec *exec, t_all *p);
 
 //exec_get_path
 char		*find_path(t_env *env);
@@ -264,11 +272,34 @@ void		redirect_pipe(t_ast *current, t_exec *exec);
 void		exec_init(t_exec *exec);
 void		exec_free(t_exec *exec);
 void		set_pipe(t_all *p, t_exec *exec);
-void		reset_pipe(t_all *p);
 int			array_size(char **arr);
 
-void	testAST(t_ast* node, int option);
+void		testAST(t_ast* node, int option);
 
+
+//						PIPER                      //
+//piper
+int			piper(t_all *p, t_ast *current, char **env);
+int			pipe_allocation(t_all *p);
+void		pipe_print(t_exec *exec);
+
+//pipe_parser
+int			pipe_parser(t_all *p, t_ast *current, t_exec **exec, int option);
+void		pipe_parser_next(t_all *p, t_ast *current, t_exec **exec);
+void		pipe_addback(t_all *p, t_exec **exec, t_exec *new_node);
+t_exec		*pipe_last(t_exec *exec);
+
+//pipe_exec
+int			wait_childs(t_all *p, int *pid);
+int			pipe_exec(t_all *p, t_exec **exec, char **env, int *pid);
+int			pipe_exec_child(t_all *p, t_exec *node, char **env);
+int			pipe_exec_parent(t_all *p, int pid, int status);
+
+//pipe_free
+void		pipe_free(t_all *p, t_exec *exec);
+void		pipe_free_exec(t_exec **exec);
+void		pipe_free_fd(t_all *p);
+void		pipe_close_fd(t_all *p);
 
 //////////////////////////////////////////////////////////
 
@@ -380,8 +411,8 @@ t_ast		*replace_word(t_ast **root, t_ast *node, t_ast *new_node);
 void		delete_word(t_ast **root, t_ast **node);
 bool		modify_word(t_ast **node, t_token *token_list);
 int			split_word(t_all *p, t_ast **current);
-int			split_one(const char *cmd_line, size_t *i, t_token **token_list);
-int			split_two(const char *cmd_line, size_t *i, t_token **token_list);
+int			split_one(const char *cmd_line, size_t *i, t_token **token_list, int option);
+int			split_two(const char *cmd_line, size_t *i, t_token **token_list, int option);
 bool		limit_word(char c);
 int			word_management(t_ast **root, t_ast **current, t_token	*token_list);
 
@@ -456,6 +487,8 @@ bool		is_redirect(t_token **tok);
 bool		is_redirect_enum(enum s_type word);
 void		free_list_ptr(t_ast_ptr **list, t_ast **temp_free, int option);
 
+
+
 /*					SIGNALS					*/
 
 int			event(void);
@@ -478,6 +511,7 @@ bool		is_operator(enum s_type type, int option);
 int			double_operator(t_token *c);
 int			check_first_token(t_token *c);
 bool		check_syntax(t_token *current);
+bool		skip_whitespace(char *line);
 
 bool		check_parenthesis(t_token *current, t_syntax syntax, int *skip);
 bool		closepar_error(t_token *current, t_syntax syntax, int *skip);
@@ -501,6 +535,7 @@ void		free_array(char **array);
 void		free_ast(t_ast *node);
 
 /*					 UTILS					*/
+
 bool		ft_is_in_env(t_env *env, char *str);
 void		change_value(t_env *env, char *key, char *value);
 void		change_value_equal(t_env *env, char *key);
@@ -517,7 +552,6 @@ void		print_tab(char **command);
 
 /*					BUILTINS				*/
 //ENV
-
 t_env		*env_to_struct(char **env);
 void		ft_env_add_back(t_env **lst, t_env *new);
 int			ft_env(t_env *env);
