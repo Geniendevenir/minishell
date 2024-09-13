@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_one.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 21:53:15 by allan             #+#    #+#             */
-/*   Updated: 2024/09/13 17:26:33 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/13 19:06:07 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ bool word_token(const char *cmd_line, size_t *i, t_token **token_list, int optio
 	j = *i;
 	if (option == 0)
 	{
-		while (cmd_line[j], limit_word(cmd_line[j], 0) == 0)
+		while (cmd_line[j] && limit_word(cmd_line[j], 0) == 0)
 			j++;
 	}
 	else if (option == 1)

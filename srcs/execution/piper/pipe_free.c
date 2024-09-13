@@ -6,31 +6,45 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:42:50 by allan             #+#    #+#             */
-/*   Updated: 2024/09/10 17:59:05 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/13 14:07:57 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	pipe_close_fd(t_all *p)
+void	pipe_close_fd(t_all *p, int option)
 {
 	int	i;
 
 	i = 0;
-	while (i < p->max_pipe)
+	if (option == 1)
 	{
-		close(p->fd[i][0]);
-		close(p->fd[i][1]);
-		i++;
+		while (i <= p->curr_pipe - 1)
+		{
+			close(p->fd[i][0]);
+			close(p->fd[i][1]);
+			i++;
+		}
+	}
+	else if (option == 2)
+	{
+		while (i < p->max_pipe)
+		{
+			close(p->fd[i][0]);
+			close(p->fd[i][1]);
+			i++;
+		}
 	}
 }
 
-void	pipe_free(t_all *p, t_exec *exec)
+void	pipe_free(t_all *p, t_exec *exec, int *pid)
 {
 	pipe_free_exec(&exec); //add close input/output
 	//pipe_free_fd(p);
 	if (p->fd)
 		free(p->fd);
+	if (pid)
+		free(pid);
 	p->max_pipe = 0;
 	p->curr_pipe = 0;
 }
@@ -45,9 +59,21 @@ void	pipe_free_exec(t_exec **exec)
 	current = *exec;
 	while (current)
 	{
+		if (!current->next)
+		{
+			if (current)
+			{
+				exec_free(current);
+				free(current);
+			}
+			break;
+		}
 		tmp = current->next;
-		exec_free(current);
-		free(current);
+		if (current)
+		{
+			exec_free(current);
+			free(current);
+		}
 		current = tmp;
 	}
 }

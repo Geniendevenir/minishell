@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 14:57:22 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/13 11:35:20 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/13 20:33:16 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ int	hdoc_process(int fd, t_token *limiter, t_all **p, int nb)
 	buffer = NULL;
 	while (1)
 	{
-		if (sig_int == 1)
-			break;
 		if (buffer != NULL)
 			write_hdoc(fd, buffer);
 		buffer = readline("> ");
@@ -39,7 +37,7 @@ int	hdoc_process(int fd, t_token *limiter, t_all **p, int nb)
 			warning(limiter->value, (*p)->line_num);
 			break ;
 		}
-		else if (ft_strcmp(buffer, limiter->value) == 0)
+		else if (ft_strcmp(buffer, limiter->value) == 0 || sig_int == 1)
 			break ;
 		(*p)->line_num++;
 	}

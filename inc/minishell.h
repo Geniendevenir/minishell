@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/13 18:37:37 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/13 19:05:31 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@
 # define BASE "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 # define BASE_LENGTH 62
 # define MAX_FILENAME_LENGTH 165
+# define TAILLE_BUFFER 1024
 
 //DONT CHANGE THE NUMBER
 # define ERROR_MALLOC 1
@@ -120,10 +121,10 @@ enum s_type{
 	WORD_CMD,
 	WORD_OPTION, // option / argument d'une commande
 	WORD_LIMITER,
-	WORD_SQLIMITER, //dans le cas ou j'ai oublie un cas
 	WORD_STRING,
 	WORD_ERROR, //ERREUR (le WORD n'est pas classifie)
 	WORD_WTF,
+	WORD_SQLIMITER, //dans le cas ou j'ai oublie un cas
 };
 
 typedef struct s_token
@@ -203,6 +204,7 @@ typedef struct s_all
 	int		std_out;
 	int		option;
 	int		(*fd)[2];
+	int		skip;
 }	t_all;
 
 typedef struct s_word
@@ -228,20 +230,12 @@ typedef struct s_exec
 	struct s_exec	*next;
 }				t_exec;
 
-//						MERGE							//
-# define TAILLE_BUFFER 1024
-void		print_folder(char *fd_src, int fd);
-bool		here_doc_check_file(t_all *p, t_token *token_list);//go copier coller tout le here doc
-void		copy_folder(char *src, char *dest);
-char		*ft_strdup_spe(char *s);
-void		expand_heredoc(t_all *p);
-int			get_token_list(t_all *p, t_token **token, char *line);
 
 //						EXECUTION                      //
 int			executer(t_all *p, t_ast *current, char **env);
 
 //ast_explorer
-t_ast		*left_expand(t_all *p, t_ast *current);
+t_ast		*left_expand(t_all *p, t_ast *current, int option);
 t_ast		*up_to_cmd(t_ast *current);
 t_ast		*get_next_operator(t_all *p, t_ast *current, t_ast **prev);
 
@@ -260,7 +254,7 @@ bool		is_builtin(char *cmd);
 int			open_filein(t_exec *exec);
 int			open_fileout(t_exec *exec);
 int			open_files(t_exec *exec);
-int			open_pipe(t_all *p, t_exec *exec);
+int			open_pipe(t_all *p, t_exec *exec, int option);
 int			close_files(t_exec *exec, t_all *p);
 
 //exec_get_path
@@ -285,26 +279,32 @@ void		testAST(t_ast* node, int option);
 //						PIPER                      //
 //piper
 int			piper(t_all *p, t_ast *current, char **env);
-int			pipe_allocation(t_all *p);
 void		pipe_print(t_exec *exec);
+int			pipe_analyser(t_all *p, t_exec *exec);
 
 //pipe_parser
 int			pipe_parser(t_all *p, t_ast *current, t_exec **exec, int option);
 void		pipe_parser_next(t_all *p, t_ast *current, t_exec **exec);
 void		pipe_addback(t_all *p, t_exec **exec, t_exec *new_node);
+int			pipe_addempty(t_all *p, t_exec **exec);
 t_exec		*pipe_last(t_exec *exec);
 
 //pipe_exec
-int			wait_childs(t_all *p, int *pid);
+int			wait_childs(t_all *p, int *pid, t_exec *exec);
 int			pipe_exec(t_all *p, t_exec **exec, char **env, int *pid);
-int			pipe_exec_child(t_all *p, t_exec *node, char **env);
+int			pipe_exec_child(t_all *p, t_exec *node, char **env, int option);
 int			pipe_exec_parent(t_all *p, int pid, int status);
+int			pipe_exec_last(t_all *p, t_exec *node, char **env, int *pid);
 
 //pipe_free
-void		pipe_free(t_all *p, t_exec *exec);
+void		pipe_free(t_all *p, t_exec *exec, int *pid);
 void		pipe_free_exec(t_exec **exec);
 void		pipe_free_fd(t_all *p);
-void		pipe_close_fd(t_all *p);
+void		pipe_close_fd(t_all *p, int option);
+
+//pipe_utils
+int			is_command(t_ast *current);
+t_exec *	last_command(t_exec *exec);
 
 //////////////////////////////////////////////////////////
 
@@ -322,7 +322,7 @@ bool 		lexer(char *cmd_line, t_token **token_list, int error);
 int			tokenizer_one(const char *cmd_line, size_t *i, t_token **token_list);
 int			tokenizer_two(const char *cmd_line, size_t *i, t_token **token_list);
 int			tokenizer_three(const char *cmd_line, size_t *i, t_token **token_list);
-int			tokenizer_four(const char *cmd_line, size_t *i, t_token **token_list);
+//int			tokenizer_four(const char *cmd_line, size_t *i, t_token **token_list);
 
 //token_management
 void 		token_init(t_token **token_list);
@@ -408,7 +408,11 @@ char		*ft_strjoin_spe(char *s1, char const *s2);
 void		bloquer_signal_eof(void);
 void		restaurer_signal_eof(void);
 void		write_hdoc(int fd, char *buffer);
-
+bool		here_doc_check_file(t_all *p, t_token *token_list);
+void		copy_folder(char *src, char *dest);
+char		*ft_strdup_spe(char *s);
+void		expand_heredoc(t_all *p);
+int			get_token_list(t_all *p, t_token **token, char *line);
 
 /*								EXPANDER						*/
 //split_word
@@ -554,6 +558,7 @@ void		print_error_cmd_not_found(t_token *current);
 void		printAST(t_ast* node, int level);
 const char* getAST_Class(t_ast *current);
 void		print_tab(char **command);
+void		print_folder(char *fd_src, int fd);
 
 /*					BUILTINS				*/
 //ENV
