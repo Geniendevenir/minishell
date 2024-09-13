@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 12:18:13 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/13 15:26:14 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/13 17:15:14 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,8 @@ int get_token_list(t_all *p, t_token **token, char *line)
 
 	error = 0;
 	i = 0;
-	while (line && i < ft_strlen(line))
+	printf("line = %s\n", line);
+	while (i < ft_strlen(line))
 	{
 		error = split_one(line, &i, token, 1);
 		if (error != 0)
@@ -125,11 +126,12 @@ int get_token_list(t_all *p, t_token **token, char *line)
 			error_lexer(error);
 			return (1);
 		}
-		i++;
+		//i++;
 	}
+	token_print_amazing(token);
 	if (expander(token, p, error) == 1) //free token list automatiquement
 		return (1);
-	token_print_amazing(token);
+	
 	return (0);
 }
 
@@ -148,7 +150,6 @@ char *expand_line(t_all *p, char *line)
 		write(2, "ERROR GET TOKEN LIST\n", 21);
 		return (NULL);
 	}
-	token_print_amazing(&token);
 	new_line = ft_strdup(token->value);
 	if (token->next)
 		token = token->next;
@@ -172,12 +173,8 @@ void expand_heredoc(t_all *p)
 	char	*line;
 
 	line = "not NULL";
-	printf("EXPAND HEREDOC\n");
-	if(p->here_doc[p->int_here_doc])
-		printf("J'EXISTE PTN DE Mtoken_print_amazing ERDEEEEEEEE");
 	if (!p->here_doc || !p->here_doc[p->int_here_doc])
 		return;
-	printf("EXPAND HEREDOC2\n");
 	fd = open(p->here_doc[p->int_here_doc], O_RDONLY);
 	if (fd == -1)
 		return (ft_putstr_fd("error openfd1\n", 2));
@@ -192,10 +189,7 @@ void expand_heredoc(t_all *p)
 	{
 		line = get_next_line(fd);
 		if (line == NULL)
-		{
-			free(line);
 			break;
-		}
 		printf("line before expand line = %s\n", line);
 		line = ft_strdup_spe(expand_line(p, line));
 		printf("line after expand line = %s\n", line);

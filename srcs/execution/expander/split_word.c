@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 17:54:19 by allan             #+#    #+#             */
-/*   Updated: 2024/09/11 20:33:28 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/13 17:28:13 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ int split_word(t_all *p, t_ast **current)
 			return (1);
 		}
 	}
+	token_print_amazing(&token_list);
 	if (expander(&token_list, p, error) == 1) //free token list automatiquement
 		return (1);
 	error = word_management(&p->ast, current, token_list);
@@ -116,9 +117,9 @@ int	split_two(const char *cmd_line, size_t *i, t_token **token_list, int option)
 		else if (cmd_line[*i] == '*' || is_wildcard(cmd_line, *i) == 0)
 			error = wildcard_token(cmd_line, i, token_list);
 		else
-			error = word_token(cmd_line, i, token_list);
+			error = word_token(cmd_line, i, token_list, 0);
 	}
 	else
-		error = word_token(cmd_line, i, token_list);
+		error = word_token(cmd_line, i, token_list, 1);
 	return (error);
 }
