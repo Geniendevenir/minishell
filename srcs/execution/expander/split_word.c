@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_word.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 17:54:19 by allan             #+#    #+#             */
-/*   Updated: 2024/09/13 17:28:13 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/13 23:33:49 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ int split_word(t_all *p, t_ast **current)
 			return (1);
 		}
 	}
-	token_print_amazing(&token_list);
 	if (expander(&token_list, p, error) == 1) //free token list automatiquement
 		return (1);
 	error = word_management(&p->ast, current, token_list);

@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 18:37:43 by allan             #+#    #+#             */
-/*   Updated: 2024/09/10 18:14:23 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/14 21:35:55 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,7 @@ int get_command(t_ast *current, t_exec *exec)
 	int	size;
 		
 	size = command_size(current);
-	printf("test 2\n");
-	//printf("cmd size = %d\n", size);
 	exec->command = parse_command(current, size);
-	printf("test 3\n");
 	if (!exec->command)
 		return (1);
 	return (0);
@@ -88,8 +85,8 @@ int		check_cmd(t_exec *exec, t_env *env)
 		}
 		if (!path)
 		{
-			write(1, exec->command[0], ft_strlen(exec->command[0]));
-			write(1, ": command not found\n", 20);
+			write(2, exec->command[0], ft_strlen(exec->command[0]));
+			write(2, ": command not found\n", 20);
 			return (127);
 		}
 		exec->path = path;

@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:24:24 by allan             #+#    #+#             */
-/*   Updated: 2024/09/10 11:48:21 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/14 23:53:56 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	exec_cmd(t_exec *exec, int *exit_status, char **env)
 {
 	int	pid;
 	int	status;
-
+ 
 	pid = fork();
 	if (pid == -1)
 	{
@@ -73,6 +73,8 @@ int	exec_cmd(t_exec *exec, int *exit_status, char **env)
 	}
 	else if (pid == 0)
 	{
+		/* close(p->std_in);
+		close(p->std_out); */
 		if (execve(exec->path, exec->command, env) == -1)
 			write(2, "Error: Execve execution failed\n", 31);
 		exit(-1);
@@ -84,8 +86,6 @@ int	exec_cmd(t_exec *exec, int *exit_status, char **env)
 			error_executer(NULL, 9);
 			return (-1);
 		}
-		/* printf("status = %d\n", status);
-		printf("WIFEXITED(status) = %d\n", WIFEXITED(status)); */
 		if (WIFEXITED(status))
 			return (WEXITSTATUS(status));
 		return (status);

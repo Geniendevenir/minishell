@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:42:50 by allan             #+#    #+#             */
-/*   Updated: 2024/09/13 14:07:57 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/14 23:14:45 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void	pipe_close_fd(t_all *p, int option)
 void	pipe_free(t_all *p, t_exec *exec, int *pid)
 {
 	pipe_free_exec(&exec); //add close input/output
-	//pipe_free_fd(p);
 	if (p->fd)
 		free(p->fd);
 	if (pid)
@@ -54,7 +53,7 @@ void	pipe_free_exec(t_exec **exec)
 	t_exec	*current;
 	t_exec	*tmp;
 
-	if (!exec)
+	if (!exec || !(*exec))
 		return ;
 	current = *exec;
 	while (current)
@@ -76,21 +75,4 @@ void	pipe_free_exec(t_exec **exec)
 		}
 		current = tmp;
 	}
-}
-
-void	pipe_free_fd(t_all *p)
-{
-	int	i;
-
-	i = 0;
-	if (!p->fd)
-		return ;
-	while (i < p->max_pipe)
-	{
-		close(p->fd[i][0]);
-		close(p->fd[i][1]);
-		i++;
-	}
-	free(p->fd);
-	p->fd = NULL;
 }

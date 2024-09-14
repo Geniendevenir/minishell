@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/13 18:54:44 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/14 23:18:38 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ char	*minishell(t_all *p, char **env)
 
 	rl_event_hook = event;
 	p->line = readline("\033[1;032mMinishell> \033[m");
+	if (sig_int == 1)
+        p->exit_status = 127;
 	if (p->line == NULL)
 	{
 		printf("exit\n");

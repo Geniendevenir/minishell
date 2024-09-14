@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/13 19:05:31 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/14 23:38:31 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,10 +234,12 @@ typedef struct s_exec
 //						EXECUTION                      //
 int			executer(t_all *p, t_ast *current, char **env);
 
-//ast_explorer
+//exec_parser
 t_ast		*left_expand(t_all *p, t_ast *current, int option);
 t_ast		*up_to_cmd(t_ast *current);
 t_ast		*get_next_operator(t_all *p, t_ast *current, t_ast **prev);
+t_ast		*get_last_pipe(t_ast *current);
+t_ast		*down_left(t_ast *current);
 
 //exec_check_cmd
 int			get_command(t_ast *current, t_exec *exec);
@@ -263,6 +265,9 @@ char		*path_free(t_path *p, int *error, int option);
 void		p_init(t_path *p);
 char		*get_path(const char *cmd, t_env *env, int *error);
 
+t_ast *get_next_operator(t_all *p, t_ast *current, t_ast **prev);
+t_ast *get_last_pipe(t_ast *current);
+
 //exec_redirect
 int			assign_redirect(t_ast *current, t_exec *exec);
 void		redirect_pipe(t_ast *current, t_exec *exec);
@@ -284,27 +289,29 @@ int			pipe_analyser(t_all *p, t_exec *exec);
 
 //pipe_parser
 int			pipe_parser(t_all *p, t_ast *current, t_exec **exec, int option);
-void		pipe_parser_next(t_all *p, t_ast *current, t_exec **exec);
-void		pipe_addback(t_all *p, t_exec **exec, t_exec *new_node);
-int			pipe_addempty(t_all *p, t_exec **exec);
-t_exec		*pipe_last(t_exec *exec);
+int			pipe_parser_next(t_all *p, t_ast *current, t_exec **exec);
+int			parser_add_pipe(t_all *p, t_ast *current, t_exec **exec);
 
 //pipe_exec
 int			wait_childs(t_all *p, int *pid, t_exec *exec);
 int			pipe_exec(t_all *p, t_exec **exec, char **env, int *pid);
-int			pipe_exec_child(t_all *p, t_exec *node, char **env, int option);
-int			pipe_exec_parent(t_all *p, int pid, int status);
+void		pipe_exec_child(t_all *p, t_exec *node, char **env, int option);
 int			pipe_exec_last(t_all *p, t_exec *node, char **env, int *pid);
 
 //pipe_free
 void		pipe_free(t_all *p, t_exec *exec, int *pid);
 void		pipe_free_exec(t_exec **exec);
-void		pipe_free_fd(t_all *p);
 void		pipe_close_fd(t_all *p, int option);
 
 //pipe_utils
 int			is_command(t_ast *current);
 t_exec *	last_command(t_exec *exec);
+void		pipe_addback(t_all *p, t_exec **exec, t_exec *new_node);
+int			pipe_addempty(t_all *p, t_exec **exec);
+t_exec		*pipe_last(t_exec *exec);
+int			pipe_allocation(t_all *p, int **pid);
+t_exec		*pipe_skip_empty(t_all *p, t_exec *node);
+int			pipe_hate_norm(t_all *p, int *i, int option);
 
 //////////////////////////////////////////////////////////
 

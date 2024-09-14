@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_here_doc.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 12:18:13 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/13 17:43:53 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/13 23:33:32 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,7 @@ int get_token_list(t_all *p, t_token **token, char *line)
 			error_lexer(error);
 			return (1);
 		}
-		//i++;
 	}
-	token_print_amazing(token);
 	if (expander(token, p, error) == 1) //free token list automatiquement
 		return (1);
 	

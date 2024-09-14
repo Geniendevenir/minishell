@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 13:58:59 by allan             #+#    #+#             */
-/*   Updated: 2024/09/10 16:13:26 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/14 23:06:04 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,9 +115,9 @@ void	error_expander(t_ast *current, int error)
 {
 	if (error == 1)
 	{
-		write(1, "bash: ", 6);
-		write(1, current->value, ft_strlen(current->value));
-		write(1, ": ambiguous redirect\n", 21);
+		write(2, "bash: ", 6);
+		write(2, current->value, ft_strlen(current->value));
+		write(2, ": ambiguous redirect\n", 21);
 	}
 	/* if (error == 2)
 	if (error == 3)
@@ -151,7 +151,6 @@ void	error_executer(char *error, int option)
 		write(2, "Error: Waitpid Initialisation Failed\n", 37);
 	else if (option == 10)
 		write(2, "Error: Pipe Initialisation Failed\n", 34);
-	//write(2, error, ft_strlen(error));
 }
 
 void	error_builtins(char *error, int option)
