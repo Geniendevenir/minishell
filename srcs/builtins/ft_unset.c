@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 17:32:39 by Matprod           #+#    #+#             */
-/*   Updated: 2024/08/24 17:19:59 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/14 17:45:31 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,6 @@ void	ft_destroy(t_env *env, char *unset)
 
 	while (env && env->next)
 	{
-		if (ft_strcmp(env->next->key, "PWD") == 0
-			&& ft_strcmp(env->next->key, unset) == 0)
-		{
-			env->next->code = 4;
-			return ;
-		}
 		if (!ft_strncmp(env->next->key, unset, ft_strlen(unset)))
 		{
 			tmp = env->next;

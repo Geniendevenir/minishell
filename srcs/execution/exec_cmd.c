@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:24:24 by allan             #+#    #+#             */
-/*   Updated: 2024/09/10 11:48:21 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/14 09:37:51 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	exec_builtin(t_all **p, t_exec *exec, char **cmd)
 		result = ft_cd((*p)->env ,cmd);
 	}
 	else if (ft_strcmp(cmd[0], "pwd") == 0)
-		result = ft_pwd(cmd[1]);
+		result = ft_pwd((*p)->env, cmd[1]);
 	else if (ft_strcmp(cmd[0], "export") == 0)
 		result = ft_export((*p)->env, cmd);
 	else if (ft_strcmp(cmd[0], "unset") == 0)

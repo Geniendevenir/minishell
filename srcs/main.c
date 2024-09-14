@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/13 18:54:44 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/14 15:55:27 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,17 @@
 
 int		sig_int = 0;
 
+void	test_pipe(t_ast *current)
+{
+	while(current)
+	{
+		if(current->value)
+			printf("pipe curr = %s\n", current->value);
+		if(!current->parent)
+			break ;
+		current = current->parent;
+	}
+}
 void	testAST(t_ast* node, int option)
 {
 	if (option == 1)
@@ -31,9 +42,23 @@ void	testAST(t_ast* node, int option)
 	{
 		while (node->right)
 			node = node->right;
+		node = node->parent;
 		while (node->left)
 			node = node->left;
 		printf("last left right = %s\n", node->value);
+		while (node->parent)
+		{
+			printf("parent = %s\n", node->parent->value);
+			node = node->parent;
+		}
+	}
+	else if (option == 3)
+	{
+		while (node->right)
+			node = node->right;
+		while (node->left)
+			node = node->left;
+		printf("option 3 last left right = %s\n", node->value);
 		while (node->parent)
 		{
 			printf("parent = %s\n", node->parent->value);
@@ -80,8 +105,10 @@ char	*minishell(t_all *p, char **env)
 		if (p->error == 0)
 		{
 			printAST(p->ast, 0);
-			testAST(p->ast, 1);
-			testAST(p->ast, 2);
+			//testAST(p->ast, 1);
+			//testAST(p->ast, 2);
+			//testAST(p->ast, 3);
+			//test_pipe(p->ast);
 			current = p->ast;
 			if (executer(p, current, env) == 1)
 			{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   word_management.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 23:02:14 by allan             #+#    #+#             */
-/*   Updated: 2024/08/08 15:31:00 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/14 15:57:52 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ void delete_word(t_ast **root, t_ast **node)
 		return ;
 	if ((*node)->left == NULL)
 	{
-		printf("b\n");
 		*node = replace_word(root, *node, NULL); // Case 2: (*Node) is a leaf
 		if ((*node)->parent)
 			*node = (*node)->parent;	

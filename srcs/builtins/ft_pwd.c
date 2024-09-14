@@ -3,16 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 16:49:27 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/05 14:40:52 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/14 17:06:43 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_pwd(char *option)
+/* int is_pwd_in_env(t_env *env)
+{
+	while (env)
+	{
+		if (!ft_strcmp(env->key, "PWD"))
+			return (1);
+		env = env->next;
+	}
+	return (0);
+} */
+
+int	ft_pwd(t_env *env, char *option)
 {
 	char	buffer[1024];
 	int		i;

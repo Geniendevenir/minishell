@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/13 19:05:31 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/14 09:36:53 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -573,9 +573,9 @@ char		**env_to_char_export(t_env *env);
 //UNSET
 int			ft_unset(t_env *env, char **unset);
 //PWD
-int			ft_pwd(char *option);
+int			ft_pwd(t_env *env, char *option);
 //CD
-int		ft_cd(t_env *env, char **cmd);
+int			ft_cd(t_env *env, char **cmd);
 //EXPORT
 char		*get_env_var(t_env *envp, char	*var);
 int			ft_export(t_env *env, char **cmd);

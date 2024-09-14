@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 20:38:03 by Matprod           #+#    #+#             */
-/*   Updated: 2024/08/12 19:15:01 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/14 15:49:45 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	if_no_last_ope(t_ast **new_node, t_ast_ptr **list)
 void	if_last_ope_exist(t_ast **new_node, t_ast_ptr **list)
 {
 	(*new_node)->left = (*list)->last_ope->right;
+	(*list)->last_ope->right->parent = *new_node;
 	(*list)->last_ope->right = *new_node;
 	(*new_node)->parent = (*list)->last_ope;
 	(*list)->current = *new_node;
