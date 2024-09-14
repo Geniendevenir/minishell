@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 16:29:27 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/13 18:52:51 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/14 18:44:59 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,6 @@ bool	check_echo(char *str)
 
 int	echo_error(char **cmd)
 {
-	/* if (write(1, "\0", 1) == -1)
-		if (errno == ENOSPC)
-			return (ft_putendl_fd(
-					"echo: write error: No space left on device", 2), 1); */
 	if (!cmd || !cmd[0])
 	{
 		write(1, "\n", 1);

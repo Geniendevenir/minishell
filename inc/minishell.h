@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/14 09:36:53 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/14 22:04:34 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,6 +230,11 @@ typedef struct s_exec
 	struct s_exec	*next;
 }				t_exec;
 
+//					MERGE					//
+
+//utils
+void		trim_space(char *str);
+int			ft_exit(t_all **p, t_exec *exec, char **cmd);
 
 //						EXECUTION                      //
 int			executer(t_all *p, t_ast *current, char **env);
@@ -585,7 +590,7 @@ int			export_free(t_env **add_env, int option);
 int			valid_export(char *new_env);
 char		**sort_env(char **env);
 //EXIT
-void		ft_exit(t_all **p, t_exec *exec, char **cmd);
+int			ft_exit(t_all **p, t_exec *exec, char **cmd);
 /* int			ft_exit(char **commande, bool child);
 int			check_is_num(char *exit_status);
 int			check_size(long long int *exit_status);
