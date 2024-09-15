@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_check_cmd.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 18:37:43 by allan             #+#    #+#             */
-/*   Updated: 2024/09/14 16:17:35 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/14 21:35:55 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,7 @@ int get_command(t_ast *current, t_exec *exec)
 	int	size;
 		
 	size = command_size(current);
-	printf("test 2\n");
-	//printf("cmd size = %d\n", size);
 	exec->command = parse_command(current, size);
-	printf("test 3\n");
 	if (!exec->command)
 		return (1);
 	return (0);
@@ -68,40 +65,12 @@ char **parse_command(t_ast *current, int size)
 	return (command);
 }
 
-int check_dot(char *cmd, int option)
-{
-	if (option == 0)
-	{
-		if (!ft_strcmp(cmd, "."))
-		{
-			ft_putstr_fd("bash: .: filename argument required\n", 1);
-			ft_putstr_fd(".: usage: . filename [arguments]\n", 1);
-			return (2);
-		}
-		if (!ft_strcmp(cmd, ".."))
-		{
-			ft_putstr_fd("..: command not found\n", 1);
-			return (127);
-		}
-	}
-	else if (option == 1)
-	{
-		if (!ft_strcmp(cmd, "."))
-			return (2);
-		if (!ft_strcmp(cmd, ".."))
-			return (127);
-	}
-	return (0);
-}
-
 int		check_cmd(t_exec *exec, t_env *env)
 {
 	char	*path;
 	int		error;
 
 	error = 0;
-	if (check_dot(exec->command[0], 0) != 0)
-		return (check_dot(exec->command[0], 1));
 	if (access(exec->command[0], X_OK) == -1) //check if not absolute path
 	{
 		if (check_builtin(exec->command[0]) == 1)
@@ -116,8 +85,8 @@ int		check_cmd(t_exec *exec, t_env *env)
 		}
 		if (!path)
 		{
-			write(1, exec->command[0], ft_strlen(exec->command[0]));
-			write(1, ": command not found\n", 20);
+			write(2, exec->command[0], ft_strlen(exec->command[0]));
+			write(2, ": command not found\n", 20);
 			return (127);
 		}
 		exec->path = path;

@@ -6,261 +6,66 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 21:23:21 by allan             #+#    #+#             */
-/*   Updated: 2024/09/13 18:43:59 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 11:10:31 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-/*
-	TO DO
-	1 - Executer une fois un builtin
-	2 - Executer une fois un builtin ou non builtin
-	3 - Executer en redirigeant
-	4 - Executer plusieurs builtin ou cmd
-	5 - Executer une fois un pipe
-	6 - Executer plusieurs pipes
-	7 - Expand HEREDOC
-	8 - Error Management Execution
- */
-
-//RECHECK TOUS LES RETURNS / EXIT STATUS
-
-
-//write(2, "test\n");
-t_ast *left_expand(t_all *p, t_ast *current, int option)
-{
-	p->error = 0;
-	while (current) //Down->Left : A CHAQUE DESCENTE LEFT OR RIHT EXPAND LES ENV POUR LES WORD ET LES HEREDOC DONT LE TYPE N'EST PAS SQ_LIMITER
-	{
-		if (current->type == TOKEN_PIPE)
-		{
-			if (option == 0)
-				p->max_pipe += 1;
-			if (current->right)
-				left_expand(p, current->right, 1);
-		}
-		if (is_operator(current->type, 2))
-			p->option = 0;
-		if (current->state == STATE_WORD && current->type == WORD_LIMITER)
-			expand_heredoc(p);
-		if (current->state == STATE_WORD && current->type != WORD_SQLIMITER && current->type != WORD_LIMITER)
-		{
-			/* write(2, "current = %s\n", current->value);
-			write(2, "current size = %ld\n", ft_strlen(current->value)); */
-			p->error = split_word(p, &current);
-			if (!current || !current->value)
-				return (current);
-			else if (p->error != 0 && p->error != -1)
-				return (current); //CHANGE RETURN AS IT ALSO TAKE INTO ACCOUNT EMPTY PROMTP AFTER EXPANDER
-			else if (is_operator(current->type, 2) == 1)
-				return (current);
-		}
-		if (p->error != -1 || current->type == TOKEN_PIPE)
-		{
-			if (!current->left)
-				return (current);
-			current = current->left;
-		}
-	}
-	return (current);
-}
-
-t_ast	*up_to_cmd(t_ast *current)
-{
-	while (current->parent && (current->parent->type == WORD_CMD || current->parent->type == WORD_OPTION)) //Up->Cmd
-		current = current->parent;
-	if (current->value)
-		printf("after up_to_cmd = %s\n", current->value);
-	return (current);
-}
-
 int		executer(t_all *p, t_ast *current, char **env)
 {
 	t_exec	exec;
-	t_ast	*prev;
 
-	write(2, "TURN\n", 5);
 	exec_init(&exec);
-	current = left_expand(p, current, 0);
+	p->error = 0;
+	current = down_left_expand(p, current, 0);
 	if (p->error == 1)
-	{
-		exec_free(&exec);
-		//reset_pipe(p, 1);
-		return (1);
-	}
+		return (exec_free(&exec), 1);
 	if (p->max_pipe > 0)
 	{
-		piper(p, current, env);
-		return (0);
+		if (piper(p, current, env) == 1)
+			return (exec_free(&exec), 1);
+		current = get_last_pipe(current);
+		if (!current->parent)
+			return (exec_free(&exec), 0);
 	}
-	current = up_to_cmd(current);
-	if (current && current->value && current->type == WORD_CMD)
+	else
 	{
-		if (get_command(current, &exec) == 1)
-		{
-			//write(2, "Get Command Error Malloc\n", 25);
-			exec_free(&exec);
+		if (execute_command(p, &current, &exec, env) == 1)
 			return (1);
-		}
-		if (exec.command[0])
-		{
-			//write(2, "CMD:\n", 5);
-			print_tab(exec.command);
-			//set_pipe(p, &exec);
-			assign_redirect(current, &exec);
-			p->exit_status = open_files(&exec);
-			//write(2, "a\n", 2);
-			if (p->exit_status == 1)
-			{
-				close_files(&exec, p);
-				exec_free(&exec);
-				//reset_pipe(p, 1);
-				return (1);
-			}
-			//write(2, "RESULT:\n", 8);
-			if (is_builtin(exec.command[0]) == 1 && p->exit_status == 0)
-				p->exit_status = exec_builtin(&p, &exec, exec.command);
-			else if (p->exit_status == 0)
-			{
-				p->exit_status = check_cmd(&exec, p->env);
-				if (p->exit_status == 0)
-				{
-					//write(2, "FULL CMD:\n", 10);
-					print_tab(exec.command);
-					/* if (exec.path)
-					{
-						write(2, "exec.path = ", 12);
-						write(2, "exec.path\n", ft_strlen(exec.path));
-						write(2, "\n", 1);
-					} */
-					p->exit_status = exec_cmd(&exec, &p->exit_status, env);
-					if (p->exit_status < 0)
-					{
-						write(2, "End child\n", 10);
-						close_files(&exec, p);
-						exec_free(&exec);
-						//reset_pipe(p, 1);
-						return (1);
-					}
-				}
-			}
-				//if (p->exit_status == 1) stop
-		}
 	}
-	//Pipe Deuxieme execution plante
-	//(ls || echo test) | $DONT: Fix dans check_syntax OK
-	//ls && echo test < output.txt: Fix dans is_finished OK
-	//ls | cat | cat OK
-	//Pipe when using non builtins OK
-	//Just Spaces: Fix dans check syntax OK
-	
-	//Cat + Ctrl C ou Grep + Ctrl C ET Ctrl D
-	//Pour child de l'execve mettre exit en cas d'erreur
-	close_files(&exec, p);
+	if (close_files(&exec, p) == 1)
+		return (exec_free(&exec), 1);
 	exec_free(&exec);
-	//reset_pipe(p, 0);
-	while (current->parent)
-	{
-		if (is_operator(current->parent->type, 2) == 1)
-			break ;
-		current = current->parent;
-	}
-	prev = current;
-	/* write(2, "beggggining current = %s\n", prev->value);
-	if (prev->parent)
-		write(2, "BEGINING current->parent = %s\n", prev->parent->value); */
-	if (current->parent)
-	{
-		current = current->parent;
-		while (current->parent && current->right == prev)
-		{
-			prev = current;
-			current = current->parent;
-		}
-	}
-	if (current->right == prev)
-		return (0);
-	current = prev;
-	/* if (current->value)
-		write(2, "current = %s\n", current->value);
-	write(2, "p->exit_status = %d\n", p->exit_status);
-	write(2, "p->option = %d\n", p->option); */
-	if (is_operator(current->type, 2) == 0 || p->option == 1)
-	{
-		current = get_next_operator(p, current, &prev);
-		p->option = 0;
-	}
-	prev = current;
-	if (current->type == TOKEN_OR && p->exit_status == 0)
-	{
-		if (current->parent && (current->type == TOKEN_OR || prev == current->right))
-		{
-			current = get_next_operator(p, current, &prev);
-			if (prev == current)
-				return (0);
-		}
-		while (current->parent && (current->type == TOKEN_OR || prev == current->right))
-		{
-			current = get_next_operator(p, current, &prev);
-			prev = prev->parent;
-		}
-		if (current->type == TOKEN_OR || is_operator(current->type, 2) == 0)
-			return (0);
-		if ((!current->parent && p->option != 0) || (!current->parent && prev == current->right))
-			return (0);
-		p->option = 0;
-	}
-	else if (current->type == TOKEN_AND && p->exit_status != 0)
-	{
-		while (current->type == TOKEN_AND && current->parent)
-		{
-			current = get_next_operator(p, current, &prev);
-			if (prev == current)
-				return (0);
-		}
-		if (current->type == TOKEN_AND)
-			return (0);
-		if ((!current->parent && p->option != 0))
-			return (0);
-		p->option = 0;
-	}
-	if ((!current->parent && p->option != 0) || is_operator(current->type, 2) == 0)
-		return (0);
-	else if (p->option == 1)
-		current = get_next_operator(p, current, &prev);
-	if (current->right)
-	{
-		p->option = 1;
-		write(2, "\n\n", 2);
-		executer(p, current->right, env);
-	}
+	parser_exec_next(p, current, env);
 	return (0);
 }
 
-t_ast *get_next_operator(t_all *p, t_ast *current, t_ast **prev)
+int		execute_command(t_all *p, t_ast **current, t_exec *exec, char **env)
 {
-	if (current->parent)
+	*current = up_to_cmd(*current);
+	if ((*current) && (*current)->value && (*current)->type == WORD_CMD)
 	{
-		current = current->parent;
-		if (current->type == TOKEN_PIPE)
+		if (get_command(*current, exec) == 1)
+			return (error_executer(NULL, 4), exec_free(exec), 1);
+		if (exec->command[0])
 		{
-			if (p->max_pipe > 0)
-				p->curr_pipe--;
+			assign_redirect((*current), exec);
+			if (open_files(p, exec) == 1)
+				return (close_files(exec, p), exec_free(exec), 1);
+			if (is_builtin(exec->command[0]) == 1 && p->exit_status == 0)
+				p->exit_status = exec_builtin(&p, exec, exec->command);
+			else if (p->exit_status == 0)
+			{
+				p->exit_status = check_cmd(exec, p->env);
+				if (p->exit_status == 0)
+				{
+					p->exit_status = exec_cmd(p, exec, &p->exit_status, env);
+					if (p->exit_status < 0)
+						return (close_files(exec, p), exec_free(exec), 1);
+				}
+			}
 		}
 	}
-	while (current->parent)
-	{
-		if (is_operator(current->type, 2))
-			break ;
-		current = current->parent;
-		if (current->type == TOKEN_PIPE)
-		{
-			if (p->max_pipe > 0)
-				p->curr_pipe--;
-		}
-	}
-	return (current);
+	return (0);
 }
-

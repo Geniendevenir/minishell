@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_word.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 17:54:19 by allan             #+#    #+#             */
-/*   Updated: 2024/09/13 17:28:13 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 11:28:50 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	word_management(t_ast **root, t_ast **current, t_token	*token_list)
 	if (!token_list->value || !*token_list->value)
 	{
 		delete_word(root, current);
-		return (-1); //check valeur non utilise par exit status
+		return (-1);
 	}
 	else if (token_list->next)
 	{
@@ -29,8 +29,6 @@ int	word_management(t_ast **root, t_ast **current, t_token	*token_list)
 	return (0);
 }
 
-/* printf("AFTER EXPANDER:\n");
-	token_print(&token_list); */
 int split_word(t_all *p, t_ast **current)
 {
 	size_t		i;
@@ -53,8 +51,7 @@ int split_word(t_all *p, t_ast **current)
 			return (1);
 		}
 	}
-	token_print_amazing(&token_list);
-	if (expander(&token_list, p, error) == 1) //free token list automatiquement
+	if (expander(&token_list, p, error) == 1)
 		return (1);
 	error = word_management(&p->ast, current, token_list);
 	token_free(&token_list);
@@ -75,10 +72,7 @@ int	split_one(const char *cmd_line, size_t *i, t_token **token_list, int option)
 			(*i) += 2;
 		}
 		else if (is_env(cmd_line[*i + 1], 1) == 2) //Is ENV valid ?
-		{
-			(*i)++;
-			return (0);
-		}
+			return ((*i)++, 0);
 		else if (is_env(cmd_line[*i + 1], 1) == 1) //$$
 		{
 			error = token_addback(token_list, "$", 2);

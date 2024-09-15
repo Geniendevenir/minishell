@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 12:18:13 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/13 20:10:24 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 14:19:23 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,3 +104,4 @@ void	expand_heredoc(t_all *p)
 	}
 	while_expand_heredoc(p, line, fd2, fd);
 }
+

@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 13:19:53 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 14:20:56 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,27 +230,29 @@ typedef struct s_exec
 	struct s_exec	*next;
 }				t_exec;
 
-//					MERGE					//
-// copier mon heredoc /ast/ parser / utils/ main.c / et tout les buitlins sauf echo et cd
-//rajouter free line a free all
-//parser
-int			parser(char *cmd_line, t_ast **ast, t_all **p);
-//utils
-void		update_variable(t_all *p);
-void		trim_space(char *str);
-//exit
-int			ft_exit(t_all **p, t_exec *exec, char **cmd);
-//pwd
-int			ft_pwd(char *option);
-//here_doc
-int			create_signal_here();
+//						MERGE 							//
+//init all / expand here doc et expand here doc utils
+
 //						EXECUTION                      //
 int			executer(t_all *p, t_ast *current, char **env);
+int			execute_command(t_all *p, t_ast **current, t_exec *exec, char **env);
 
-//ast_explorer
-t_ast		*left_expand(t_all *p, t_ast *current, int option);
+//exec_parser
+int			parser_exec_next(t_all *p, t_ast *current, char **env);
+int			parse_operator_or(t_all *p, t_ast **current, t_ast **prev);
+int			parse_operator_and(t_all *p, t_ast **current, t_ast **prev);
+
+//exec_parse_up
+t_ast		*get_next_operator(t_all *p, t_ast *current, t_ast **prev, int option);
+t_ast		*get_last_pipe(t_ast *current);
 t_ast		*up_to_cmd(t_ast *current);
-t_ast		*get_next_operator(t_all *p, t_ast *current, t_ast **prev);
+t_ast		*up_to_parent_operator(t_ast *current);
+t_ast		*up_and_check_right(t_ast *current, t_ast **prev);
+
+//exec_parse_down
+t_ast		*down_left_expand(t_all *p, t_ast *current, int option);
+void		expand_pipe(t_all *p, t_ast *current, int option);
+t_ast		*down_left(t_ast *current);
 
 //exec_check_cmd
 int			get_command(t_ast *current, t_exec *exec);
@@ -260,15 +262,17 @@ int			check_cmd(t_exec *exec, t_env *env);
 
 //exec_cmd
 int			exec_builtin(t_all **p, t_exec *exec, char **cmd);
-int			exec_cmd(t_exec *exec, int *exit_status, char **env);
+int			exec_cmd(t_all *p, t_exec *exec, int *exit_status, char **env);
 bool		is_builtin(char *cmd);
 
 //exec_file
 int			open_filein(t_exec *exec);
+int			filein_error(t_all *p, t_exec *exec);
 int			open_fileout(t_exec *exec);
-int			open_files(t_exec *exec);
+int			open_files(t_all *p, t_exec *exec);
 int			open_pipe(t_all *p, t_exec *exec, int option);
 int			close_files(t_exec *exec, t_all *p);
+void		fd_dup(t_exec *exec, int result, int result2);
 
 //exec_get_path
 char		*find_path(t_env *env);
@@ -297,33 +301,42 @@ int			pipe_analyser(t_all *p, t_exec *exec);
 
 //pipe_parser
 int			pipe_parser(t_all *p, t_ast *current, t_exec **exec, int option);
-void		pipe_parser_next(t_all *p, t_ast *current, t_exec **exec);
-void		pipe_addback(t_all *p, t_exec **exec, t_exec *new_node);
-int			pipe_addempty(t_all *p, t_exec **exec);
-t_exec		*pipe_last(t_exec *exec);
+int			pipe_parser_next(t_all *p, t_ast *current, t_exec **exec);
+int			parser_add_pipe(t_all *p, t_ast *current, t_exec **exec);
 
 //pipe_exec
 int			wait_childs(t_all *p, int *pid, t_exec *exec);
 int			pipe_exec(t_all *p, t_exec **exec, char **env, int *pid);
-int			pipe_exec_child(t_all *p, t_exec *node, char **env, int option);
-int			pipe_exec_parent(t_all *p, int pid, int status);
+void		pipe_exec_child(t_all *p, t_exec *node, char **env, int option);
 int			pipe_exec_last(t_all *p, t_exec *node, char **env, int *pid);
 
 //pipe_free
 void		pipe_free(t_all *p, t_exec *exec, int *pid);
 void		pipe_free_exec(t_exec **exec);
-void		pipe_free_fd(t_all *p);
 void		pipe_close_fd(t_all *p, int option);
+void		pipe_close_fd_two(t_all *p);
+
+//pipe_redirect
+void		open_first_pipe(t_all *p, t_exec *exec, int option);
+void		open_middle_pipe(t_all *p, t_exec *exec);
+void		open_last_pipe(t_all *p, t_exec *exec, int option);
+void		pipe_error(int option);
 
 //pipe_utils
 int			is_command(t_ast *current);
 t_exec *	last_command(t_exec *exec);
+void		pipe_addback(t_all *p, t_exec **exec, t_exec *new_node);
+int			pipe_addempty(t_all *p, t_exec **exec);
+t_exec		*pipe_last(t_exec *exec);
+int			pipe_allocation(t_all *p, int **pid);
+t_exec		*pipe_skip_empty(t_all *p, t_exec *node);
+int			pipe_hate_norm(t_all *p, int *i, int option);
 
 //////////////////////////////////////////////////////////
 
 //				PARSER
 
-
+int			parser(char *cmd_line, t_ast **ast, t_all **p);
 
 //check_lexer
 int			check_quotes(char *cmd_line);
@@ -385,6 +398,8 @@ bool		is_valid_env(char c);
 bool		is_freeable(char *value, int option);
 bool		is_wildcard(const char *cmd_line, int i);
 void		index_init(t_index *index, size_t *i, int option);
+void		update_variable(t_all *p);
+void		trim_space(char *str);
 
 //print
 void		token_print(t_token **token_list);
@@ -395,7 +410,7 @@ const char	*getToken_Class(t_token *current);
 
 //error_management
 void		error_lexer(int error);
-bool		error_syntax(t_token *current, int error);
+void		error_syntax(t_token *current, int error);
 void		error_expander(t_ast *current, int error);
 void		error_executer(char *error, int option);
 void		error_builtins(char *error, int option);
@@ -411,7 +426,6 @@ int			quit_here_doc(int opt, t_all *p, int nb);
 void		free_here_docs(char **here_docs);
 int			here_doc_count(t_token *tok);
 void		init_here_docs(t_token *token_list, t_all **p);
-int			create_signal_here();
 int			signals_hdoc(int opt, t_all **p);
 int			fichier_existe(const char *name);
 void		if_in_increment_base(size_t len, size_t *j, char *name);
@@ -426,6 +440,7 @@ void		copy_folder(char *src, char *dest);
 char		*ft_strdup_spe(char *s);
 void		expand_heredoc(t_all *p);
 int			get_token_list(t_all *p, t_token **token, char *line);
+int			create_signal_here(void);
 
 /*								EXPANDER						*/
 //split_word
@@ -531,11 +546,13 @@ enum s_type	check_word(char *word, t_word *boolean);
 bool		define_word(t_token **token_list, t_word *boolean);
 bool		is_operator(enum s_type type, int option);
 int			double_operator(t_token *c);
+int			double_operator_next(t_token *c);
 int			check_first_token(t_token *c);
 bool		check_syntax(t_token *current);
 bool		skip_whitespace(char *line);
 
 bool		check_parenthesis(t_token *current, t_syntax syntax, int *skip);
+bool		check_parenthesis_error(t_token *current, t_syntax *syntax, int *skip);
 bool		closepar_error(t_token *current, t_syntax syntax, int *skip);
 bool		openpar_error(t_token *current, t_syntax syntax, int *skip);
 bool		is_parenthesis_error(t_token *current, t_syntax syntax, int option);
@@ -569,7 +586,7 @@ void		print_error_token(t_token *current);
 void		print_error_token_special(char *value);
 void		print_error_cmd_not_found(t_token *current);
 void		printAST(t_ast* node, int level);
-const char* getAST_Class(t_ast *current);
+const char*	getAST_Class(t_ast *current);
 void		print_tab(char **command);
 void		print_folder(char *fd_src, int fd);
 
@@ -599,18 +616,14 @@ int			valid_export(char *new_env);
 char		**sort_env(char **env);
 //EXIT
 int			ft_exit(t_all **p, t_exec *exec, char **cmd);
-/* int			ft_exit(char **commande, bool child);
-int			check_is_num(char *exit_status);
-int			check_size(long long int *exit_status);
-void 		check_is_child(char *commande, bool child, int error); */
 //ECHO
 bool		check_echo(char *str);
-//static int	conditions_echo(char *cmd);
 int			ft_echo(char **cmd);
 
 int			main(int argc, char **argv, char **env);
 char		*minishell(t_all *p, char **env);
 
+//extern int	g_sig_int;
 /*						AST	TRY				*/
 
 #define PRECEDENCE_LOWEST 1

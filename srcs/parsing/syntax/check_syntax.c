@@ -6,33 +6,11 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 16:42:50 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/10 16:13:58 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 11:38:32 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*
-	()
-	()()
-	& | OK
-	
-	enum s_type{
-	NOT_DEFINE,
-	TOKEN_WORD,
-	TOKEN_AND,
-	TOKEN_OR,
-	TOKEN_PIPE,
-	TOKEN_REDIRECTIN,
-	TOKEN_REDIRECTOUT,
-	TOKEN_HEREDOC,
-	TOKEN_APPENDOUT,
-	TOKEN_LIMITER,
-	TOKEN_OPENPAR,
-	TOKEN_CLOSEPAR,
-};
-
-*/
 
 bool	is_operator(enum s_type type, int option)
 {
@@ -60,69 +38,47 @@ bool	is_operator(enum s_type type, int option)
 	}
 	return (0);
 }
-/* REGLER PROBLEME:
-1
-bash: syntax error near unexpected token '&&'
-Minishell> test (&&
 
-
-*/
 int		double_operator(t_token *c)
 {
 	if (!c->next)
 	{
-		if ((is_operator(c->type, 2) || is_operator(c->type, 3) || is_operator(c->type, 9)))
-		{
-			error_syntax(c, 5);
-			return (1);
-		}
+		if ((is_operator(c->type, 2) || is_operator(c->type, 3)
+			|| is_operator(c->type, 9)))
+			return (error_syntax(c, 5), 1);
 	}
 	else if (c->next)
 	{
 		if (c->type == TOKEN_WORD && c->next->type == TOKEN_OPENPAR)
-		{
-			error_syntax(c->next, 1);
-			return (1);
-		}
-		if ((c->type == TOKEN_PIPE && c->next->type == TOKEN_OPENPAR) || (c->type == TOKEN_CLOSEPAR && c->next->type == TOKEN_PIPE))
-		{
-			error_syntax(c->next, 7);
-			return (1);
-		}
-		if (c->type == TOKEN_HEREDOC && (c->next->type != WORD_LIMITER && c->next->type != WORD_SQLIMITER))
-		{
-			error_syntax(c->next, 1);
-			return (1);
-		}
-		if ((c->type == TOKEN_REDIRECTIN || c->type == TOKEN_REDIRECTOUT) && c->next->type != TOKEN_WORD)
-		{
-			error_syntax(c->next, 1);
-			return (1);
-		}
-		if (c->type == TOKEN_REDIRECTIN && c->next->type == TOKEN_REDIRECTOUT)
-		{
-			error_syntax(c, 5);
-			return (1);
-		}
-		if (is_operator(c->type, 2) && is_operator(c->next->type, 2))
-		{
-			error_syntax(c->next, 1);
-			return (1);
-		}
-		if (is_operator(c->type, 3) && ((is_operator(c->next->type, 3) || is_operator(c->next->type, 2)
-			|| is_operator(c->next->type, 4))))
-		{
-			error_syntax(c->next, 1);
-			return (1);
-		}
-		if (c->next->next)
-		{
-			if ((c->type == TOKEN_REDIRECTIN || c->type == TOKEN_REDIRECTOUT) && c->next->type == TOKEN_WORD && c->next->next->type == TOKEN_OPENPAR)
-			{
-				error_syntax(c->next->next, 1);
-					return (1);
-			}
-		}
+			return (error_syntax(c->next, 1), 1);
+		if ((c->type == TOKEN_PIPE && c->next->type == TOKEN_OPENPAR)
+			|| (c->type == TOKEN_CLOSEPAR && c->next->type == TOKEN_PIPE))
+			return (error_syntax(c->next, 7), 1);
+		if (c->type == TOKEN_HEREDOC && (c->next->type != WORD_LIMITER
+			&& c->next->type != WORD_SQLIMITER))
+			return (error_syntax(c->next, 1), 1);
+		if ((c->type == TOKEN_REDIRECTIN || c->type == TOKEN_REDIRECTOUT)
+			&& c->next->type != TOKEN_WORD)
+			return (error_syntax(c->next, 1), 1);
+		return (double_operator_next(c));
+	}
+	return (0);
+}
+
+int	double_operator_next(t_token *c)
+{
+	if (c->type == TOKEN_REDIRECTIN && c->next->type == TOKEN_REDIRECTOUT)
+			return (error_syntax(c, 5), 1);
+	if (is_operator(c->type, 2) && is_operator(c->next->type, 2))
+		return (error_syntax(c->next, 1), 1);
+	if (is_operator(c->type, 3) && ((is_operator(c->next->type, 3)
+		|| is_operator(c->next->type, 2) || is_operator(c->next->type, 4))))
+		return (error_syntax(c->next, 1), 1);
+	if (c->next->next)
+	{
+		if ((c->type == TOKEN_REDIRECTIN || c->type == TOKEN_REDIRECTOUT)
+			&& c->next->type == TOKEN_WORD && c->next->next->type == TOKEN_OPENPAR)
+				return (error_syntax(c->next->next, 1), 1);
 	}
 	return (0);
 }

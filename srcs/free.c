@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:34:27 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 13:33:23 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 13:47:27 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ void	free_env(t_env *envp)
 			free(envp->value);
 		temp = envp;
 		envp = envp->next;
-		free(temp);
+		if (temp)
+			free(temp);
 	}
 	return ;
 }
@@ -52,7 +53,11 @@ void	free_array(char **array)
 
 	i = -1;
 	while (array[++i])
-		free(array[i]);
-	free(array);
+	{
+		if (array[i])
+			free(array[i]);
+	}
+	if (array)
+		free(array);
 }
 
