@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:31:18 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/10 11:55:42 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 13:45:17 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,35 @@ char	*ft_strjoin_spe(char *s1, char const *s2)
 	*(dest + i) = '\0';
 	free(s1);
 	return (dest);
+}
+
+void	trim_space(char *str)
+{
+	char	*debut;
+	char	*fin;
+
+	debut = str;
+	while (is_whitespace((unsigned char)*debut))
+		debut++;
+	if (*debut == '\0')
+	{
+		str[0] = '\0';
+		return ;
+	}
+	fin = debut + ft_strlen(debut) - 1;
+	while (fin > debut && isspace((unsigned char)*fin))
+		fin--;
+	*(fin + 1) = '\0';
+	ft_memmove(str, debut, fin - debut + 2);
+}
+
+void update_variable(t_all *p)
+{
+	extern int g_sig_int;
+	
+	g_sig_int = 0;
+	free(p->line);
+	p->line = NULL;
+	p->int_here_doc = 0;
+	p->line_num++;
 }

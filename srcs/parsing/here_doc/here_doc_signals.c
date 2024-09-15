@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 21:19:55 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/07 16:54:08 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 13:21:21 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,18 @@
 
 void	sighandler_hdoc(int signal)
 {
-	extern int	sig_int;
+	extern int	g_sig_int;
 
 	if (signal == SIGINT)
 	{
-		sig_int = 1;
+		g_sig_int = 1;
 		rl_replace_line("", 0);
 		rl_done = 1;
 	}
 	return ;
 }
 
-int	create_signal_here(t_all **p)
+int	create_signal_here(void)
 {
 	struct termios		old_termios;
 	struct termios		new_termios;
@@ -48,11 +48,11 @@ int	create_signal_here(t_all **p)
 
 int	signals_hdoc(int opt, t_all **p)
 {
-	extern int	sig_int;
+	extern int	g_sig_int;
 
 	if (opt == 0)
 	{
-		if (stop_signals() == -1 || create_signal_here(p) == -1)
+		if (stop_signals() == -1 || create_signal_here() == -1)
 		{
 			return (-1);
 		}
@@ -65,7 +65,7 @@ int	signals_hdoc(int opt, t_all **p)
 		{
 			return (-1);
 		}
-		if (sig_int != 1)
+		if (g_sig_int != 1)
 		{
 			init_signal(0, p);
 		}

@@ -6,41 +6,13 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 11:30:09 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 13:45:01 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		sig_int = 0;
-
-void	testAST(t_ast* node, int option)
-{
-	if (option == 1)
-	{
-		while (node->left)
-			node = node->left;
-		printf("last left = %s\n", node->value);
-		while (node->parent)
-		{
-			printf("parent = %s\n", node->parent->value);
-			node = node->parent;
-		}
-	}
-	else if (option == 2)
-	{
-		while (node->right)
-			node = node->right;
-		while (node->left)
-			node = node->left;
-		printf("last left right = %s\n", node->value);
-		while (node->parent)
-		{
-			printf("parent = %s\n", node->parent->value);
-			node = node->parent;
-		}
-	}
-}
+int		g_sig_int = 0;
 
 int	main(int argc, char **argv, char **env)
 {
@@ -60,43 +32,27 @@ int	main(int argc, char **argv, char **env)
 
 char	*minishell(t_all *p, char **env)
 {
-	extern int	sig_int;
-	t_ast 	*current;
+	extern int	g_sig_int;
+	t_ast		*current;
 
 	rl_event_hook = event;
 	p->line = readline("\033[1;032mMinishell> \033[m");
-	if (sig_int == 1)
-        p->exit_status = 127;
+	if (g_sig_int == 1)
+		p->exit_status = 127;
 	if (p->line == NULL)
+		return (ft_putstr("exit\n"), free_all(p), exit(0), NULL);
+	if (p->sig->sig_quit == 0 && skip_whitespace(p->line))
 	{
-		printf("exit\n");
-		p->exit_status = 0;
-		return (free(p->line), free_all(p), rl_clear_history(), exit(0), NULL);
-	}
-	if (p->sig->sig_quit == 0  && skip_whitespace(p->line))
-	{
-		p->error = parser(p->line, p->env, &p->ast, &p);
+		p->error = parser(p->line, &p->ast, &p);
 		if (p->error == 0)
 		{
 			current = p->ast;
 			if (executer(p, current, env) == 1)
-			{
-				free_ast(p->ast);
-				return (free(p->line), free_all(p), rl_clear_history(), exit(0), NULL);
-			}
+				return (free_ast(p->ast), free_all(p), exit(0), NULL);
 			free_here_docs(p->here_doc);
 			free_ast(p->ast);
 		}
 		add_history(p->line);
 	}
-	sig_int = 0;
-	free(p->line);
-	p->line = NULL;
-	p->int_here_doc = 0;
-	p->line_num++;
-	return (p->line);
+	return (update_variable(p), p->line);
 }
-
-//valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --suppressions=./.readline.supp --trace-children=yes ./minishell
-//valgrind -suppressions=./.readline.supp ./minishell
-//ps -f --forest : see shell process tree

@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:25:36 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/07 12:50:51 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 13:47:35 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-
-//CHECK SI BESOIN DE GERER LE CAS: _=/usr/bin/env$
 
 t_env	*ft_envnew(char *key, char *value)
 {

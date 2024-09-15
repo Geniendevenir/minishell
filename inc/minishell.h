@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 13:31:36 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 13:48:32 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -334,7 +334,7 @@ int			pipe_hate_norm(t_all *p, int *i, int option);
 
 //				PARSER
 
-int			parser(char *cmd_line, t_env *env, t_ast **ast, t_all **p);
+int			parser(char *cmd_line, t_ast **ast, t_all **p);
 
 //check_lexer
 int			check_quotes(char *cmd_line);
@@ -396,6 +396,8 @@ bool		is_valid_env(char c);
 bool		is_freeable(char *value, int option);
 bool		is_wildcard(const char *cmd_line, int i);
 void		index_init(t_index *index, size_t *i, int option);
+void		update_variable(t_all *p);
+void		trim_space(char *str);
 
 //print
 void		token_print(t_token **token_list);
@@ -422,7 +424,6 @@ int			quit_here_doc(int opt, t_all *p, int nb);
 void		free_here_docs(char **here_docs);
 int			here_doc_count(t_token *tok);
 void		init_here_docs(t_token *token_list, t_all **p);
-int			create_signal_here(t_all **p);
 int			signals_hdoc(int opt, t_all **p);
 int			fichier_existe(const char *name);
 void		if_in_increment_base(size_t len, size_t *j, char *name);
@@ -437,6 +438,7 @@ void		copy_folder(char *src, char *dest);
 char		*ft_strdup_spe(char *s);
 void		expand_heredoc(t_all *p);
 int			get_token_list(t_all *p, t_token **token, char *line);
+int			create_signal_here(void);
 
 /*								EXPANDER						*/
 //split_word
@@ -611,7 +613,7 @@ int			export_free(t_env **add_env, int option);
 int			valid_export(char *new_env);
 char		**sort_env(char **env);
 //EXIT
-void		ft_exit(t_all **p, t_exec *exec, char **cmd);
+int			ft_exit(t_all **p, t_exec *exec, char **cmd);
 //ECHO
 bool		check_echo(char *str);
 int			ft_echo(char **cmd);
@@ -619,7 +621,7 @@ int			ft_echo(char **cmd);
 int			main(int argc, char **argv, char **env);
 char		*minishell(t_all *p, char **env);
 
-//extern int	sig_int;
+//extern int	g_sig_int;
 /*						AST	TRY				*/
 
 #define PRECEDENCE_LOWEST 1

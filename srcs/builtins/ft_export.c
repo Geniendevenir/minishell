@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 12:53:21 by allan             #+#    #+#             */
-/*   Updated: 2024/09/07 12:49:26 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/14 18:45:46 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ int	do_export(t_env *env, char *key, char *cmd)
 		&& cmd[ft_strlen(key) + 1] == '=')
 		return (change_concat(env, key, cmd));
 	value = ft_strdup(cmd + ft_strlen(key) + 1);
+	trim_space(value);
 	if (!value)
 		return (free(key), 1);
 	change_value(env, key, value);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc_utils2.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:42:25 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/13 19:11:40 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/13 20:27:46 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ void	write_hdoc(int fd, char *buffer)
 	free(buffer);
 }
 
-bool here_doc_check_file(t_all *p, t_token *token_list)
+bool	here_doc_check_file(t_all *p, t_token *token_list)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(p && p->here_doc && p->here_doc[i])
+	while (p && p->here_doc && p->here_doc[i])
 	{
 		if (access(p->here_doc[i], F_OK) == 0)
 			i++;
@@ -35,5 +35,5 @@ bool here_doc_check_file(t_all *p, t_token *token_list)
 			return (ft_putstr_fd("Error delete file here_doc\n", 2), 1);
 		}
 	}
-	return(0);
+	return (0);
 }

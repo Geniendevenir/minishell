@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 11:10:17 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/07 20:14:22 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 13:38:52 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,11 @@ void	lanormedufutur(void)
 
 void sighandler(int signal)
 {
-	extern int sig_int;
+	extern int g_sig_int;
 	
 	if (signal == SIGINT)
 	{
-		sig_int = 1;
+		g_sig_int = 1;
 		write(1, "\n", 2);
 		rl_on_new_line();
 		rl_replace_line("", 0);
