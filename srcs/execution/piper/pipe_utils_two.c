@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 22:00:35 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 11:46:30 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 13:32:01 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,11 @@ int		pipe_allocation(t_all *p, int **pid)
 		return (1);
 	*pid = malloc(sizeof(int) * ((p->max_pipe - p->skip) + 1));
 	if (!(*pid))
+	{
+		if (p->fd)
+			free(p->fd);
 		return (1);
+	}
 	return (0);
 }
 
@@ -59,6 +63,16 @@ int		pipe_hate_norm(t_all *p, int *i, int option)
 		p->curr_pipe++;
 	}
 	return (0);
+}
+
+void	pipe_error(int option)
+{
+	if (option == 1)
+		write(2, "Error: Opening /dev/null\n", 25);
+	else if (option == 2)
+		write(2, "Error redirecting stdin to /dev/null\n", 37);
+	else if (option == 3)
+		write(2, "Error Dup2 Redirection Failed\n", 30);
 }
 
 void	pipe_print(t_exec *exec)

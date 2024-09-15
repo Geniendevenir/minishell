@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 12:04:20 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 13:31:36 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -314,6 +314,12 @@ void		pipe_free_exec(t_exec **exec);
 void		pipe_close_fd(t_all *p, int option);
 void		pipe_close_fd_two(t_all *p);
 
+//pipe_redirect
+void		open_first_pipe(t_all *p, t_exec *exec, int option);
+void		open_middle_pipe(t_all *p, t_exec *exec);
+void		open_last_pipe(t_all *p, t_exec *exec, int option);
+void		pipe_error(int option);
+
 //pipe_utils
 int			is_command(t_ast *current);
 t_exec *	last_command(t_exec *exec);
@@ -542,6 +548,7 @@ bool		check_syntax(t_token *current);
 bool		skip_whitespace(char *line);
 
 bool		check_parenthesis(t_token *current, t_syntax syntax, int *skip);
+bool		check_parenthesis_error(t_token *current, t_syntax *syntax, int *skip);
 bool		closepar_error(t_token *current, t_syntax syntax, int *skip);
 bool		openpar_error(t_token *current, t_syntax syntax, int *skip);
 bool		is_parenthesis_error(t_token *current, t_syntax syntax, int option);

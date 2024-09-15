@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:34:27 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 00:39:32 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 13:17:57 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ void	free_env(t_env *envp)
 			free(envp->value);
 		temp = envp;
 		envp = envp->next;
-		free(temp);
+		if (temp)
+			free(temp);
 	}
 	return ;
 }
@@ -37,8 +38,10 @@ void	free_all(t_all *p)
 	close(p->std_out);
 	//free(p->line);
 	free_env(p->env);
-	free(p->sig);
-	free(p);
+	if (p->sig)
+		free(p->sig);
+	if (p)
+		free(p);
 }
 
 void	free_array(char **array)

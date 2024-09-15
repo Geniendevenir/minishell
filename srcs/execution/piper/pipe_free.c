@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:42:50 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 11:45:50 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 13:29:39 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,12 @@ void	pipe_close_fd_two(t_all *p)
 
 void	pipe_free(t_all *p, t_exec *exec, int *pid)
 {
-	pipe_free_exec(&exec); //add close input/output
+	pipe_free_exec(&exec);
 	if (p->fd)
+	{
 		free(p->fd);
+		p->fd = NULL;	
+	}
 	if (pid)
 		free(pid);
 	p->max_pipe = 0;

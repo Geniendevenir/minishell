@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 17:46:20 by allan             #+#    #+#             */
-/*   Updated: 2024/09/14 23:42:24 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 13:31:27 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,3 +33,11 @@ int	piper(t_all *p, t_ast *current, char **env)
 		return (pipe_free(p, exec, pid), 1);
 	return (pipe_free(p, exec, pid), 0);
 }
+
+//echo test | cat | cat | cat | cat | cat | cat
+
+//echo test | cat | cat | cat | cat | $djkfkjs | cat
+
+//echo test | cat | cat | cat | cat | $djkfkjs | $akjfjsdfjihsd
+
+//

@@ -49,6 +49,7 @@ SRCS 				=	srcs/free.c\
 						srcs/parsing/syntax/check_word_utils.c\
 						srcs/parsing/syntax/check_syntax.c\
 						srcs/parsing/syntax/check_parenthesis.c\
+						srcs/parsing/syntax/check_parenthesis_utils.c\
 						srcs/parsing/ast/ast.c\
 						srcs/parsing/ast/ast_utils.c\
 						srcs/parsing/ast/ast_handle_builtin_and_cmd.c\
@@ -91,10 +92,11 @@ SRCS 				=	srcs/free.c\
 						srcs/execution/expander/word_management.c\
 						srcs/execution/expander/expand_here_doc.c\
 						srcs/execution/expander/expand_here_doc_utils.c\
+						srcs/execution/piper/piper.c\
+						srcs/execution/piper/pipe_redirect.c\
 						srcs/execution/piper/pipe_exec.c\
 						srcs/execution/piper/pipe_free.c\
 						srcs/execution/piper/pipe_parser.c\
-						srcs/execution/piper/piper.c\
 						srcs/execution/piper/pipe_utils.c\
 						srcs/execution/piper/pipe_utils_two.c\
 
