@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/14 22:04:34 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/14 22:15:31 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,6 +235,7 @@ typedef struct s_exec
 //utils
 void		trim_space(char *str);
 int			ft_exit(t_all **p, t_exec *exec, char **cmd);
+int			ft_pwd(char *option);
 
 //						EXECUTION                      //
 int			executer(t_all *p, t_ast *current, char **env);
@@ -578,7 +579,7 @@ char		**env_to_char_export(t_env *env);
 //UNSET
 int			ft_unset(t_env *env, char **unset);
 //PWD
-int			ft_pwd(t_env *env, char *option);
+int			ft_pwd(char *option);
 //CD
 int			ft_cd(t_env *env, char **cmd);
 //EXPORT

@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/14 15:55:27 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/14 23:17:26 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ char	*minishell(t_all *p, char **env)
 
 	rl_event_hook = event;
 	p->line = readline("\033[1;032mMinishell> \033[m");
+	if (sig_int == 1)
+		p->exit_status = 127;
 	if (p->line == NULL)
 	{
 		printf("exit\n");

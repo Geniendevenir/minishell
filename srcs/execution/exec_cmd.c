@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:24:24 by allan             #+#    #+#             */
-/*   Updated: 2024/09/14 09:37:51 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/14 22:45:07 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	exec_builtin(t_all **p, t_exec *exec, char **cmd)
 		result = ft_cd((*p)->env ,cmd);
 	}
 	else if (ft_strcmp(cmd[0], "pwd") == 0)
-		result = ft_pwd((*p)->env, cmd[1]);
+		result = ft_pwd(cmd[1]);
 	else if (ft_strcmp(cmd[0], "export") == 0)
 		result = ft_export((*p)->env, cmd);
 	else if (ft_strcmp(cmd[0], "unset") == 0)
@@ -56,7 +56,7 @@ int	exec_builtin(t_all **p, t_exec *exec, char **cmd)
 	else if (ft_strcmp(cmd[0], "env") == 0 && cmd[1] == NULL)
 		result = ft_env((*p)->env);
 	else if (ft_strcmp(cmd[0], "exit") == 0)
-		ft_exit(p, exec, cmd);
+		result = ft_exit(p, exec, cmd);
 	return (result);
 }
 

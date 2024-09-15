@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 12:53:13 by allan             #+#    #+#             */
-/*   Updated: 2024/09/14 22:09:55 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/14 23:02:52 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,17 +43,7 @@ void	free_exit(t_all *p)
 	rl_clear_history();
 }
 
-int		check_number_exit(char *cmd)
-{
-	/* if (ft_atoi(cmd) < 9223372036854775808 
-		&& ft_atoi(cmd) > -9223372036854775809)
-		return (0);
-	else
-		return (1); */
-	
-}
-
-int		ft_exit(t_all **p, t_exec *exec, char **cmd)
+int	ft_exit(t_all **p, t_exec *exec, char **cmd)
 {
 	int	nb;
 
