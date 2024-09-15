@@ -6,18 +6,18 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 22:00:35 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 13:32:01 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 17:04:13 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		pipe_allocation(t_all *p, int **pid)
+int	pipe_allocation(t_all *p, int **pid)
 {
 	if (p->skip == p->max_pipe)
-		p->fd = malloc(sizeof(int[2]) * 1);
+		p->fd = malloc(sizeof(int [2]) * 1);
 	else
-		p->fd = malloc(sizeof(int[2]) * (p->max_pipe - p->skip));
+		p->fd = malloc(sizeof(int [2]) * (p->max_pipe - p->skip));
 	if (!p->fd)
 		return (1);
 	*pid = malloc(sizeof(int) * ((p->max_pipe - p->skip) + 1));
@@ -47,7 +47,7 @@ t_exec	*pipe_skip_empty(t_all *p, t_exec *node)
 	return (node);
 }
 
-int		pipe_hate_norm(t_all *p, int *i, int option)
+int	pipe_hate_norm(t_all *p, int *i, int option)
 {
 	if (option == 0)
 	{
@@ -75,7 +75,7 @@ void	pipe_error(int option)
 		write(2, "Error Dup2 Redirection Failed\n", 30);
 }
 
-void	pipe_print(t_exec *exec)
+/* void	pipe_print(t_exec *exec)
 {
 	while (exec)
 	{
@@ -94,4 +94,4 @@ void	pipe_print(t_exec *exec)
 			break ;
 		exec = exec->next;
 	}
-}
+} */

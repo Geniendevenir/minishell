@@ -6,20 +6,19 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 12:18:13 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/13 23:33:32 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 16:18:24 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int get_token_list(t_all *p, t_token **token, char *line)
+int	get_token_list(t_all *p, t_token **token, char *line)
 {
 	size_t		i;
 	int			error;
 
 	error = 0;
 	i = 0;
-	printf("line = %s\n", line);
 	while (i < ft_strlen(line))
 	{
 		error = split_one(line, &i, token, 1);
@@ -30,13 +29,12 @@ int get_token_list(t_all *p, t_token **token, char *line)
 			return (1);
 		}
 	}
-	if (expander(token, p, error) == 1) //free token list automatiquement
+	if (expander(token, p, error) == 1)
 		return (1);
-	
 	return (0);
 }
 
-char *expand_line(t_all *p, char *line)
+char	*expand_line(t_all *p, char *line)
 {
 	t_token	*token;
 	char	*new_line;
@@ -57,17 +55,31 @@ char *expand_line(t_all *p, char *line)
 	while (token->next)
 	{
 		new_line = ft_strjoin_spe(new_line, token->value);
-		//new_line = ft_strjoin_spe(new_line, "\n");
 		token = token->next;
 	}
 	free(line);
 	token_free(&token);
-	printf("new_line = %s\n",new_line);
 	return (new_line);
 }
 
+void	while_expand_heredoc(t_all *p, char *line, int fd2, int fd)
+{
+	while (line)
+	{
+		line = get_next_line(fd);
+		if (line == NULL)
+			break ;
+		line = ft_strdup_spe(expand_line(p, line));
+		write(fd2, line, ft_strlen(line));
+		free(line);
+	}
+	close(fd);
+	close(fd2);
+	copy_folder("fd2", p->here_doc[p->int_here_doc]);
+	p->int_here_doc++;
+}
 
-void expand_heredoc(t_all *p)
+void	expand_heredoc(t_all *p)
 {
 	int		fd;
 	int		fd2;
@@ -75,7 +87,7 @@ void expand_heredoc(t_all *p)
 
 	line = "not NULL";
 	if (!p->here_doc || !p->here_doc[p->int_here_doc])
-		return;
+		return ;
 	fd = open(p->here_doc[p->int_here_doc], O_RDONLY);
 	if (fd == -1)
 	{
@@ -89,18 +101,5 @@ void expand_heredoc(t_all *p)
 		close(fd2);
 		return (ft_putstr_fd("error open fd2\n", 2));
 	}
-	while (line)
-	{
-		line = get_next_line(fd);
-		if (line == NULL)
-			break;
-		line = ft_strdup_spe(expand_line(p, line));
-		write(fd2, line, ft_strlen(line));
-		write(fd2, "\n", 1);
-		free(line);
-	}
-	close(fd);
-	close(fd2);
-	copy_folder("fd2" , p->here_doc[p->int_here_doc]);
-	p->int_here_doc++;
+	while_expand_heredoc(p, line, fd2, fd);
 }

@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:42:50 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 13:29:39 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 14:10:45 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	pipe_free(t_all *p, t_exec *exec, int *pid)
 	if (p->fd)
 	{
 		free(p->fd);
-		p->fd = NULL;	
+		p->fd = NULL;
 	}
 	if (pid)
 		free(pid);
@@ -83,7 +83,7 @@ void	pipe_free_exec(t_exec **exec)
 				exec_free(current);
 				free(current);
 			}
-			break;
+			break ;
 		}
 		tmp = current->next;
 		if (current)

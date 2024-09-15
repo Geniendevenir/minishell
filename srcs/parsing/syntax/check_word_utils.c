@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 19:24:26 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/10 11:44:58 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 16:13:43 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,12 @@ int	check_word_part_append(t_word *boolean)
 	return (WORD_FILEOUT_APPEND);
 }
 
-bool skip_whitespace(char *line)
+bool	skip_whitespace(char *line)
 {
 	int	i;
-	
+
 	i = 0;
-	while(line[i])
+	while (line[i])
 	{
 		if (is_whitespace(line[i]))
 			i++;

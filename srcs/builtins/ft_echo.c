@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 16:29:27 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 00:06:46 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 16:54:18 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ int	ft_echo(char **cmd)
 			ft_putstr_fd(" ", 1);
 		i++;
 	}
-	write(1, "\n", 1);
+	if (ft_strcmp(cmd[0], "-n") != 0)
+		write(1, "\n", 1);
 	return (EXIT_SUCCESS);
 }

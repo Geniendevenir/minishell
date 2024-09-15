@@ -6,13 +6,13 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 19:12:43 by allan             #+#    #+#             */
-/*   Updated: 2024/09/14 23:40:59 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 14:06:11 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		is_command(t_ast *current)
+int	is_command(t_ast *current)
 {
 	if (current->type == WORD_CMD)
 		return (1);
@@ -27,12 +27,12 @@ int		is_command(t_ast *current)
 	return (0);
 }
 
-t_exec *	last_command(t_exec *exec)
+t_exec	*last_command(t_exec *exec)
 {
 	t_exec	*node;
 
 	node = exec;
-	while (exec) //Se placer a la derniere commande
+	while (exec)
 	{
 		if (!exec->next)
 			break ;
@@ -41,7 +41,7 @@ t_exec *	last_command(t_exec *exec)
 	return (exec);
 }
 
-t_exec *pipe_last(t_exec *exec)
+t_exec	*pipe_last(t_exec *exec)
 {
 	while (exec)
 	{
@@ -52,7 +52,7 @@ t_exec *pipe_last(t_exec *exec)
 	return (exec);
 }
 
-int		pipe_addempty(t_all *p, t_exec **exec)
+int	pipe_addempty(t_all *p, t_exec **exec)
 {
 	t_exec	*node;
 

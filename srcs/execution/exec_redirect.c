@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 20:32:13 by allan             #+#    #+#             */
-/*   Updated: 2024/09/11 13:01:01 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 15:46:59 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	redirect_pipe(t_ast *current, t_exec *exec)
 {
-	//pipe 1 = gauche/ pipe 2 = millieu / pipe 3 = droite
 	if (exec->pipe == 1)
 	{
 		if (exec->out == NULL)
@@ -23,7 +22,7 @@ void	redirect_pipe(t_ast *current, t_exec *exec)
 			exec->redirectout = 1;
 		}
 		if (exec->in != NULL)
-		exec->redirectin = 1;
+			exec->redirectin = 1;
 	}
 	else if (exec->pipe == 2)
 	{
@@ -39,48 +38,45 @@ void	redirect_pipe(t_ast *current, t_exec *exec)
 		}
 	}
 	else if (exec->pipe == 3)
-	{
-		if (exec->in == NULL)
-		{
-			exec->in = current;
-			exec->redirectin = 1;
-		}
-		if (exec->out != NULL)
-		exec->redirectout = 1;
-	}
+		redirect_pipe_next(current, exec);
 }
 
-int		assign_redirect(t_ast *current, t_exec *exec)
+void	redirect_pipe_next(t_ast *current, t_exec *exec)
 {
-	while (current && (exec->redirectin == 0 || exec->redirectout == 0))
+	if (exec->in == NULL)
 	{
-		if (is_operator(current->type, 2) == 1)
+		exec->in = current;
+		exec->redirectin = 1;
+	}
+	if (exec->out != NULL)
+		exec->redirectout = 1;
+}
+
+int	assign_redirect(t_ast *c, t_exec *ex)
+{
+	while (c && (ex->redirectin == 0 || ex->redirectout == 0))
+	{
+		if (is_operator(c->type, 2) == 1)
 		{
-			if (current->type == TOKEN_PIPE)
-				redirect_pipe(current, exec);
+			if (c->type == TOKEN_PIPE)
+				redirect_pipe(c, ex);
 			else
 			{
-				if (exec->in != NULL)
-					exec->redirectin = 1;
-				if (exec->out != NULL)
-					exec->redirectout = 1;
+				if (ex->in != NULL)
+					ex->redirectin = 1;
+				if (ex->out != NULL)
+					ex->redirectout = 1;
 			}
 		}
-		if ((current->type == WORD_FILEIN || current->type == WORD_LIMITER || current->type == WORD_SQLIMITER) && exec->redirectin == 0)
-			exec->in = current;
-		else if ((current->type == WORD_FILEOUT || current->type == WORD_FILEOUT_APPEND) && exec->redirectout == 0)
-			exec->out = current;
-		if (!current->parent)
-			break;
-		current = current->parent;
+		if ((c->type == 18 || c->type == 25 || c->type == 29)
+			&& ex->redirectin == 0)
+			ex->in = c;
+		else if ((c->type == WORD_FILEOUT || c->type == WORD_FILEOUT_APPEND)
+			&& ex->redirectout == 0)
+			ex->out = c;
+		if (!c->parent)
+			break ;
+		c = c->parent;
 	}
-	/* if (exec->in)
-		printf("in = %s\n", exec->in->value);
-	else
-		printf("in = NULL\n");
-	if (exec->out)
-		printf("out = %s\n", exec->out->value);
-	else
-		printf("out = NULL\n"); */
 	return (0);
 }

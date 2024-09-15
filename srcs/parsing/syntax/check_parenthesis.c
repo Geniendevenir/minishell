@@ -6,44 +6,44 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 13:31:07 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 12:25:39 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 16:12:41 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	check_parenthesis(t_token *current, t_syntax syntax, int *skip)
+bool	check_parenthesis(t_token *current, t_syntax s, int *skip)
 {
-	int error;
+	int	error;
 
 	error = 0;
 	*skip += 1;
-	if (*skip != 1 && syntax.openpar == 0)
+	if (*skip != 1 && s.openpar == 0)
 		return (0);
 	if (current->type == TOKEN_PIPE)
 		return (error_syntax(current, 6), 1);
 	if (is_operator(current->type, 1))
 	{
 		if (current->next)
-			return(check_parenthesis(current->next, 
-				(t_syntax){ .openpar = syntax.openpar, .operator = 1}, skip));
+			return (check_parenthesis(current->next,
+					(t_syntax){.openpar = s.openpar, .operator = 1}, skip));
 	}
 	else if (current->type == TOKEN_CLOSEPAR || current->type == TOKEN_OPENPAR)
 	{
-		error = check_parenthesis_error(current, &syntax, skip);
+		error = check_parenthesis_error(current, &s, skip);
 		if (error != 2)
 			return (error);
 	}
 	else if (current->next)
-		return (check_parenthesis(current->next, syntax, skip));
-	if (!current->next && syntax.openpar != 0)
+		return (check_parenthesis(current->next, s, skip));
+	if (!current->next && s.openpar != 0)
 		return (error_syntax(current, 1), 1);
 	return (0);
 }
 
 bool	closepar_error(t_token *current, t_syntax syntax, int *skip)
 {
-	if (syntax.openpar <= 0 || syntax.operator == 0 
+	if (syntax.openpar <= 0 || syntax.operator == 0
 		|| (syntax.openpar - 1 > 0 && !current->next))
 	{
 		if (syntax.openpar <= 0)
@@ -79,9 +79,9 @@ bool	is_parenthesis_error(t_token *current, t_syntax syntax, int option)
 {
 	if (option == 1)
 	{
-		if (syntax.openpar <= 0 || syntax.operator == 0 
-				|| (syntax.openpar - 1 > 0 && !current->next))
-				return (1);
+		if (syntax.openpar <= 0 || syntax.operator == 0
+			|| (syntax.openpar - 1 > 0 && !current->next))
+			return (1);
 		else if (current->next)
 			return (1);
 	}
@@ -97,7 +97,7 @@ bool	check_current_parenthesis(t_token *current, int option)
 {
 	bool	operator;
 	int		skip_par;
-	
+
 	operator = 0;
 	skip_par = -1;
 	while (current)

@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 18:39:42 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 11:41:50 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 15:38:25 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	exec_init(t_exec *exec)
 	exec->next = NULL;
 }
 
-void		exec_free(t_exec *exec)
+void	exec_free(t_exec *exec)
 {
 	exec->pipe = 0;
 	exec->redirectin = 0;
@@ -51,11 +51,11 @@ void	set_pipe(t_all *p, t_exec *exec)
 		else if (p->curr_pipe == p->max_pipe)
 			exec->pipe = 3;
 		else
-			exec->pipe = 2;	
+			exec->pipe = 2;
 	}
 }
 
-int		array_size(char **arr)
+int	array_size(char **arr)
 {
 	int	i;
 
@@ -63,4 +63,20 @@ int		array_size(char **arr)
 	while (arr[i])
 		i++;
 	return (i);
+}
+
+int	filein_error(t_all *p, t_exec *exec)
+{
+	if (p->max_pipe > 0)
+		pipe_close_fd(p, 3);
+	if (errno == 2)
+	{
+		p->exit_status = 1;
+		if (p->max_pipe > 0)
+			return (error_executer(exec->in->value, 1), exit(0), 0);
+		return (error_executer(exec->in->value, 1), 0);
+	}
+	else
+		return (error_executer(exec->in->value, 3), 1);
+	return (2);
 }

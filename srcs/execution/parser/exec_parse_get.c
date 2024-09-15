@@ -6,13 +6,13 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 10:51:53 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 11:16:29 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 14:39:20 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_ast *get_next_operator(t_all *p, t_ast *current, t_ast **prev, int option)
+t_ast	*get_next_operator(t_all *p, t_ast *current, t_ast **prev, int option)
 {
 	if (current->parent)
 		current = current->parent;
@@ -27,7 +27,7 @@ t_ast *get_next_operator(t_all *p, t_ast *current, t_ast **prev, int option)
 	return (current);
 }
 
-t_ast *get_last_pipe(t_ast *current)
+t_ast	*get_last_pipe(t_ast *current)
 {
 	while (current && current->parent && current->type != TOKEN_PIPE)
 		current = current->parent;

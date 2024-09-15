@@ -17,15 +17,16 @@ READLINE			= -lreadline
 MINI_SHELL_DIR		=	$(SRC_DIR)
 
 # Concatenate all source files
-SRCS 				=	srcs/free.c\
+SRCS 				=	srcs/init_free/free.c\
 						srcs/main.c \
-						srcs/init.c\
-						srcs/print_utils.c \
-						srcs/signals.c\
-						srcs/utils.c\
-						srcs/sort_env.c\
-						srcs/hate_the_norm.c\
-						srcs/error_management.c\
+						srcs/init_free/init.c\
+						srcs/init_free/print_utils.c \
+						srcs/init_free/signals.c\
+						srcs/init_free/utils.c\
+						srcs/init_free/sort_env.c\
+						srcs/init_free/hate_the_norm.c\
+						srcs/init_free/error_management.c\
+						srcs/init_free/signals_exec.c\
 						srcs/parsing/parser.c\
 						srcs/parsing/lexer/check_lexer.c\
 						srcs/parsing/lexer/lexer.c\

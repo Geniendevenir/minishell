@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:24:24 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 09:31:32 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 16:43:22 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,12 @@ bool	is_builtin(char *cmd)
 int	exec_builtin(t_all **p, t_exec *exec, char **cmd)
 {
 	int	result;
-	
+
 	result = 0;
 	if (ft_strcmp(cmd[0], "echo") == 0)
 		result = ft_echo(cmd + 1);
 	else if (ft_strcmp(cmd[0], "cd") == 0)
-		result = ft_cd((*p)->env ,cmd);
+		result = ft_cd((*p)->env, cmd);
 	else if (ft_strcmp(cmd[0], "pwd") == 0)
 		result = ft_pwd(cmd[1]);
 	else if (ft_strcmp(cmd[0], "export") == 0)
@@ -53,14 +53,14 @@ int	exec_builtin(t_all **p, t_exec *exec, char **cmd)
 	return (result);
 }
 
-int	exec_cmd(t_all *p, t_exec *exec, int *exit_status, char **env)
+int	exec_cmd(t_all *p, t_exec *exec, char **env)
 {
 	int	pid;
 	int	status;
- 
+
 	pid = fork();
 	if (pid == -1)
-		return (error_executer(NULL, 8), -1); //does not set $?
+		return (error_executer(NULL, 8), -1);
 	else if (pid == 0)
 	{
 		close(p->std_in);

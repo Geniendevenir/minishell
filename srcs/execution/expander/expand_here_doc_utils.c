@@ -3,14 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   expand_here_doc_utils.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 17:43:21 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/13 17:43:57 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 15:25:07 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	while_copy_folder(char *line, char *src, int fd_src, int fd_dest)
+{
+	while (line)
+	{
+		line = get_next_line(fd_src);
+		if (!line)
+			break ;
+		ft_putstr_fd(line, fd_dest);
+		free(line);
+	}
+	close(fd_src);
+	close(fd_dest);
+	unlink(src);
+}
 
 void	copy_folder(char *src, char *dest)
 {
@@ -23,27 +38,16 @@ void	copy_folder(char *src, char *dest)
 	if (fd_src == -1)
 	{
 		ft_putstr_fd("Erreur lors de l'ouverture du fichier src", 2);
-		return;
-	}	
+		return ;
+	}
 	fd_dest = open(dest, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd_dest == -1)
 	{
 		ft_putstr_fd("Erreur lors de l'ouverture du fichier dest", 2);
 		close(fd_src);
-		return;
+		return ;
 	}
-	while (line)
-	{
-		line = get_next_line(fd_src);
-		if (!line)
-			break;
-		ft_putstr_fd(line, fd_dest);
-		free(line);
-	}
-	close(fd_src);
-	close(fd_dest);
-	print_folder(dest, fd_dest);
-	unlink(src);
+	while_copy_folder(line, src, fd_src, fd_dest);
 }
 
 char	*ft_strdup_spe(char *s)
@@ -55,7 +59,7 @@ char	*ft_strdup_spe(char *s)
 	if (!s)
 		return (NULL);
 	length = ft_strlen(s);
-	dup_str = malloc((length + 3) * sizeof(char)); //a cehck
+	dup_str = malloc((length + 3) * sizeof(char));
 	if (!dup_str)
 		return (NULL);
 	index = 0;

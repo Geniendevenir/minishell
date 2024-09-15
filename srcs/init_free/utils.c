@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:31:18 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 13:45:17 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 16:57:22 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,10 +88,10 @@ void	trim_space(char *str)
 	ft_memmove(str, debut, fin - debut + 2);
 }
 
-void update_variable(t_all *p)
+void	update_variable(t_all *p)
 {
-	extern int g_sig_int;
-	
+	extern int	g_sig_int;
+
 	g_sig_int = 0;
 	free(p->line);
 	p->line = NULL;

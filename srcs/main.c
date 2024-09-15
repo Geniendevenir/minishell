@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 13:45:01 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 16:48:20 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,10 @@ char	*minishell(t_all *p, char **env)
 		if (p->error == 0)
 		{
 			current = p->ast;
+			setup_signal_handlers(sig_handler_child, sig_handler_child);
 			if (executer(p, current, env) == 1)
 				return (free_ast(p->ast), free_all(p), exit(0), NULL);
+			create_signal();
 			free_here_docs(p->here_doc);
 			free_ast(p->ast);
 		}

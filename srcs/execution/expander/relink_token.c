@@ -6,13 +6,13 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 23:11:11 by allan             #+#    #+#             */
-/*   Updated: 2024/07/07 19:15:14 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 15:10:53 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		relink_token(t_token **token_list, t_token *current, int error)
+int	relink_token(t_token **token_list, t_token *current, int error)
 {
 	t_token	*new_list;
 
@@ -23,8 +23,8 @@ int		relink_token(t_token **token_list, t_token *current, int error)
 	while (current)
 	{
 		error = 1;
-		if ((current->state == STATE_WORD || current->state == STATE_EXIT_STATUS) 
-			&& (current->type != WORD_LIMITER && current->type != WORD_SQLIMITER))
+		if ((current->state == 2 || current->state == 4)
+			&& (current->type != 25 && current->type != 29))
 			current = relink_word(current, &new_list, &error);
 		else
 		{
@@ -47,7 +47,7 @@ t_token	*relink_word(t_token *current, t_token **new_list, int *error)
 	int		wildcard;
 
 	relink_word_init(&word, &new_word, &wildcard);
-	while (current && (current->state == STATE_WORD || current->state == STATE_EXIT_STATUS))
+	while (current && (current->state == STATE_WORD || current->state == 4))
 	{
 		if (current->state == STATE_EXIT_STATUS)
 			wildcard = 2;
@@ -78,7 +78,7 @@ void	relink_word_init(char **word, char **new_word, int *wildcard)
 
 bool	add_word(t_token **new_list, char *word, int option)
 {
-	t_token *last;
+	t_token	*last;
 
 	if (token_addback(new_list, word, 0) == 1)
 	{
@@ -106,7 +106,7 @@ bool	add_word(t_token **new_list, char *word, int option)
 
 bool	relink_operator(t_token *current, t_token **new_list)
 {
-	t_token *last;
+	t_token	*last;
 
 	if (current->state == STATE_OPERATOR)
 	{

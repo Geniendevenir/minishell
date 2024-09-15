@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 21:53:15 by allan             #+#    #+#             */
-/*   Updated: 2024/09/13 19:06:07 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 15:55:02 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,11 @@ int	env_token(const char *cmd_line, size_t *i, t_token **token_list)
 {
 	t_token	*current;
 	char	*token_value;
-	size_t		j;
+	size_t	j;
 
 	j = *i;
-	if (cmd_line[j + 1] && ((cmd_line[j + 1] >= '0' && cmd_line[j + 1] <= '9') || cmd_line[j + 1] == '*'))
+	if (cmd_line[j + 1] && ((cmd_line[j + 1] >= '0' && cmd_line[j + 1] <= '9')
+			|| cmd_line[j + 1] == '*'))
 		j++;
 	else
 	{
@@ -64,7 +65,8 @@ bool	wildcard_token(const char *cmd_line, size_t *i, t_token **token_list)
 	size_t	j;
 
 	j = *i;
-	while (cmd_line[j] && (limit_word(cmd_line[j], 0) == 0 || cmd_line[j] == '*'))
+	while (cmd_line[j] && (limit_word(cmd_line[j], 0) == 0
+			|| cmd_line[j] == '*'))
 		j++;
 	token_value = ft_substr(cmd_line, *i, (j - *i));
 	if (!token_value)
@@ -79,7 +81,8 @@ bool	wildcard_token(const char *cmd_line, size_t *i, t_token **token_list)
 	return (0);
 }
 
-bool word_token(const char *cmd_line, size_t *i, t_token **token_list, int option)
+bool	word_token(const char *cmd_line, size_t *i, t_token **token_list
+, int option)
 {
 	t_token	*current;
 	char	*token_value;
@@ -92,15 +95,7 @@ bool word_token(const char *cmd_line, size_t *i, t_token **token_list, int optio
 			j++;
 	}
 	else if (option == 1)
-	{
-		while (cmd_line[j])
-		{
-			if (cmd_line[j] == '$' && cmd_line[j + 1] && limit_word(cmd_line[j + 1], 1) == 1)
-				break ;
-			else
-				j++;
-		}
-	}
+		word_token_utils(cmd_line, &j);
 	token_value = ft_substr(cmd_line, *i, (j - *i));
 	if (!token_value)
 		return (1);
@@ -112,4 +107,16 @@ bool word_token(const char *cmd_line, size_t *i, t_token **token_list, int optio
 	current->type = TOKEN_WORD;
 	(*i) = j;
 	return (0);
+}
+
+void	word_token_utils(const char *cmd_line, size_t *j)
+{
+	while (cmd_line[*j])
+	{
+		if (cmd_line[*j] == '$' && cmd_line[*j + 1]
+			&& limit_word(cmd_line[*j + 1], 1) == 1)
+			break ;
+		else
+			*j += 1;
+	}
 }

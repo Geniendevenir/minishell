@@ -6,11 +6,32 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 22:57:28 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 13:49:49 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 17:02:07 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+void	init_var_p(t_all **p)
+{
+	(*p)->sig->sig_quit = 0;
+	(*p)->sig->sig_int = 0;
+	(*p)->sig->p_status = 0;
+	(*p)->sig->cmd_stat = 0;
+	(*p)->line_num = 1;
+	(*p)->here_doc = NULL;
+	(*p)->ast = NULL;
+	(*p)->line = NULL;
+	(*p)->exit_status = 0;
+	(*p)->max_pipe = 0;
+	(*p)->curr_pipe = 0;
+	(*p)->error = 0;
+	(*p)->std_in = dup(STDIN_FILENO);
+	(*p)->std_out = dup(STDOUT_FILENO);
+	(*p)->option = 0;
+	(*p)->fd = NULL;
+	(*p)->int_here_doc = 0;
+}
 
 t_all	*init_all(char **env)
 {
@@ -27,23 +48,7 @@ t_all	*init_all(char **env)
 		return (free_env(p->env), free(p), NULL);
 	if (create_signal() == -1)
 		return (free_env(p->env), free(p->sig), free(p), NULL);
-	p->sig->sig_quit = 0;
-	p->sig->sig_int = 0;
-	p->sig->p_status = 0;
-	p->sig->cmd_stat = 0;
-	p->line_num = 1;
-	p->here_doc = NULL;
-	p->ast = NULL;
-	p->line = NULL;
-	p->exit_status = 0;
-	p->max_pipe = 0;
-	p->curr_pipe = 0;
-	p->error = 0;
-	p->std_in = dup(STDIN_FILENO);
-	p->std_out = dup(STDOUT_FILENO);
-	p->option = 0;
-	p->fd = NULL;
-	p->int_here_doc = 0;
+	init_var_p(&p);
 	return (p);
 }
 

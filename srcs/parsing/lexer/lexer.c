@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 14:38:47 by allan             #+#    #+#             */
-/*   Updated: 2024/09/12 18:44:57 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 16:30:37 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,10 +101,12 @@ int	tokenizer_two(const char *cmd_line, size_t *i, t_token **token_list)
 
 int	tokenizer_three(const char *cmd_line, size_t *i, t_token **token_list)
 {
-	int	error;
+	int		error;
+	int		heredoc;
 
 	error = 0;
-	if (last_heredoc(token_list) == 1)
+	heredoc = 0;
+	if (last_heredoc(token_list, heredoc) == 1)
 		error = limiter_token(cmd_line, i, token_list);
 	else
 		error = lexical_token(cmd_line, i, token_list);

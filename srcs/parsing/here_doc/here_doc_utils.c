@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 16:29:41 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/13 11:35:03 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 16:45:16 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,7 @@ void	free_here_docs(char **here_docs)
 		}
 	}
 	if (here_docs)
-	{
-		print_tab(here_docs);
 		free(here_docs);
-	}
 }
 
 int	here_doc_count(t_token *tok)
