@@ -6,11 +6,13 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:24:24 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 15:30:13 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 16:30:11 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+extern int g_sig_int;
 
 bool	is_builtin(char *cmd)
 {
@@ -58,7 +60,6 @@ int	exec_cmd(t_all *p, t_exec *exec, char **env)
 	int	pid;
 	int	status;
  
-	setup_signal_handlers(sig_handler_child, sig_handler_child);
 	pid = fork();
 	if (pid == -1)
 		return (error_executer(NULL, 8), -1); //does not set $?

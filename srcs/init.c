@@ -6,13 +6,13 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 22:57:28 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 14:01:16 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 16:33:48 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void init_var_p(t_all **p)
+void	init_var_p(t_all **p)
 {
 	(*p)->sig->sig_quit = 0;
 	(*p)->sig->sig_int = 0;
