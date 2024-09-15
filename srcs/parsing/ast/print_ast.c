@@ -6,13 +6,13 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 19:49:03 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/12 14:19:47 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 13:13:29 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-const char* getAST_Class(t_ast *current) //a enlever
+/* const char* getAST_Class(t_ast *current) //a enlever
 {
 	const char* Token_Class[] = {
     	"|NOT_DEFINE",
@@ -51,9 +51,9 @@ const char* getAST_Class(t_ast *current) //a enlever
     } else {
         return "NULL";
     }
-}
+} */
 
-void printAST(t_ast* node, int level)// a enlever
+/* void printAST(t_ast* node, int level)// a enlever
 {
     if (node == NULL) return;
     
@@ -72,4 +72,4 @@ void printAST(t_ast* node, int level)// a enlever
     if (node->left) {
         printAST(node->left, level + 1);
     }
-}
+} */

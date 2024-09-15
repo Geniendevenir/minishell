@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 13:06:40 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 13:19:53 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,6 +231,7 @@ typedef struct s_exec
 }				t_exec;
 
 //					MERGE					//
+// copier mon heredoc /ast/ parser / utils/ main.c / et tout les buitlins sauf echo et cd
 //rajouter free line a free all
 //parser
 int			parser(char *cmd_line, t_ast **ast, t_all **p);
