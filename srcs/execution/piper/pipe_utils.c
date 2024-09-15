@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 19:12:43 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 14:06:11 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 17:22:54 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,6 @@ int	is_command(t_ast *current)
 
 t_exec	*last_command(t_exec *exec)
 {
-	t_exec	*node;
-
-	node = exec;
 	while (exec)
 	{
 		if (!exec->next)

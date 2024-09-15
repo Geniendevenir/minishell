@@ -6,13 +6,13 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 10:51:53 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 14:39:20 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 17:17:05 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_ast	*get_next_operator(t_all *p, t_ast *current, t_ast **prev, int option)
+t_ast	*get_next_operator(t_all *p, t_ast *current, int option)
 {
 	if (current->parent)
 		current = current->parent;

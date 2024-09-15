@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 17:54:19 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 15:05:08 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 17:19:45 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,15 +109,14 @@ int	split_two(const char *cmd_line, size_t *i, t_token **token_list, int option)
 				error = squote_token(cmd_line, i, token_list);
 		}
 		else
-			error = split_two_next(cmd_line, i, token_list, option);
+			error = split_two_next(cmd_line, i, token_list);
 	}
 	else
 		error = word_token(cmd_line, i, token_list, 1);
 	return (error);
 }
 
-int	split_two_next(const char *cmd_line, size_t *i, t_token **token_list
-, int option)
+int	split_two_next(const char *cmd_line, size_t *i, t_token **token_list)
 {
 	int	error;
 

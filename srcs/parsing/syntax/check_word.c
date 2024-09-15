@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_word.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 14:48:05 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/08 13:17:12 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 17:07:33 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int	check_cmd_exist(char *word, t_env *env)
 	return (0);
 }
 
-enum s_type	check_word(char *word, t_word *boolean)
+enum e_type	check_word(char *word, t_word *boolean)
 {
 	if (boolean->redi_in == 1)
 	{
