@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:24:24 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 09:31:32 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 15:09:04 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	exec_builtin(t_all **p, t_exec *exec, char **cmd)
 	return (result);
 }
 
-int	exec_cmd(t_all *p, t_exec *exec, int *exit_status, char **env)
+int	exec_cmd(t_all *p, t_exec *exec, char **env)
 {
 	int	pid;
 	int	status;

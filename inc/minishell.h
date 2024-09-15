@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 14:20:56 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 14:47:16 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,6 +232,9 @@ typedef struct s_exec
 
 //						MERGE 							//
 //init all / expand here doc et expand here doc utils
+int			exec_cmd(t_all *p, t_exec *exec, char **env);
+void 		sighandler_exec(int signal);
+int			create_signal_exec(void);
 
 //						EXECUTION                      //
 int			executer(t_all *p, t_ast *current, char **env);
@@ -262,7 +265,6 @@ int			check_cmd(t_exec *exec, t_env *env);
 
 //exec_cmd
 int			exec_builtin(t_all **p, t_exec *exec, char **cmd);
-int			exec_cmd(t_all *p, t_exec *exec, int *exit_status, char **env);
 bool		is_builtin(char *cmd);
 
 //exec_file

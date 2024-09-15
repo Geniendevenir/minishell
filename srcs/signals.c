@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 11:10:17 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 13:38:52 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 15:06:13 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,17 +51,32 @@ void sighandler(int signal)
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
+	return ;
+}
+
+void sighandler_exec(int signal)
+{
+	extern int g_sig_int;
+	
+	if (signal == SIGINT)
+	{
+		g_sig_int = 1;
+		write(1, "\n", 2);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
 	else if (signal == (int)SIGQUIT)
 	{
-		write(1, "Quit: (core dumped)\n", 20);
-		rl_replace_line("", 0);
+		write(2, "Quit: (core dumped)\n", 20);
+		/* rl_replace_line("", 0);
 		rl_on_new_line();
-		rl_redisplay();
+		rl_redisplay(); */
 	}
 	return ;
 }
 
-/*int	create_signal(void)
+int	create_signal(void)
 {
 	struct termios old_termios;
 	struct termios new_termios;
@@ -87,30 +102,9 @@ void sighandler(int signal)
 		return (-1);
 	}
 	return (0);
-}*/
+}
 
-/* int	create_signal(void)
-{
-    struct sigaction a;
-
-    // Configuration du handler pour SIGQUIT
-    a.sa_handler = SIG_DFL;  // SIG_DFL: comportement par défaut (générer core dump)
-    a.sa_flags = 0;
-    sigemptyset(&a.sa_mask);
-
-    // Associer le handler au signal SIGQUIT
-    if (sigaction(SIGQUIT, &a, NULL) != 0)
-        return (-1);
-
-    // Configuration du handler pour SIGINT (facultatif selon tes besoins)
-    a.sa_handler = SIG_IGN;  // SIG_IGN: ignorer SIGINT (Ctrl + C)
-    if (sigaction(SIGINT, &a, NULL) != 0)
-        return (-1);
-
-    return (0);
-} */
-
-int	create_signal(void)
+int	create_signal_exec(void)
 {
 	struct termios		old_termios;
 	struct termios		new_termios;
@@ -123,7 +117,7 @@ int	create_signal(void)
 	new_termios.c_cc[VSUSP] = 26;
 	if (tcsetattr(0, TCSANOW, &new_termios))
 		return (-1);
-	a.sa_handler = sighandler;
+	a.sa_handler = sighandler_exec;
 	a.sa_flags = 0;
 	sigemptyset(&a.sa_mask);
 	if (sigaction(SIGINT, &a, NULL) != 0
@@ -132,58 +126,6 @@ int	create_signal(void)
 	return (0);
 }
 
-/* 
-void	sig_eof(int code, t_all *p)
-{
-	char	*save;
 
-	(void) code;
-	if (p->sig->p_status == 0 && rl_end == 0)
-	{
-		p->sig->sig_quit = 1;
-		rl_on_new_line();
-		rl_replace_line("end", 0);
-		printf("\nexit\n");
-		rl_done = 1;
-	}
-	else if (p->sig->p_status == 0)
-	{
-		save = ft_strdup(rl_line_buffer);
-		if (save == NULL)
-void	sig_eof(int code, t_all *p)
-{
-	char	*save;
-
-	(void) code;
-	if (p->sig->p_status == 0 && rl_end == 0)
-	{
-		p->sig->sig_quit = 1;
-		rl_on_new_line();
-		rl_replace_line("end", 0);
-		printf("\nexit\n");
-		rl_done = 1;
-	}
-	else if (p->sig->p_status == 0)
-	{
-		save = ft_strdup(rl_line_buffer);
-		if (save == NULL)
-			rl_on_new_line();
-		rl_on_new_line();
-		rl_replace_line(save, 0);
-		rl_redisplay();
-		free(save);
-	}
-	else if (p->sig->p_status == 2)
-		p->sig->sig_quit = 1;
-}
-			rl_on_new_line();
-		rl_on_new_line();
-		rl_replace_line(save, 0);
-		rl_redisplay();
-		free(save);
-	}
-	else if (p->sig->p_status == 2)
-		p->sig->sig_quit = 1;
-} */
 
 

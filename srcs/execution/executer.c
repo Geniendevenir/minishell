@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executer.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 21:23:21 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 11:10:31 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 15:02:09 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int		execute_command(t_all *p, t_ast **current, t_exec *exec, char **env)
 				p->exit_status = check_cmd(exec, p->env);
 				if (p->exit_status == 0)
 				{
-					p->exit_status = exec_cmd(p, exec, &p->exit_status, env);
+					p->exit_status = exec_cmd(p, exec, env);
 					if (p->exit_status < 0)
 						return (close_files(exec, p), exec_free(exec), 1);
 				}
