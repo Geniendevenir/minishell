@@ -6,11 +6,25 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 15:27:18 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 15:37:52 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 16:38:23 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	event(void)
+{
+	return (42);
+}
+
+int	stop_signals(void)
+{
+	if (signal(SIGINT, SIG_IGN) == SIG_ERR
+		|| signal(SIGQUIT, SIG_IGN) == SIG_ERR
+		|| signal(SIGTSTP, SIG_IGN) == SIG_ERR)
+		return (-1);
+	return (0);
+}
 
 void	sig_handler_child(int sig)
 {

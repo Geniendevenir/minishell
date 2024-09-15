@@ -6,30 +6,16 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 11:10:17 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 15:31:05 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 16:54:26 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int	event(void)
+void	sighandler(int signal)
 {
-	return (42);
-}
+	extern int	g_sig_int;
 
-int	stop_signals(void)
-{
-	if (signal(SIGINT, SIG_IGN) == SIG_ERR
-		|| signal(SIGQUIT, SIG_IGN) == SIG_ERR
-		|| signal(SIGTSTP, SIG_IGN) == SIG_ERR)
-		return (-1);
-	return (0);
-}
-
-void sighandler(int signal)
-{
-	extern int g_sig_int;
-	
 	if (signal == SIGINT)
 	{
 		g_sig_int = 1;
@@ -41,10 +27,36 @@ void sighandler(int signal)
 	return ;
 }
 
-void sighandler_exec(int signal)
+int	create_signal(void)
 {
-	extern int g_sig_int;
-	
+	struct termios		old_termios;
+	struct termios		new_termios;
+	struct sigaction	a;
+
+	if (tcgetattr(0, &old_termios) != 0)
+		return (-1);
+	new_termios = old_termios;
+	new_termios.c_cc[VEOF] = 4;
+	new_termios.c_cc[VSUSP] = 26;
+	if (tcsetattr(0, TCSANOW, &new_termios))
+		return (-1);
+	a.sa_handler = sighandler;
+	a.sa_flags = 0;
+	sigemptyset(&a.sa_mask);
+	if (sigaction(SIGINT, &a, NULL) != 0)
+		return (-1);
+	a.sa_handler = SIG_IGN;
+	sigemptyset(&a.sa_mask);
+	if (sigaction(SIGTSTP, &a, NULL) != 0
+		|| sigaction(SIGQUIT, &a, NULL) != 0)
+		return (-1);
+	return (0);
+}
+
+void	sighandler_exec(int signal)
+{
+	extern int	g_sig_int;
+
 	if (signal == SIGINT)
 	{
 		g_sig_int = 1;
@@ -62,34 +74,6 @@ void sighandler_exec(int signal)
 		rl_redisplay();
 	}
 	return ;
-}
-
-int	create_signal(void)
-{
-	struct termios old_termios;
-	struct termios new_termios;
-	struct sigaction a;
-	
-	if (tcgetattr(0, &old_termios) != 0)
-		return (-1);
-	new_termios = old_termios;
-	new_termios.c_cc[VEOF] = 4;
-	new_termios.c_cc[VSUSP] = 26;
-	if (tcsetattr(0, TCSANOW, &new_termios))
-		return (-1);
-	a.sa_handler = sighandler;
-	a.sa_flags = 0;
-	sigemptyset(&a.sa_mask);
-	if (sigaction(SIGINT, &a, NULL) != 0)
-		return (-1);
-	a.sa_handler = SIG_IGN;
-	sigemptyset(&a.sa_mask);
-	if (sigaction(SIGTSTP, &a, NULL) != 0 
-		|| sigaction(SIGQUIT, &a, NULL) != 0)
-	{
-		return (-1);
-	}
-	return (0);
 }
 
 int	create_signal_exec(void)
@@ -117,7 +101,3 @@ int	create_signal_exec(void)
 		return (-1);
 	return (0);
 }
-
-
-
-
