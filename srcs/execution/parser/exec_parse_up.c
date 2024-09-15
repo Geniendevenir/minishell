@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 10:05:13 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 11:19:27 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 14:37:43 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 t_ast	*up_to_cmd(t_ast *current)
 {
 	while (current->parent && (current->parent->type == WORD_CMD
-		|| current->parent->type == WORD_OPTION))
+			|| current->parent->type == WORD_OPTION))
 		current = current->parent;
 	return (current);
 }

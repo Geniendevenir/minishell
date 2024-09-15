@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:22:25 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 11:43:29 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 14:12:47 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	pipe_parser(t_all *p, t_ast *current, t_exec **exec, int option)
 	exec_init(node);
 	current = down_left(current);
 	if (current->state == STATE_WORD && (current->type == WORD_CMD
-		|| current->type == WORD_OPTION))
+			|| current->type == WORD_OPTION))
 	{
 		current = up_to_cmd(current);
 		if (get_command(current, node) == 1)
@@ -41,7 +41,7 @@ int	pipe_parser(t_all *p, t_ast *current, t_exec **exec, int option)
 	return (0);
 }
 
-int		pipe_parser_next(t_all *p, t_ast *current, t_exec **exec)
+int	pipe_parser_next(t_all *p, t_ast *current, t_exec **exec)
 {
 	if (current->type == TOKEN_PIPE)
 	{
@@ -49,7 +49,7 @@ int		pipe_parser_next(t_all *p, t_ast *current, t_exec **exec)
 		if (parser_add_pipe(p, current, exec) == 1)
 			return (1);
 	}
-	while(p->curr_pipe < p->max_pipe)
+	while (p->curr_pipe < p->max_pipe)
 	{
 		if (!current->parent)
 			break ;
@@ -64,25 +64,25 @@ int		pipe_parser_next(t_all *p, t_ast *current, t_exec **exec)
 	return (0);
 }
 
-int		parser_add_pipe(t_all *p, t_ast *current, t_exec **exec)
+int	parser_add_pipe(t_all *p, t_ast *current, t_exec **exec)
 {
-		if (current->right && is_command(current->right) == 1)
-		{
-			if (pipe_parser(p, current->right, exec, 1) == 1)
-				return (1);
-		}
-		else
-		{
-			if (pipe_addempty(p, exec) == 1)
-				return (1);
-		}
-		return (0);
+	if (current->right && is_command(current->right) == 1)
+	{
+		if (pipe_parser(p, current->right, exec, 1) == 1)
+			return (1);
+	}
+	else
+	{
+		if (pipe_addempty(p, exec) == 1)
+			return (1);
+	}
+	return (0);
 }
 
 int	pipe_analyser(t_all *p, t_exec *exec)
 {
 	t_exec	*node;
-	int	i;
+	int		i;
 
 	node = exec;
 	i = 1;
@@ -99,5 +99,5 @@ int	pipe_analyser(t_all *p, t_exec *exec)
 	if (p->skip == (p->max_pipe + 1))
 		return (1);
 	node = exec;
-	return (0);	
+	return (0);
 }

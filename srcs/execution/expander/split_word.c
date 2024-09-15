@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 17:54:19 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 11:28:50 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 15:05:08 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	word_management(t_ast **root, t_ast **current, t_token	*token_list)
 	return (0);
 }
 
-int split_word(t_all *p, t_ast **current)
+int	split_word(t_all *p, t_ast **current)
 {
 	size_t		i;
 	t_token		*token_list;
@@ -57,7 +57,7 @@ int split_word(t_all *p, t_ast **current)
 	token_free(&token_list);
 	return (error);
 }
-		
+
 int	split_one(const char *cmd_line, size_t *i, t_token **token_list, int option)
 {
 	int	error;
@@ -65,22 +65,22 @@ int	split_one(const char *cmd_line, size_t *i, t_token **token_list, int option)
 	error = 0;
 	if (cmd_line[*i] == '$')
 	{
-		if (cmd_line[*i + 1] == '?') //$?
+		if (cmd_line[*i + 1] == '?')
 		{
 			error = token_addback(token_list, "?", 2);
 			env_special_token(token_list, 1);
 			(*i) += 2;
 		}
-		else if (is_env(cmd_line[*i + 1], 1) == 2) //Is ENV valid ?
+		else if (is_env(cmd_line[*i + 1], 1) == 2)
 			return ((*i)++, 0);
-		else if (is_env(cmd_line[*i + 1], 1) == 1) //$$
+		else if (is_env(cmd_line[*i + 1], 1) == 1)
 		{
 			error = token_addback(token_list, "$", 2);
 			env_special_token(token_list, 2);
 			(*i)++;
 		}
 		else
-			error = env_token(cmd_line, i, token_list); //ENV $WORD
+			error = env_token(cmd_line, i, token_list);
 	}
 	else
 		error = split_two(cmd_line, i, token_list, option);
@@ -108,12 +108,23 @@ int	split_two(const char *cmd_line, size_t *i, t_token **token_list, int option)
 			else
 				error = squote_token(cmd_line, i, token_list);
 		}
-		else if (cmd_line[*i] == '*' || is_wildcard(cmd_line, *i) == 0)
-			error = wildcard_token(cmd_line, i, token_list);
 		else
-			error = word_token(cmd_line, i, token_list, 0);
+			error = split_two_next(cmd_line, i, token_list, option);
 	}
 	else
 		error = word_token(cmd_line, i, token_list, 1);
+	return (error);
+}
+
+int	split_two_next(const char *cmd_line, size_t *i, t_token **token_list
+, int option)
+{
+	int	error;
+
+	error = 0;
+	if (cmd_line[*i] == '*' || is_wildcard(cmd_line, *i) == 0)
+		error = wildcard_token(cmd_line, i, token_list);
+	else
+		error = word_token(cmd_line, i, token_list, 0);
 	return (error);
 }

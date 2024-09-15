@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 10:19:15 by allan             #+#    #+#             */
-/*   Updated: 2024/07/21 18:14:56 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 16:19:49 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ bool	is_whitespace(char c)
 	return (0);
 }
 
-int		is_env(char c, int option)
+int	is_env(char c, int option)
 {
 	if (option == 1)
 	{

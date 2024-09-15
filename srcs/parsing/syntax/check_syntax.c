@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 16:42:50 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 11:38:32 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 16:16:26 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,12 @@ bool	is_operator(enum s_type type, int option)
 	return (0);
 }
 
-int		double_operator(t_token *c)
+int	double_operator(t_token *c)
 {
 	if (!c->next)
 	{
 		if ((is_operator(c->type, 2) || is_operator(c->type, 3)
-			|| is_operator(c->type, 9)))
+				|| is_operator(c->type, 9)))
 			return (error_syntax(c, 5), 1);
 	}
 	else if (c->next)
@@ -55,7 +55,7 @@ int		double_operator(t_token *c)
 			|| (c->type == TOKEN_CLOSEPAR && c->next->type == TOKEN_PIPE))
 			return (error_syntax(c->next, 7), 1);
 		if (c->type == TOKEN_HEREDOC && (c->next->type != WORD_LIMITER
-			&& c->next->type != WORD_SQLIMITER))
+				&& c->next->type != WORD_SQLIMITER))
 			return (error_syntax(c->next, 1), 1);
 		if ((c->type == TOKEN_REDIRECTIN || c->type == TOKEN_REDIRECTOUT)
 			&& c->next->type != TOKEN_WORD)
@@ -68,17 +68,18 @@ int		double_operator(t_token *c)
 int	double_operator_next(t_token *c)
 {
 	if (c->type == TOKEN_REDIRECTIN && c->next->type == TOKEN_REDIRECTOUT)
-			return (error_syntax(c, 5), 1);
+		return (error_syntax(c, 5), 1);
 	if (is_operator(c->type, 2) && is_operator(c->next->type, 2))
 		return (error_syntax(c->next, 1), 1);
 	if (is_operator(c->type, 3) && ((is_operator(c->next->type, 3)
-		|| is_operator(c->next->type, 2) || is_operator(c->next->type, 4))))
+				|| is_operator(c->next->type, 2)
+				|| is_operator(c->next->type, 4))))
 		return (error_syntax(c->next, 1), 1);
 	if (c->next->next)
 	{
 		if ((c->type == TOKEN_REDIRECTIN || c->type == TOKEN_REDIRECTOUT)
-			&& c->next->type == TOKEN_WORD && c->next->next->type == TOKEN_OPENPAR)
-				return (error_syntax(c->next->next, 1), 1);
+			&& c->next->type == 1 && c->next->next->type == 12)
+			return (error_syntax(c->next->next, 1), 1);
 	}
 	return (0);
 }
@@ -89,12 +90,12 @@ int	check_first_token(t_token *c)
 		|| c->type == TOKEN_AND)
 	{
 		error_syntax(c, 1);
-			return (1);
+		return (1);
 	}
 	return (0);
 }
 
-bool 	check_syntax(t_token *current)
+bool	check_syntax(t_token *current)
 {
 	int			skip;
 	t_syntax	syntax;
@@ -109,11 +110,11 @@ bool 	check_syntax(t_token *current)
 	while (current)
 	{
 		if (double_operator(current) == 1)
-				return (1);
+			return (1);
 		if (skip > 0)
 			skip--;
 		if (skip == 0 && (current->type == TOKEN_OPENPAR
-			|| current->type == TOKEN_CLOSEPAR))
+				|| current->type == TOKEN_CLOSEPAR))
 		{
 			if (check_parenthesis(current, syntax, &skip) == 1)
 				return (1);

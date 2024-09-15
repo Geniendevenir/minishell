@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hate_the_norm.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 19:33:11 by allan             #+#    #+#             */
-/*   Updated: 2024/07/11 19:30:06 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 16:54:47 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,10 @@ bool	wildcard_return(DIR **d)
 	closedir(*d);
 	return (1);
 }
+
 bool	is_file(t_ast *current)
 {
-	if ((current)->type == WORD_FILEOUT || (current)->type == WORD_FILEIN 
+	if ((current)->type == WORD_FILEOUT || (current)->type == WORD_FILEIN
 		|| (current)->type == WORD_FILEOUT_APPEND)
 		return (1);
 	return (0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   word_management.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 23:02:14 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 14:10:27 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 16:34:04 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_ast	*replace_word(t_ast **root, t_ast *node, t_ast *new_node)
 	{
 		new_node = create_node(NULL, 0);
 		if (!new_node)
-			return (NULL); //add error malloc
+			return (NULL);
 	}
 	if (node->type == WORD_CMD)
 	{
@@ -27,49 +27,61 @@ t_ast	*replace_word(t_ast **root, t_ast *node, t_ast *new_node)
 	}
 	if (new_node->value != NULL)
 		new_node->parent = node->parent;
-	if (node->parent == NULL)  // node is the root
+	if (node->parent == NULL)
+		return (replace_word_next(root, node, new_node, 1));
+	else if (node->parent->left == node)
+		return (replace_word_next(root, node, new_node, 2));
+	else if (node->parent->right == node)
+		return (replace_word_next(root, node, new_node, 3));
+	return (node);
+}
+
+t_ast	*replace_word_next(t_ast **root, t_ast *node, t_ast *new_node
+, int option)
+{
+	if (option == 1)
 	{
 		*root = new_node;
 		return (new_node);
 	}
-	else if (node->parent->left == node)
+	else if (option == 2)
 	{
 		node->parent->left = new_node;
 		new_node->parent = node->parent;
 		return (new_node);
 	}
-	else if (node->parent->right == node)
+	else if (option == 3)
 	{
 		node->parent->right = new_node;
 		new_node->parent = node->parent;
 		return (new_node);
 	}
-	return (node);
+	return (new_node);
 }
 
-void delete_word(t_ast **root, t_ast **node)
+void	delete_word(t_ast **root, t_ast **node)
 {
 	t_ast	*temp;
-	
+
 	temp = *node;
 	if ((*node) == NULL)
 		return ;
 	if ((*node)->left == NULL)
 	{
-		*node = replace_word(root, *node, NULL); // Case 2: (*Node) is a leaf
+		*node = replace_word(root, *node, NULL);
 		if ((*node)->parent)
-			*node = (*node)->parent;	
+			*node = (*node)->parent;
 	}
 	else
-		*node = replace_word(root, *node, (*node)->left); // Case 3: (*Node) has only left child
+		*node = replace_word(root, *node, (*node)->left);
 	free(temp->value);
 	free(temp);
 }
 
-bool insert_word(t_ast **node, t_token *token)
+bool	insert_word(t_ast **node, t_token *token)
 {
 	t_ast	*new_node;
-	
+
 	new_node = create_node(token, (*node)->subshell);
 	if (!new_node)
 		return (1);
@@ -90,41 +102,12 @@ bool insert_word(t_ast **node, t_token *token)
 
 bool	modify_word(t_ast **node, t_token *token_list)
 {
-	char *temp;
+	char	*temp;
 
 	temp = (*node)->value;
 	(*node)->value = ft_strdup(token_list->value);
 	free(temp);
 	if (!(*node)->value)
 		return (1);
-	return (0);
-}
-
-int		handle_wildcard(t_ast **current, t_token **token_list)
-{
-	t_token *token;
-	int		error;
-
-	token = *token_list;
-	error = 0;
-	if ((*current)->type == WORD_FILEOUT || (*current)->type == WORD_FILEIN || (*current)->type == WORD_FILEOUT_APPEND) //cas > *exits
-		error_expander(*current, 1);
-	else if ((*current)->type == WORD_CMD || (*current)->type == WORD_OPTION)
-	{
-		if (ft_strcmp((*current)->value, token->value) != 0)
-		{
-			error = modify_word(current, *token_list);
-			if (error != 0)
-				return (error);
-		}
-		token = token->next;
-		while (token)
-		{
-			if (insert_word(current, token) == 1)
-				return (1);
-			*current = (*current)->left;
-			token = token->next;
-		}
-	}
 	return (0);
 }

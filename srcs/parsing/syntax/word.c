@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:27:35 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 11:40:41 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 17:03:30 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,11 @@ bool	if_define_word(t_token *current)
 		return (0);
 }
 
-void	print_and_free_define_word(t_token **list, t_token *current)
+/* void	print_and_free_define_word(t_token **list, t_token *current)
 {
 	print_error_cmd_not_found(current);
 	token_free(list);
-}
+} */
 
 bool	define_word(t_token **token_list, t_word *boolean)
 {

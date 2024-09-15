@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 13:26:25 by allan             #+#    #+#             */
-/*   Updated: 2024/07/29 23:53:14 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 15:40:11 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,17 +28,9 @@ char	*path_free(t_path *p, int *error, int option)
 	if (option == 1)
 		free_array(p->env_paths);
 	else if (option == 2)
-	{
-		free_array(p->env_paths);
-		return (p->final_path);
-	}
+		return (free_array(p->env_paths), p->final_path);
 	else if (option == 3)
-	{
-		free_array(p->env_paths);
-		/* if (p->final_path)
-			free(p->final_path); */
-		return (NULL);
-	}
+		return (free_array(p->env_paths), NULL);
 	*error = 1;
 	return (NULL);
 }
@@ -54,11 +46,9 @@ void	p_init(t_path *p)
 
 char	*get_path(const char *cmd, t_env *env, int *error)
 {
-	t_path 	p;
+	t_path	p;
 
 	p_init(&p);
-	if (!env) // If no ENV can be deleted
-		return (NULL);
 	p.path_value = find_path(env);
 	if (!p.path_value || !(*p.path_value))
 		return (NULL);
@@ -79,6 +69,5 @@ char	*get_path(const char *cmd, t_env *env, int *error)
 		free(p.final_path);
 		p.i++;
 	}
-	path_free(&p, error, 3);
-	return (NULL);
+	return (path_free(&p, error, 3), NULL);
 }

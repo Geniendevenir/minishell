@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_here_doc.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 12:18:13 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 14:19:23 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 16:18:24 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ int	get_token_list(t_all *p, t_token **token, char *line)
 			return (1);
 		}
 	}
-	token_print_amazing(token);
 	if (expander(token, p, error) == 1)
 		return (1);
 	return (0);
@@ -104,4 +103,3 @@ void	expand_heredoc(t_all *p)
 	}
 	while_expand_heredoc(p, line, fd2, fd);
 }
-

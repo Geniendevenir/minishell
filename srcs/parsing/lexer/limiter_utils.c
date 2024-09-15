@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   limiter_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 19:48:26 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 15:47:06 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 16:27:12 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,26 +18,21 @@ void	while_in_last_heredoc(int *heredoc, t_token **current)
 	{
 		if ((*current)->type == TOKEN_HEREDOC)
 			(*heredoc)--;
-		/* if (!(*current)->next)
-			break; */
-			
 		(*current) = (*current)->next;
 	}
 }
 
-bool	last_heredoc(t_token **token_list)
+bool	last_heredoc(t_token **token_list, int heredoc)
 {
 	t_token	*current;
-	int		heredoc;
 
-	heredoc = 0;
 	current = *token_list;
 	while (current)
 	{
 		if (current->type == TOKEN_HEREDOC)
 			heredoc++;
 		if (!current->next)
-			break;
+			break ;
 		current = current->next;
 	}
 	if (heredoc == 0)
@@ -47,21 +42,12 @@ bool	last_heredoc(t_token **token_list)
 	while (current && current->type == TOKEN_WHITESPACE)
 	{
 		if (!current->next)
-			break;
+			break ;
 		current = current->next;
 	}
-	if (!current)
-	{
-		if (current && current->value)
-			printf("current = %s\n", current->value);
+	if (!current || ((current->type == TOKEN_WHITESPACE
+				|| current->type == TOKEN_HEREDOC) && !current->next))
 		return (1);
-	}
-	if (((current->type == TOKEN_WHITESPACE || current->type == TOKEN_HEREDOC) && !current->next))
-	{
-		if (current && current->value)
-			printf("current = %s\n", current->value);
-		return (1);
-	}
 	return (0);
 }
 

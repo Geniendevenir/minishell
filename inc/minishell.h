@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 15:30:05 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 17:24:24 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,20 +230,12 @@ typedef struct s_exec
 	struct s_exec	*next;
 }				t_exec;
 
-//						MERGE 							//
-//init all / expand here doc et expand here doc utils
-int			exec_cmd(t_all *p, t_exec *exec, char **env);
-void 		sighandler_exec(int signal);
-void		setup_signal_handlers(void (*int_)(int), void (*quit_)(int));
-void		sig_handler_child(int sig);
-int			create_signal_exec(void);
-
 //						EXECUTION                      //
 int			executer(t_all *p, t_ast *current, char **env);
 int			execute_command(t_all *p, t_ast **current, t_exec *exec, char **env);
 
 //exec_parser
-int			parser_exec_next(t_all *p, t_ast *current, char **env);
+int			parser_exec_next(t_all *p, t_ast *cur, char **env);
 int			parse_operator_or(t_all *p, t_ast **current, t_ast **prev);
 int			parse_operator_and(t_all *p, t_ast **current, t_ast **prev);
 
@@ -267,6 +259,7 @@ int			check_cmd(t_exec *exec, t_env *env);
 
 //exec_cmd
 int			exec_builtin(t_all **p, t_exec *exec, char **cmd);
+int			exec_cmd(t_all *p, t_exec *exec, char **env);
 bool		is_builtin(char *cmd);
 
 //exec_file
@@ -285,8 +278,9 @@ void		p_init(t_path *p);
 char		*get_path(const char *cmd, t_env *env, int *error);
 
 //exec_redirect
-int			assign_redirect(t_ast *current, t_exec *exec);
+int			assign_redirect(t_ast *c, t_exec *ex);
 void		redirect_pipe(t_ast *current, t_exec *exec);
+void		redirect_pipe_next(t_ast *current, t_exec *exec);
 
 //exec_utils
 void		exec_init(t_exec *exec);
@@ -328,7 +322,7 @@ void		pipe_error(int option);
 
 //pipe_utils
 int			is_command(t_ast *current);
-t_exec *	last_command(t_exec *exec);
+t_exec		*last_command(t_exec *exec);
 void		pipe_addback(t_all *p, t_exec **exec, t_exec *new_node);
 int			pipe_addempty(t_all *p, t_exec **exec);
 t_exec		*pipe_last(t_exec *exec);
@@ -348,22 +342,25 @@ int			check_semicolon(char *cmd_line);
 int			skip_quotes(const char *cmd_line, int i, int option);
 
 //lexer
-bool 		lexer(char *cmd_line, t_token **token_list, int error);
-int			tokenizer_one(const char *cmd_line, size_t *i, t_token **token_list);
-int			tokenizer_two(const char *cmd_line, size_t *i, t_token **token_list);
-int			tokenizer_three(const char *cmd_line, size_t *i, t_token **token_list);
-//int			tokenizer_four(const char *cmd_line, size_t *i, t_token **token_list);
+bool		lexer(char *cmd_line, t_token **token_list, int error);
+int			tokenizer_one(const char *cmd_line, size_t *i,
+				t_token **token_list);
+int			tokenizer_two(const char *cmd_line, size_t *i,
+				t_token **token_list);
+int			tokenizer_three(const char *cmd_line, size_t *i,
+				t_token **token_list);
 
 //token_management
-void 		token_init(t_token **token_list);
-t_token 	*token_last(t_token *token_list);
+void		token_init(t_token **token_list);
+t_token		*token_last(t_token *token_list);
 bool		token_addback(t_token **token_list, char *value, int option);
 void		token_addback_two(t_token **token_list, t_token *token);
 bool		token_addnext(t_token **current, char *value);
 int			token_free(t_token **token_list);
 
 //tokenizer
-bool		whitespace_token(const char *cmd_line, size_t *i, t_token **token_list);
+bool		whitespace_token(const char *cmd_line,
+				size_t *i, t_token **token_list);
 bool		squote_token(const char *cmd_line, size_t *i, t_token **token_list);
 bool		inpar_token(size_t *i, t_token **token_list);
 bool		outpar_token(size_t *i, t_token **token_list);
@@ -374,25 +371,40 @@ bool		heredoc_token(size_t *i, t_token **token_list);
 bool		inputre_token(size_t *i, t_token **token_list);
 bool		outputapp_token(size_t *i, t_token **token_list);
 bool		outputre_token(size_t *i, t_token **token_list);
-bool		lexical_token(const char *cmd_line, size_t *i, t_token **token_list);
-bool		word_token(const char *cmd_line, size_t *i, t_token **token_list, int option); //split
+bool		lexical_token(const char *cmd_line,
+				size_t *i, t_token **token_list);
+bool		word_token(const char *cmd_line, size_t *i,
+				t_token **token_list, int option);
+void		word_token_utils(const char *cmd_line, size_t *j);
 int			env_token(const char *cmd_line, size_t *i, t_token **token_list);
 void		env_special_token(t_token **token_list, int option);
-bool		wildcard_token(const char *cmd_line, size_t *i, t_token **token_list);
-bool		dquotes_token(const char *cmd_line, size_t *i, t_token **token_list);
-bool		dquote_add_token(char *token_value, t_token **token_list, int option);
-bool		dquotes_last_token(const char *cmd_line, t_index *index, t_token **token_list);
-bool		env_dquotes(const char *cmd_line, t_index *index, t_token **token_list);
+bool		wildcard_token(const char *cmd_line,
+				size_t *i, t_token **token_list);
+bool		dquotes_token(const char *cmd_line,
+				size_t *i, t_token **token_list);
+bool		dquote_add_token(char *token_value,
+				t_token **token_list, int option);
+bool		dquotes_last_token(const char *cmd_line,
+				t_index *index, t_token **token_list);
+bool		env_dquotes(const char *cmd_line, t_index *index,
+				t_token **token_list);
+void		env_dquotes_foward(const char *cmd_line, size_t *j, int *option);
 size_t		index_foward(size_t *j);
 
-bool		limiter_token(const char *cmd_line, size_t *i, t_token **token_list);
+bool		limiter_token(const char *cmd_line,
+				size_t *i, t_token **token_list);
 bool		stop_limiter(const char *cmd_line, size_t *i, bool option);
-bool		limiter_squote(const char *cmd_line, t_index *index, char **token_value);
-bool		limiter_dquote(const char *cmd_line, t_index *index, char **token_value);
-bool		limiter_word(const char *cmd_line, t_index *index, char **token_value);
-bool		last_heredoc(t_token **token_list);
-bool		create_limiter(const char *cmd_line, t_index *index, char **token_value);
-bool		limiter_join(const char *cmd_line, t_index *index, char **token_value);
+bool		limiter_squote(const char *cmd_line, t_index *index,
+				char **token_value);
+bool		limiter_dquote(const char *cmd_line, t_index *index,
+				char **token_value);
+bool		limiter_word(const char *cmd_line, t_index *index,
+				char **token_value);
+bool		last_heredoc(t_token **token_list, int heredoc);
+bool		create_limiter(const char *cmd_line, t_index *index,
+				char **token_value);
+bool		limiter_join(const char *cmd_line, t_index *index,
+				char **token_value);
 
 //utils
 bool		is_whitespace(char c);
@@ -449,16 +461,18 @@ int			create_signal_here(void);
 /*								EXPANDER						*/
 //split_word
 t_ast		*replace_word(t_ast **root, t_ast *node, t_ast *new_node);
+t_ast		*replace_word_next(t_ast **root, t_ast *node, t_ast *new_node, int option);
 void		delete_word(t_ast **root, t_ast **node);
 bool		modify_word(t_ast **node, t_token *token_list);
 int			split_word(t_all *p, t_ast **current);
 int			split_one(const char *cmd_line, size_t *i, t_token **token_list, int option);
 int			split_two(const char *cmd_line, size_t *i, t_token **token_list, int option);
+int			split_two_next(const char *cmd_line, size_t *i, t_token **token_list, int option);
 bool		limit_word(char c, int option);
 int			word_management(t_ast **root, t_ast **current, t_token	*token_list);
 
 //handle_wildcard
-int			handle_wildcard(t_ast **current, t_token **token_list);
+int			handle_wildcard(t_ast **cur, t_token **token_list);
 bool		insert_word(t_ast **node, t_token *token);
 
 bool		expander(t_token **token_list, t_all *p, int error);
@@ -536,6 +550,10 @@ int			event(void);
 int			create_signal(void);
 void		sighandler(int signal);
 int			stop_signals(void);
+void		sighandler_exec(int signal);
+void		setup_signal_handlers(void (*int_)(int), void (*quit_)(int));
+void		sig_handler_child(int sig);
+int			create_signal_exec(void);
 
 /*					SYNTAX AND WORD					*/
 int			check_word_part_cmd(char *word, t_word *boolean);
@@ -555,7 +573,7 @@ int			check_first_token(t_token *c);
 bool		check_syntax(t_token *current);
 bool		skip_whitespace(char *line);
 
-bool		check_parenthesis(t_token *current, t_syntax syntax, int *skip);
+bool		check_parenthesis(t_token *current, t_syntax s, int *skip);
 bool		check_parenthesis_error(t_token *current, t_syntax *syntax, int *skip);
 bool		closepar_error(t_token *current, t_syntax syntax, int *skip);
 bool		openpar_error(t_token *current, t_syntax syntax, int *skip);

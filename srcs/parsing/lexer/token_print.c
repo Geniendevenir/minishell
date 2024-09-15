@@ -6,13 +6,13 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 16:30:01 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/17 18:45:47 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 16:17:15 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	token_print(t_token **token_list)
+/* void	token_print(t_token **token_list)
 {
 	t_token	*current;
 
@@ -115,4 +115,4 @@ const char* getToken_Class(t_token *current)
     } else {
         return "NULL";
     }
-}
+} */

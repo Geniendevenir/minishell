@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 13:58:59 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 12:29:37 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 17:00:58 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ void	error_syntax(t_token *current, int error)
 	if (error == 3)
 		write(2, "bash: syntax error near unexpected token ')'\n", 45);
 	if (error == 4)
-		write(2, "bash: no '&&' or '||' token found in between parenthesis\n", 57);
+		write(2, "bash: no '&&' or '||' token found in between parenthesis\n",
+			57);
 	if (error == 5)
 		write(2, "bash: syntax error near unexpected token 'newline'\n", 51);
 	if (error == 6)
@@ -102,6 +103,6 @@ void	error_builtins(char *error, int option)
 		write(2, error, ft_strlen(error));
 		write(2, ": Not a directory\n", 18);
 	}
-	else if ( option == 3)
+	else if (option == 3)
 		write(2, "cd : too many arguments\n", 24);
 }

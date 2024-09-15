@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:11:24 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 12:31:10 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 15:38:50 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,23 +50,7 @@ void	fd_dup(t_exec *exec, int result, int result2)
 	}
 }
 
-int	filein_error(t_all *p, t_exec *exec)
-{
-	if (p->max_pipe > 0)
-		pipe_close_fd(p, 3);
-	if (errno == 2)
-	{
-		p->exit_status = 1;
-		if (p->max_pipe > 0)
-			return (error_executer(exec->in->value, 1), exit(0), 0);
-		return (error_executer(exec->in->value, 1), 0);
-	}
-	else
-		return (error_executer(exec->in->value, 3), 1);
-	return (2);
-}
-
-int    open_filein(t_exec *exec)
+int	open_filein(t_exec *exec)
 {
 	if (exec->in && exec->in->type != TOKEN_PIPE)
 	{
@@ -81,20 +65,22 @@ int    open_filein(t_exec *exec)
 	return (1);
 }
 
-int    open_fileout(t_exec *exec)
+int	open_fileout(t_exec *exec)
 {
 	if (exec->out && exec->out->type != TOKEN_PIPE)
 	{
 		if (exec->out->type == WORD_FILEOUT)
 		{
-			exec->fileout = open(exec->out->value, O_TRUNC | O_CREAT | O_RDWR, 0000644);
+			exec->fileout = open(exec->out->value, O_TRUNC
+					| O_CREAT | O_RDWR, 0000644);
 			if (exec->fileout == -1)
 				return (-1);
 			return (0);
 		}
-		else if(exec->out->type == WORD_FILEOUT_APPEND)
+		else if (exec->out->type == WORD_FILEOUT_APPEND)
 		{
-			exec->fileout = open(exec->out->value, O_APPEND | O_CREAT | O_RDWR, 0000644);
+			exec->fileout = open(exec->out->value, O_APPEND
+					| O_CREAT | O_RDWR, 0000644);
 			if (exec->fileout == -1)
 				return (-1);
 			return (0);
@@ -103,7 +89,7 @@ int    open_fileout(t_exec *exec)
 	return (1);
 }
 
-int		close_files(t_exec *exec, t_all *p)
+int	close_files(t_exec *exec, t_all *p)
 {
 	if (exec->filein != 0)
 	{
