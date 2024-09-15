@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/14 22:15:31 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 12:41:00 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,8 +233,11 @@ typedef struct s_exec
 //					MERGE					//
 
 //utils
+void		update_variable(t_all *p);
 void		trim_space(char *str);
+//exit
 int			ft_exit(t_all **p, t_exec *exec, char **cmd);
+//pwd
 int			ft_pwd(char *option);
 
 //						EXECUTION                      //
