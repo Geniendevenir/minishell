@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 11:10:17 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 15:06:13 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 15:31:05 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,19 +24,6 @@ int	stop_signals(void)
 		|| signal(SIGTSTP, SIG_IGN) == SIG_ERR)
 		return (-1);
 	return (0);
-}
-
-void	lanormedufutur(void)
-{
-	char	*save;
-
-	save = ft_strdup(rl_line_buffer);
-	if (save == NULL)
-		rl_on_new_line();
-	rl_on_new_line();
-	rl_replace_line(save, 0);
-	rl_redisplay();
-	free(save);
 }
 
 void sighandler(int signal)
@@ -68,10 +55,11 @@ void sighandler_exec(int signal)
 	}
 	else if (signal == (int)SIGQUIT)
 	{
+		g_sig_int = 1;
 		write(2, "Quit: (core dumped)\n", 20);
-		/* rl_replace_line("", 0);
+		rl_replace_line("", 0);
 		rl_on_new_line();
-		rl_redisplay(); */
+		rl_redisplay();
 	}
 	return ;
 }
@@ -122,6 +110,10 @@ int	create_signal_exec(void)
 	sigemptyset(&a.sa_mask);
 	if (sigaction(SIGINT, &a, NULL) != 0
 		|| sigaction(SIGQUIT, &a, NULL) != 0)
+		return (-1);
+	a.sa_handler = SIG_IGN;
+	sigemptyset(&a.sa_mask);
+	if (sigaction(SIGTSTP, &a, NULL) != 0)
 		return (-1);
 	return (0);
 }

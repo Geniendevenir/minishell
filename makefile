@@ -22,6 +22,7 @@ SRCS 				=	srcs/free.c\
 						srcs/init.c\
 						srcs/print_utils.c \
 						srcs/signals.c\
+						srcs/signals_exec.c\
 						srcs/utils.c\
 						srcs/sort_env.c\
 						srcs/hate_the_norm.c\

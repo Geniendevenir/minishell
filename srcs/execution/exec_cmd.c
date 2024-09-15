@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:24:24 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 15:09:04 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 15:30:13 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ int	exec_cmd(t_all *p, t_exec *exec, char **env)
 	int	pid;
 	int	status;
  
+	setup_signal_handlers(sig_handler_child, sig_handler_child);
 	pid = fork();
 	if (pid == -1)
 		return (error_executer(NULL, 8), -1); //does not set $?

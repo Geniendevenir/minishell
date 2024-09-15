@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 14:47:16 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 15:30:05 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,6 +234,8 @@ typedef struct s_exec
 //init all / expand here doc et expand here doc utils
 int			exec_cmd(t_all *p, t_exec *exec, char **env);
 void 		sighandler_exec(int signal);
+void		setup_signal_handlers(void (*int_)(int), void (*quit_)(int));
+void		sig_handler_child(int sig);
 int			create_signal_exec(void);
 
 //						EXECUTION                      //

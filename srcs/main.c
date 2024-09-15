@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 13:45:01 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 15:33:18 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,10 @@ char	*minishell(t_all *p, char **env)
 		if (p->error == 0)
 		{
 			current = p->ast;
+			//create_signal_exec();
 			if (executer(p, current, env) == 1)
 				return (free_ast(p->ast), free_all(p), exit(0), NULL);
+			create_signal();
 			free_here_docs(p->here_doc);
 			free_ast(p->ast);
 		}
