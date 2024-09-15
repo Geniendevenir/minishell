@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 12:41:00 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 13:06:40 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,7 +231,9 @@ typedef struct s_exec
 }				t_exec;
 
 //					MERGE					//
-
+//rajouter free line a free all
+//parser
+int			parser(char *cmd_line, t_ast **ast, t_all **p);
 //utils
 void		update_variable(t_all *p);
 void		trim_space(char *str);
@@ -239,7 +241,8 @@ void		trim_space(char *str);
 int			ft_exit(t_all **p, t_exec *exec, char **cmd);
 //pwd
 int			ft_pwd(char *option);
-
+//here_doc
+int			create_signal_here();
 //						EXECUTION                      //
 int			executer(t_all *p, t_ast *current, char **env);
 
@@ -319,7 +322,7 @@ t_exec *	last_command(t_exec *exec);
 
 //				PARSER
 
-int			parser(char *cmd_line, t_env *env, t_ast **ast, t_all **p);
+
 
 //check_lexer
 int			check_quotes(char *cmd_line);
@@ -407,7 +410,7 @@ int			quit_here_doc(int opt, t_all *p, int nb);
 void		free_here_docs(char **here_docs);
 int			here_doc_count(t_token *tok);
 void		init_here_docs(t_token *token_list, t_all **p);
-int			create_signal_here(t_all **p);
+int			create_signal_here();
 int			signals_hdoc(int opt, t_all **p);
 int			fichier_existe(const char *name);
 void		if_in_increment_base(size_t len, size_t *j, char *name);
@@ -607,7 +610,6 @@ int			ft_echo(char **cmd);
 int			main(int argc, char **argv, char **env);
 char		*minishell(t_all *p, char **env);
 
-//extern int	sig_int;
 /*						AST	TRY				*/
 
 #define PRECEDENCE_LOWEST 1

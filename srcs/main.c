@@ -6,13 +6,13 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 12:45:44 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 13:04:56 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		sig_int = 0;
+int		g_sig_int = 0;
 
 int	main(int argc, char **argv, char **env)
 {
@@ -32,18 +32,18 @@ int	main(int argc, char **argv, char **env)
 
 char	*minishell(t_all *p, char **env)
 {
-	extern int	sig_int;
-	t_ast 	*current;
+	extern int	g_sig_int;
+	t_ast		*current;
 
 	rl_event_hook = event;
 	p->line = readline("\033[1;032mMinishell> \033[m");
-	if (sig_int == 1)
+	if (g_sig_int == 1)
 		p->exit_status = 127;
 	if (p->line == NULL)
 		return (ft_putstr("exit\n"), free_all(p), exit(0), NULL);
-	if (p->sig->sig_quit == 0  && skip_whitespace(p->line))
+	if (p->sig->sig_quit == 0 && skip_whitespace(p->line))
 	{
-		p->error = parser(p->line, p->env, &p->ast, &p);
+		p->error = parser(p->line, &p->ast, &p);
 		if (p->error == 0)
 		{
 			current = p->ast;
@@ -56,7 +56,3 @@ char	*minishell(t_all *p, char **env)
 	}
 	return (update_variable(p), p->line);
 }
-
-//valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --suppressions=./.readline.supp --trace-children=yes ./minishell
-//valgrind -suppressions=./.readline.supp ./minishell
-//ps -f --forest : see shell process tree

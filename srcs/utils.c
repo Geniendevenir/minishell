@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:31:18 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 12:41:50 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 12:52:35 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,9 +90,9 @@ void	trim_space(char *str)
 
 void update_variable(t_all *p)
 {
-	extern int sig_int;
+	extern int g_sig_int;
 	
-	sig_int = 0;
+	g_sig_int = 0;
 	free(p->line);
 	p->line = NULL;
 	p->int_here_doc = 0;

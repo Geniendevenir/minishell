@@ -4,6 +4,6 @@ https://docs.google.com/document/d/1wJ6vjX8eMl8vWrjwpcwk1nBqvbfruKyMxXpK6q3K0aI/
 https://docs.google.com/spreadsheets/d/1uJHQu0VPsjjBkR4hxOeCMEt3AOM1Hp_SmUzPFhAH-nA/edit
 
 
-((cat > output)) exit bizarre
-
->> cat
+//valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --suppressions=./.readline.supp --trace-children=yes ./minishell
+//valgrind -suppressions=./.readline.supp ./minishell
+//ps -f --forest : see shell process tree

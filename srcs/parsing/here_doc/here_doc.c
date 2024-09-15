@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 14:57:22 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/13 20:33:16 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 12:52:35 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	cleanbuffer(char *buffer)
 
 int	hdoc_process(int fd, t_token *limiter, t_all **p, int nb)
 {
-	extern int	sig_int;
+	extern int	g_sig_int;
 	char		*buffer;
 
 	buffer = NULL;
@@ -32,16 +32,16 @@ int	hdoc_process(int fd, t_token *limiter, t_all **p, int nb)
 		if (buffer != NULL)
 			write_hdoc(fd, buffer);
 		buffer = readline("> ");
-		if (buffer == NULL && sig_int == 0)
+		if (buffer == NULL && g_sig_int == 0)
 		{
 			warning(limiter->value, (*p)->line_num);
 			break ;
 		}
-		else if (ft_strcmp(buffer, limiter->value) == 0 || sig_int == 1)
+		else if (ft_strcmp(buffer, limiter->value) == 0 || g_sig_int == 1)
 			break ;
 		(*p)->line_num++;
 	}
-	if (sig_int == 1)
+	if (g_sig_int == 1)
 	{
 		unlink((*p)->here_doc[nb]);
 		return (cleanbuffer(buffer), -1);
@@ -66,7 +66,7 @@ int	which_limiter(int fd, t_token *current, t_all **p, int *nb)
 
 int	fill_here_doc(t_token **current, int max, t_all **p, int *nb)
 {
-	extern int	sig_int;
+	extern int	g_sig_int;
 	int			fd;
 
 	if (*nb == max)

@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 11:10:17 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 12:16:36 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 12:52:35 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,11 @@ void	lanormedufutur(void)
 
 void sighandler(int signal)
 {
-	extern int sig_int;
+	extern int g_sig_int;
 	
 	if (signal == SIGINT)
 	{
-		sig_int = 1;
+		g_sig_int = 1;
 		write(1, "\n", 2);
 		rl_on_new_line();
 		rl_replace_line("", 0);
