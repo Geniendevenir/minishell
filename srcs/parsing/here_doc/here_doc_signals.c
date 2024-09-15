@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 21:19:55 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 13:07:36 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 13:21:21 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	signals_hdoc(int opt, t_all **p)
 
 	if (opt == 0)
 	{
-		if (stop_signals() == -1 || create_signal_here(p) == -1)
+		if (stop_signals() == -1 || create_signal_here() == -1)
 		{
 			return (-1);
 		}

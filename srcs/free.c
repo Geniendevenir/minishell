@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:34:27 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 12:46:48 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 13:33:23 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,14 @@ void	free_all(t_all *p)
 {
 	close(p->std_in);
 	close(p->std_out);
-	free(p->line);
-	free_env(p->env);
-	free(p->sig);
-	free(p);
+	if (p->line)
+		free(p->line);
+	if (p->env)
+		free_env(p->env);
+	if (p->sig)
+		free(p->sig);
+	if (p)
+		free(p);
 	rl_clear_history();
 }
 
