@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 17:24:24 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 17:38:32 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -421,7 +421,7 @@ void		trim_space(char *str);
 void		token_print(t_token **token_list);
 void		token_print_amazing(t_token **token_list);
 void		amazing_printing(t_token *current, int i);
-const char*	getToken_State(t_token *current);
+const char	*getToken_State(t_token *current);
 const char	*getToken_Class(t_token *current);
 
 //error_management
@@ -461,15 +461,20 @@ int			create_signal_here(void);
 /*								EXPANDER						*/
 //split_word
 t_ast		*replace_word(t_ast **root, t_ast *node, t_ast *new_node);
-t_ast		*replace_word_next(t_ast **root, t_ast *node, t_ast *new_node, int option);
+t_ast		*replace_word_next(t_ast **root, t_ast *node,
+				t_ast *new_node, int option);
 void		delete_word(t_ast **root, t_ast **node);
 bool		modify_word(t_ast **node, t_token *token_list);
 int			split_word(t_all *p, t_ast **current);
-int			split_one(const char *cmd_line, size_t *i, t_token **token_list, int option);
-int			split_two(const char *cmd_line, size_t *i, t_token **token_list, int option);
-int			split_two_next(const char *cmd_line, size_t *i, t_token **token_list, int option);
+int			split_one(const char *cmd_line, size_t *i,
+				t_token **token_list, int option);
+int			split_two(const char *cmd_line, size_t *i,
+				t_token **token_list, int option);
+int			split_two_next(const char *cmd_line, size_t *i,
+				t_token **token_list, int option);
 bool		limit_word(char c, int option);
-int			word_management(t_ast **root, t_ast **current, t_token	*token_list);
+int			word_management(t_ast **root, t_ast **current,
+				t_token	*token_list);
 
 //handle_wildcard
 int			handle_wildcard(t_ast **cur, t_token **token_list);
@@ -482,7 +487,7 @@ int			expand_env(t_token **token_list, t_env **env, int exit_status);
 bool		find_first_env(t_token **current, t_env **env, int exit_status);
 bool		find_next_env(t_token **current, t_env **env, int exit_status);
 void		remove_token(t_token **current, bool option);
-bool		replace_token(t_token *token,  char *new_value);
+bool		replace_token(t_token *token, char *new_value);
 void		remove_all_env(t_token **token_list, int exit_status);
 bool		replace_exit_status(t_token *token, int exit_status);
 bool		expand_all_exit(t_token **token_list, int exit_status);
@@ -501,37 +506,44 @@ void		match_init(char *wildcard, char *file_name, t_wildcard *match);
 bool		file_match(t_wildcard match);
 bool		add_file(t_token **current, char *file_name, bool found);
 bool		wildcard_return(DIR **d);
-	
 void		print_envv(t_env **env);
 
 //////////////////////////////////////////////////////////
-
 
 /*						AST					*/
 
 t_ast		*parse_expression(t_token **token_list, int sub_shell);
 t_ast		*parse_subexpression(t_token **tokens, int sub_shell);
-t_ast		*open_parenthesis(t_token **tokens, t_ast	*current, int sub_shell);
-t_ast		*close_parenthesis(t_token **tokens, t_ast* root);
-t_ast		*handle_builtin_and_cmd(t_token **tokens, t_ast_ptr	**list, int sub_shell);
-t_ast		*handle_option(t_token **tokens, t_ast_ptr **list, int sub_shell);
+t_ast		*open_parenthesis(t_token **tokens, t_ast	*current,
+				int sub_shell);
+t_ast		*close_parenthesis(t_token **tokens, t_ast *root);
+t_ast		*handle_builtin_and_cmd(t_token **tokens,
+				t_ast_ptr	**list, int sub_shell);
+t_ast		*handle_option(t_token **tokens, t_ast_ptr **list,
+				int sub_shell);
 t_ast		*create_node(t_token *token, int subshell);
-void		handle_parenthesis_open(t_token **tokens, t_ast_ptr **list, int sub_shell);
-void		ope_pipe_redirect(t_token **tokens, t_ast_ptr **list, int sub_shell);
-void		handle_and_or_root_priority(t_token **tokens, t_ast_ptr **list, int sub_shell);
+void		handle_parenthesis_open(t_token **tokens, t_ast_ptr **list,
+				int sub_shell);
+void		ope_pipe_redirect(t_token **tokens, t_ast_ptr **list,
+				int sub_shell);
+void		handle_and_or_root_priority(t_token **tokens, t_ast_ptr **list,
+				int sub_shell);
 void		handle_pipe(t_token **tokens, t_ast_ptr **list, int sub_shell);
 void		while_in_handle_redirect(t_ast_ptr **list, t_ast **new_node);
 void		handle_redirect(t_token **tokens, t_ast_ptr **list, int sub_shell);
-void		handle_builtin_cmd_or_option(t_token **tokens, t_ast_ptr **list, int sub_shell);
+void		handle_builtin_cmd_or_option(t_token **tokens, t_ast_ptr **list,
+				int sub_shell);
 void		swap_child_left(t_ast	*current, t_ast	*new_node);
 void		swap_child_right(t_ast	*current, t_ast	*new_node);
 void		swap_child_left_with_else(t_ast	*current, t_ast	*new_node);
 void		swap_child_right_with_else(t_ast	*current, t_ast	*new_node);
-void		part_handle_option(t_ast_ptr **list, t_ast **new_node, t_ast **temp);
-void		while_in_handle_pipe(t_ast **current, t_ast **new_node, t_ast *save_operator);
+void		part_handle_option(t_ast_ptr **list, t_ast **new_node,
+				t_ast **temp);
+void		while_in_handle_pipe(t_ast **current, t_ast **new_node,
+				t_ast *save_operator);
 void		if_last_ope_exist(t_ast **new_node, t_ast_ptr **list);
 void		if_no_save_operator(t_ast **current, t_ast **new_node,
-t_ast		**save_operator, t_ast **save_pipe);
+				t_ast **save_operator, t_ast **save_pipe);
 void		init_pointer_ast(t_ast_ptr **list);
 void		free_token_and_next(t_token **tokens, t_token **temp);
 void		get_first_parent(t_ast_ptr **list);
@@ -541,8 +553,6 @@ bool		if_cmd_or_option(t_token **tokens);
 bool		is_redirect(t_token **tok);
 bool		is_redirect_enum(enum s_type word);
 void		free_list_ptr(t_ast_ptr **list, t_ast **temp_free, int option);
-
-
 
 /*					SIGNALS					*/
 
@@ -574,14 +584,12 @@ bool		check_syntax(t_token *current);
 bool		skip_whitespace(char *line);
 
 bool		check_parenthesis(t_token *current, t_syntax s, int *skip);
-bool		check_parenthesis_error(t_token *current, t_syntax *syntax, int *skip);
+bool		check_parenthesis_error(t_token *current, t_syntax *syntax,
+				int *skip);
 bool		closepar_error(t_token *current, t_syntax syntax, int *skip);
 bool		openpar_error(t_token *current, t_syntax syntax, int *skip);
 bool		is_parenthesis_error(t_token *current, t_syntax syntax, int option);
 bool		check_current_parenthesis(t_token *current, int option);
-
-/*					 ENV					*/
-
 
 /*					 INIT					*/
 t_all		*init_all(char **env);
