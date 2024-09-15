@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 22:00:35 by allan             #+#    #+#             */
-/*   Updated: 2024/09/14 23:39:48 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 11:46:30 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ int		pipe_hate_norm(t_all *p, int *i, int option)
 		p->curr_pipe++;
 	}
 	return (0);
-	
 }
 
 void	pipe_print(t_exec *exec)

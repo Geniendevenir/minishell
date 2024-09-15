@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:24:04 by allan             #+#    #+#             */
-/*   Updated: 2024/09/13 18:36:44 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 11:31:02 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ int parser(char *cmd_line, t_env *env, t_ast **ast, t_all **p)
 	t_word	word;
 	int		error;
 	int		sub_shell;
-	//t_token *dup_list;
 	
 	error = 0;
 	if (cmd_line[0] == '\0')
@@ -93,9 +92,6 @@ int parser(char *cmd_line, t_env *env, t_ast **ast, t_all **p)
 	token_init(&token_list);
 	if (lexer(cmd_line, &token_list, error) == 1)
 		return (1);
-	printf("AFTER LEXER:\n");
-	token_print(&token_list);
-	token_print_amazing(&token_list);
 	if (check_syntax(token_list) == 1)
 	{
 		token_free(&token_list);

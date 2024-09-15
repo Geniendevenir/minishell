@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:42:50 by allan             #+#    #+#             */
-/*   Updated: 2024/09/14 23:14:45 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 11:45:50 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,21 @@ void	pipe_close_fd(t_all *p, int option)
 			close(p->fd[i][1]);
 			i++;
 		}
+	}
+	else if (option == 3)
+		pipe_close_fd_two(p);
+}
+
+void	pipe_close_fd_two(t_all *p)
+{
+	int	i;
+
+	i = 0;
+	while (i <= p->curr_pipe)
+	{
+		close(p->fd[i][0]);
+		close(p->fd[i][1]);
+		i++;
 	}
 }
 

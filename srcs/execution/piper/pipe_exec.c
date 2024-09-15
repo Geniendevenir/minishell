@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:26:52 by allan             #+#    #+#             */
-/*   Updated: 2024/09/14 23:38:58 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 09:36:07 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,10 @@ void	pipe_exec_child(t_all *p, t_exec *node, char **env, int option)
 {
 	close(p->std_in);
 	close(p->std_out);
-	p->exit_status = open_files(node);
-	if (p->exit_status == 1)
-		exit(p->exit_status);
-	p->exit_status = open_pipe(p, node, option);
-	if (p->exit_status == 1)
-		exit(p->exit_status);
+	if (open_files(p, node) == 1)
+		exit(1);
+	if (open_pipe(p, node, option) == 1)
+		return (pipe_close_fd(p, 3), exit(1));
 	if (*node->command == NULL)
 		exit(0);
 	if (is_builtin(node->command[0]) == 1 && p->exit_status == 0)
@@ -66,6 +64,7 @@ void	pipe_exec_child(t_all *p, t_exec *node, char **env, int option)
 			if (execve(node->path, node->command, env) == -1)
 				write(2, "Error: Execve execution failed\n", 31);
 		}
+		pipe_close_fd(p, 3);
 		exit(-1);
 	}
 }

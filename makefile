@@ -74,7 +74,10 @@ SRCS 				=	srcs/free.c\
 						srcs/execution/exec_check_cmd.c\
 						srcs/execution/exec_get_path.c\
 						srcs/execution/exec_redirect.c\
-						srcs/execution/exec_parser.c\
+						srcs/execution/parser/exec_parser.c\
+						srcs/execution/parser/exec_parse_get.c\
+						srcs/execution/parser/exec_parse_down.c\
+						srcs/execution/parser/exec_parse_up.c\
 						srcs/execution/exec_utils.c\
 						srcs/execution/expander/split_word.c\
 						srcs/execution/expander/split_one.c\

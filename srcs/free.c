@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 15:34:27 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/11 02:18:54 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 00:39:32 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	free_all(t_all *p)
 {
 	close(p->std_in);
 	close(p->std_out);
-	free(p->line);
+	//free(p->line);
 	free_env(p->env);
 	free(p->sig);
 	free(p);
@@ -47,7 +47,11 @@ void	free_array(char **array)
 
 	i = -1;
 	while (array[++i])
-		free(array[i]);
-	free(array);
+	{
+		if (array[i])
+			free(array[i]);
+	}
+	if (array)
+		free(array);
 }
 

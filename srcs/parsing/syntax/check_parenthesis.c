@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 13:31:07 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/10 16:11:32 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 12:10:15 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,10 @@
 bool	check_parenthesis(t_token *current, t_syntax syntax, int *skip)
 {
 	*skip += 1;
-	if (current->value)
-		printf("current = %s\n", current->value);
-	printf("openpar = %d\n", syntax.openpar);
 	if (*skip != 1 && syntax.openpar == 0)
 		return (0);
 	if (current->type == TOKEN_PIPE)
-		return (error_syntax(current, 6));
+		return (error_syntax(current, 6), 1);
 	if (is_operator(current->type, 1))
 	{
 		if (current->next)
@@ -43,7 +40,7 @@ bool	check_parenthesis(t_token *current, t_syntax syntax, int *skip)
 	else if (current->next)
 		return (check_parenthesis(current->next, syntax, skip));
 	if (!current->next && syntax.openpar != 0)
-		return (error_syntax(current, 1));
+		return (error_syntax(current, 1), 1);
 	return (0);
 }
 

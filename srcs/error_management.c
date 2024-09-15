@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 13:58:59 by allan             #+#    #+#             */
-/*   Updated: 2024/09/14 23:06:04 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 11:46:47 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	error_lexer(int error)
 		write(2, "Error: Could not open directory '.'\n", 37); //check true error (find wildcard function)
 }
 
-bool	error_syntax(t_token *current, int error)
+void	error_syntax(t_token *current, int error)
 {
 	if (error == 1)
 	{
@@ -108,7 +108,6 @@ bool	error_syntax(t_token *current, int error)
 		write(2, "bash: '|' token found in between parenthesis\n", 46);
 	if (error == 7)
 		write(2, "bash: '|' token found just after parenthesis\n", 45);
-	return (1);
 }
 
 void	error_expander(t_ast *current, int error)
@@ -119,10 +118,6 @@ void	error_expander(t_ast *current, int error)
 		write(2, current->value, ft_strlen(current->value));
 		write(2, ": ambiguous redirect\n", 21);
 	}
-	/* if (error == 2)
-	if (error == 3)
-	if (error == 4)
-	if (error == 5) */
 }
 
 void	error_executer(char *error, int option)
@@ -142,7 +137,7 @@ void	error_executer(char *error, int option)
 	else if (option == 5)
 		write(2, "Error: Fork Failed\n", 19);
 	else if (option == 6)
-		write(2, "bash: cd: too many arguments\n", 29);
+		write(2, "Error: Dup2 Initialisation Failed\n", 35);
 	else if (option == 7)
 		write(2, "Error: Opendir Error\n", 21);
 	else if (option == 8)
@@ -163,4 +158,6 @@ void	error_builtins(char *error, int option)
 		write(2, error, ft_strlen(error));
 		write(2, ": Not a directory\n", 18);
 	}
+	else if ( option == 3)
+		write(2, "cd : too many arguments\n", 24);
 }

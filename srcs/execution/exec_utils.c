@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 18:39:42 by allan             #+#    #+#             */
-/*   Updated: 2024/09/11 13:29:00 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 11:41:50 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,45 +47,13 @@ void	set_pipe(t_all *p, t_exec *exec)
 	if (p->max_pipe > 0)
 	{
 		if (p->curr_pipe == 0)
-			exec->pipe = 1; //left pipe
+			exec->pipe = 1;
 		else if (p->curr_pipe == p->max_pipe)
-			exec->pipe = 3; //right pipe
+			exec->pipe = 3;
 		else
-			exec->pipe = 2; //middle pipe	
+			exec->pipe = 2;	
 	}
 }
-
-/* void	reset_pipe(t_all *p, int option)
-{
-	int	i;
-
-	i = 0;
-	if (option == 1)
-	{
-		dup2(p->std_in, STDIN_FILENO);
-		close(p->std_in);
-		dup2(p->std_out, STDOUT_FILENO);
-		close(p->std_out);
-	}
-	else if (p->max_pipe > 0)
-	{
-		dup2(p->std_out, STDOUT_FILENO);
-		if (p->curr_pipe == 3)
-			p->curr_pipe = 1;
-		else if (p->curr_pipe <= 1)
-		{
-			write(2, "RESET\n", 6);
-			p->max_pipe = 0;
-			p->curr_pipe = 0;
-			dup2(p->std_in, STDIN_FILENO);
-			close(p->std_in);
-			close(p->fd[0]);
-			dup2(p->std_out, STDOUT_FILENO);
-			close(p->std_out);
-			close(p->fd[1]);
-		}
-	}
-} */
 
 int		array_size(char **arr)
 {
@@ -96,4 +64,3 @@ int		array_size(char **arr)
 		i++;
 	return (i);
 }
-

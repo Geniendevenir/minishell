@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:22:25 by allan             #+#    #+#             */
-/*   Updated: 2024/09/14 23:41:36 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 11:43:29 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ int	pipe_parser(t_all *p, t_ast *current, t_exec **exec, int option)
 		return (1);
 	exec_init(node);
 	current = down_left(current);
-	if (current->state == STATE_WORD && (current->type == WORD_CMD || current->type == WORD_OPTION)) //cmd bottom left blank
+	if (current->state == STATE_WORD && (current->type == WORD_CMD
+		|| current->type == WORD_OPTION))
 	{
 		current = up_to_cmd(current);
 		if (get_command(current, node) == 1)
@@ -86,16 +87,16 @@ int	pipe_analyser(t_all *p, t_exec *exec)
 	node = exec;
 	i = 1;
 	p->skip = 0;
-	while (node) //how much cmd are empty
+	while (node)
 	{
-		if (node->command == NULL) //(!node->in || (node->in && is_operator(node->in->type, 3) == 0))
+		if (node->command == NULL)
 			p->skip = i;
 		if (!node->next)
 			break ;
 		i++;
 		node = node->next;
 	}
-	if (p->skip == (p->max_pipe + 1)) //all cmd are empty or the last cmd is
+	if (p->skip == (p->max_pipe + 1))
 		return (1);
 	node = exec;
 	return (0);	

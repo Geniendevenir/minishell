@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 13:05:18 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/07 15:04:24 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 09:30:38 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	ft_cd(t_env *env, char **cmd)
 	char	*pwd;
 
 	if (array_size(cmd) > 2)
-		return (ft_putendl_fd("cd : too many arguments", 2), 1);
+		return (error_builtins(NULL, 3), 1);
 	if (ft_is_in_env(env, "PWD"))
 		oldpwd = ft_strdup(get_in_env(env, "PWD"));
 	else

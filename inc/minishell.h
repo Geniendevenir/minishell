@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/14 23:38:31 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 12:04:20 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,12 +233,23 @@ typedef struct s_exec
 
 //						EXECUTION                      //
 int			executer(t_all *p, t_ast *current, char **env);
+int			execute_command(t_all *p, t_ast **current, t_exec *exec, char **env);
 
 //exec_parser
-t_ast		*left_expand(t_all *p, t_ast *current, int option);
-t_ast		*up_to_cmd(t_ast *current);
-t_ast		*get_next_operator(t_all *p, t_ast *current, t_ast **prev);
+int			parser_exec_next(t_all *p, t_ast *current, char **env);
+int			parse_operator_or(t_all *p, t_ast **current, t_ast **prev);
+int			parse_operator_and(t_all *p, t_ast **current, t_ast **prev);
+
+//exec_parse_up
+t_ast		*get_next_operator(t_all *p, t_ast *current, t_ast **prev, int option);
 t_ast		*get_last_pipe(t_ast *current);
+t_ast		*up_to_cmd(t_ast *current);
+t_ast		*up_to_parent_operator(t_ast *current);
+t_ast		*up_and_check_right(t_ast *current, t_ast **prev);
+
+//exec_parse_down
+t_ast		*down_left_expand(t_all *p, t_ast *current, int option);
+void		expand_pipe(t_all *p, t_ast *current, int option);
 t_ast		*down_left(t_ast *current);
 
 //exec_check_cmd
@@ -249,24 +260,23 @@ int			check_cmd(t_exec *exec, t_env *env);
 
 //exec_cmd
 int			exec_builtin(t_all **p, t_exec *exec, char **cmd);
-int			exec_cmd(t_exec *exec, int *exit_status, char **env);
+int			exec_cmd(t_all *p, t_exec *exec, int *exit_status, char **env);
 bool		is_builtin(char *cmd);
 
 //exec_file
 int			open_filein(t_exec *exec);
+int			filein_error(t_all *p, t_exec *exec);
 int			open_fileout(t_exec *exec);
-int			open_files(t_exec *exec);
+int			open_files(t_all *p, t_exec *exec);
 int			open_pipe(t_all *p, t_exec *exec, int option);
 int			close_files(t_exec *exec, t_all *p);
+void		fd_dup(t_exec *exec, int result, int result2);
 
 //exec_get_path
 char		*find_path(t_env *env);
 char		*path_free(t_path *p, int *error, int option);
 void		p_init(t_path *p);
 char		*get_path(const char *cmd, t_env *env, int *error);
-
-t_ast *get_next_operator(t_all *p, t_ast *current, t_ast **prev);
-t_ast *get_last_pipe(t_ast *current);
 
 //exec_redirect
 int			assign_redirect(t_ast *current, t_exec *exec);
@@ -302,6 +312,7 @@ int			pipe_exec_last(t_all *p, t_exec *node, char **env, int *pid);
 void		pipe_free(t_all *p, t_exec *exec, int *pid);
 void		pipe_free_exec(t_exec **exec);
 void		pipe_close_fd(t_all *p, int option);
+void		pipe_close_fd_two(t_all *p);
 
 //pipe_utils
 int			is_command(t_ast *current);
@@ -389,7 +400,7 @@ const char	*getToken_Class(t_token *current);
 
 //error_management
 void		error_lexer(int error);
-bool		error_syntax(t_token *current, int error);
+void		error_syntax(t_token *current, int error);
 void		error_expander(t_ast *current, int error);
 void		error_executer(char *error, int option);
 void		error_builtins(char *error, int option);
@@ -525,6 +536,7 @@ enum s_type	check_word(char *word, t_word *boolean);
 bool		define_word(t_token **token_list, t_word *boolean);
 bool		is_operator(enum s_type type, int option);
 int			double_operator(t_token *c);
+int			double_operator_next(t_token *c);
 int			check_first_token(t_token *c);
 bool		check_syntax(t_token *current);
 bool		skip_whitespace(char *line);
@@ -563,7 +575,7 @@ void		print_error_token(t_token *current);
 void		print_error_token_special(char *value);
 void		print_error_cmd_not_found(t_token *current);
 void		printAST(t_ast* node, int level);
-const char* getAST_Class(t_ast *current);
+const char*	getAST_Class(t_ast *current);
 void		print_tab(char **command);
 void		print_folder(char *fd_src, int fd);
 
@@ -582,7 +594,7 @@ int			ft_unset(t_env *env, char **unset);
 //PWD
 int			ft_pwd(char *option);
 //CD
-int		ft_cd(t_env *env, char **cmd);
+int			ft_cd(t_env *env, char **cmd);
 //EXPORT
 char		*get_env_var(t_env *envp, char	*var);
 int			ft_export(t_env *env, char **cmd);
@@ -593,13 +605,8 @@ int			valid_export(char *new_env);
 char		**sort_env(char **env);
 //EXIT
 void		ft_exit(t_all **p, t_exec *exec, char **cmd);
-/* int			ft_exit(char **commande, bool child);
-int			check_is_num(char *exit_status);
-int			check_size(long long int *exit_status);
-void 		check_is_child(char *commande, bool child, int error); */
 //ECHO
 bool		check_echo(char *str);
-//static int	conditions_echo(char *cmd);
 int			ft_echo(char **cmd);
 
 int			main(int argc, char **argv, char **env);
