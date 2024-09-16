@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 13:31:07 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 16:12:41 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/16 11:57:17 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 
 bool	check_parenthesis(t_token *current, t_syntax s, int *skip)
 {
-	int	error;
-
-	error = 0;
 	*skip += 1;
 	if (*skip != 1 && s.openpar == 0)
 		return (0);
@@ -30,9 +27,8 @@ bool	check_parenthesis(t_token *current, t_syntax s, int *skip)
 	}
 	else if (current->type == TOKEN_CLOSEPAR || current->type == TOKEN_OPENPAR)
 	{
-		error = check_parenthesis_error(current, &s, skip);
-		if (error != 2)
-			return (error);
+		if (check_parenthesis_error(current, &s, skip) == 1)
+			return (1);
 	}
 	else if (current->next)
 		return (check_parenthesis(current->next, s, skip));
