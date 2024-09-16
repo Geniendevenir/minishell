@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_if_parameters.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 13:23:01 by Matprod           #+#    #+#             */
-/*   Updated: 2024/07/11 18:49:39 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/15 17:07:33 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ bool	is_redirect(t_token **tok)
 		return (0);
 }
 
-bool	is_redirect_enum(enum s_type word)
+bool	is_redirect_enum(enum e_type word)
 {
 	if (word == WORD_FILEIN
 		|| word == WORD_LIMITER || word == WORD_FILEOUT

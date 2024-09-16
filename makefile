@@ -9,7 +9,7 @@ OBJ_DIR				= obj/
 
 # Compiler and CFlags
 CC					= cc
-CFLAGS				= -Wall -Wextra -I
+CFLAGS				= -Wall -Wextra -Werror -I
 RM					= rm -f
 READLINE			= -lreadline
 
@@ -27,6 +27,7 @@ SRCS 				=	srcs/init_free/free.c\
 						srcs/init_free/hate_the_norm.c\
 						srcs/init_free/error_management.c\
 						srcs/init_free/signals_exec.c\
+						srcs/init_free/update_free_main.c\
 						srcs/parsing/parser.c\
 						srcs/parsing/lexer/check_lexer.c\
 						srcs/parsing/lexer/lexer.c\

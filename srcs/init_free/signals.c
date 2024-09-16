@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 11:10:17 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 16:56:34 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 18:26:13 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	sighandler_exec(int signal)
 
 	if (signal == SIGINT)
 	{
-		g_sig_int = 1;
+		g_sig_int = 2;
 		write(1, "\n", 2);
 		rl_on_new_line();
 		rl_replace_line("", 0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:53 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 16:48:20 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/16 11:33:42 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	*minishell(t_all *p, char **env)
 	rl_event_hook = event;
 	p->line = readline("\033[1;032mMinishell> \033[m");
 	if (g_sig_int == 1)
-		p->exit_status = 127;
+		update_var_sigint(&p);
 	if (p->line == NULL)
 		return (ft_putstr("exit\n"), free_all(p), exit(0), NULL);
 	if (p->sig->sig_quit == 0 && skip_whitespace(p->line))
@@ -50,9 +50,9 @@ char	*minishell(t_all *p, char **env)
 			setup_signal_handlers(sig_handler_child, sig_handler_child);
 			if (executer(p, current, env) == 1)
 				return (free_ast(p->ast), free_all(p), exit(0), NULL);
-			create_signal();
-			free_here_docs(p->here_doc);
-			free_ast(p->ast);
+			if (g_sig_int == 2)
+				p->exit_status = 130;
+			reset_signal_free(p);
 		}
 		add_history(p->line);
 	}

@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 10:19:55 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 15:31:44 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 17:17:45 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	parser_exec_next(t_all *p, t_ast *cur, char **env)
 		return (0);
 	cur = prev;
 	if (is_operator(cur->type, 2) == 0 || p->option == 1)
-		cur = get_next_operator(p, cur, &prev, 1);
+		cur = get_next_operator(p, cur, 1);
 	prev = cur;
 	if (parse_operator_or(p, &cur, &prev) == 0)
 		return (0);
@@ -32,7 +32,7 @@ int	parser_exec_next(t_all *p, t_ast *cur, char **env)
 	if ((!cur->parent && p->option != 0) || is_operator(cur->type, 2) == 0)
 		return (0);
 	else if (p->option == 1)
-		cur = get_next_operator(p, cur, &prev, 0);
+		cur = get_next_operator(p, cur, 0);
 	if (cur->right)
 	{
 		p->option = 1;
@@ -48,14 +48,14 @@ int	parse_operator_or(t_all *p, t_ast **current, t_ast **prev)
 		if ((*current)->parent && ((*current)->type == TOKEN_OR
 				|| (*prev) == (*current)->right))
 		{
-			(*current) = get_next_operator(p, (*current), prev, 0);
+			(*current) = get_next_operator(p, (*current), 0);
 			if (*prev == *current)
 				return (0);
 		}
 		while ((*current)->parent && ((*current)->type == TOKEN_OR
 				|| (*prev) == (*current)->right))
 		{
-			(*current) = get_next_operator(p, (*current), prev, 0);
+			(*current) = get_next_operator(p, (*current), 0);
 			(*prev) = (*prev)->parent;
 		}
 		if ((*current)->type == TOKEN_OR
@@ -75,7 +75,7 @@ int	parse_operator_and(t_all *p, t_ast **current, t_ast **prev)
 	{
 		while ((*current)->type == TOKEN_AND && (*current)->parent)
 		{
-			(*current) = get_next_operator(p, (*current), prev, 0);
+			(*current) = get_next_operator(p, (*current), 0);
 			if (*prev == *current)
 				return (0);
 		}

@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 12:31:35 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 14:14:00 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 17:21:16 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	open_pipe(t_all *p, t_exec *exec, int option)
 {
 	if (p->curr_pipe == 0)
-		open_first_pipe(p, exec, option);
+		open_first_pipe(p, exec);
 	else if (p->curr_pipe > 0 && p->curr_pipe < p->max_pipe)
 		open_middle_pipe(p, exec);
 	else if (p->curr_pipe == p->max_pipe
@@ -24,7 +24,7 @@ int	open_pipe(t_all *p, t_exec *exec, int option)
 	return (0);
 }
 
-void	open_first_pipe(t_all *p, t_exec *exec, int option)
+void	open_first_pipe(t_all *p, t_exec *exec)
 {
 	int	fd_null;
 

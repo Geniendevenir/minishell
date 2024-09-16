@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:26:52 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 09:36:07 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 17:22:18 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,8 @@ int	pipe_exec(t_all *p, t_exec **exec, char **env, int *pid)
 {
 	t_exec	*node;
 	int		i;
-	int		status;
 
 	i = 0;
-	status = 0;
 	node = *exec;
 	if (p->skip == p->max_pipe)
 		return (pipe_exec_last(p, node, env, pid));

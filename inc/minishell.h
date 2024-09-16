@@ -6,7 +6,7 @@
 /*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 17:38:32 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/16 11:32:52 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,8 @@ typedef struct s_path
 	int		i;
 }				t_path;
 
-enum s_state{
+enum e_state
+{
 	STATE_START,
 	STATE_WHITESPACE,
 	STATE_WORD,
@@ -94,7 +95,8 @@ enum s_state{
 	STATE_EXIT_STATUS
 };
 
-enum s_type{
+enum e_type
+{
 	NOT_DEFINE,
 	TOKEN_WORD,
 	TOKEN_DQUOTES,
@@ -129,29 +131,31 @@ enum s_type{
 
 typedef struct s_token
 {
-	enum		s_type type;
-	enum		s_state state;
-	char		*value;
-	long		len;
-	struct		s_token *next;
+	enum e_type		type;
+	enum e_state	state;
+	char			*value;
+	long			len;
+	struct s_token	*next;
 }				t_token;
 
-typedef struct s_wildcard {
+typedef struct s_wildcard
+{
 	const char		*file_name;
 	const char		*wildcard;
 	const char		*star;
 	const char		*backtrack;
 }				t_wildcard;
 
-typedef struct s_ast {
-	int			subshell;
-	int			exit_state;
-	enum s_type type;
-	enum s_state state;
-	char		*value;
-	struct s_ast *left;
-	struct s_ast *right;
-	struct s_ast *parent;
+typedef struct s_ast
+{
+	int				subshell;
+	int				exit_state;
+	enum e_type		type;
+	enum e_state	state;
+	char			*value;
+	struct s_ast	*left;
+	struct s_ast	*right;
+	struct s_ast	*parent;
 }				t_ast;
 
 typedef struct s_ast_ptr
@@ -166,7 +170,7 @@ typedef struct s_ast_ptr
 typedef struct s_file
 {
 	int				fd;
-	enum s_type		type;
+	enum e_type		type;
 	char			*data;
 	struct s_file	*next;
 }	t_file;
@@ -209,30 +213,31 @@ typedef struct s_all
 
 typedef struct s_word
 {
-	int redi_in;
-	int redi_out;
-	int append;
-	int operator;
-	int cmd;
-} t_word;
+	int	redi_in;
+	int	redi_out;
+	int	append;
+	int	operator;
+	int	cmd;
+}	t_word;
 
 typedef struct s_exec
 {
 	int				pipe;
 	bool			redirectin;
 	bool			redirectout;
-	struct s_ast 	*in;
-	struct s_ast 	*out;
+	struct s_ast	*in;
+	struct s_ast	*out;
 	int				filein;
 	int				fileout;
-	char 			**command;
+	char			**command;
 	char			*path;
 	struct s_exec	*next;
 }				t_exec;
 
 //						EXECUTION                      //
 int			executer(t_all *p, t_ast *current, char **env);
-int			execute_command(t_all *p, t_ast **current, t_exec *exec, char **env);
+int			execute_command(t_all *p, t_ast **current,
+				t_exec *exec, char **env);
 
 //exec_parser
 int			parser_exec_next(t_all *p, t_ast *cur, char **env);
@@ -240,7 +245,7 @@ int			parse_operator_or(t_all *p, t_ast **current, t_ast **prev);
 int			parse_operator_and(t_all *p, t_ast **current, t_ast **prev);
 
 //exec_parse_up
-t_ast		*get_next_operator(t_all *p, t_ast *current, t_ast **prev, int option);
+t_ast		*get_next_operator(t_all *p, t_ast *current, int option);
 t_ast		*get_last_pipe(t_ast *current);
 t_ast		*up_to_cmd(t_ast *current);
 t_ast		*up_to_parent_operator(t_ast *current);
@@ -288,9 +293,6 @@ void		exec_free(t_exec *exec);
 void		set_pipe(t_all *p, t_exec *exec);
 int			array_size(char **arr);
 
-void		testAST(t_ast* node, int option);
-
-
 //						PIPER                      //
 //piper
 int			piper(t_all *p, t_ast *current, char **env);
@@ -315,7 +317,7 @@ void		pipe_close_fd(t_all *p, int option);
 void		pipe_close_fd_two(t_all *p);
 
 //pipe_redirect
-void		open_first_pipe(t_all *p, t_exec *exec, int option);
+void		open_first_pipe(t_all *p, t_exec *exec);
 void		open_middle_pipe(t_all *p, t_exec *exec);
 void		open_last_pipe(t_all *p, t_exec *exec, int option);
 void		pipe_error(int option);
@@ -471,7 +473,7 @@ int			split_one(const char *cmd_line, size_t *i,
 int			split_two(const char *cmd_line, size_t *i,
 				t_token **token_list, int option);
 int			split_two_next(const char *cmd_line, size_t *i,
-				t_token **token_list, int option);
+				t_token **token_list);
 bool		limit_word(char c, int option);
 int			word_management(t_ast **root, t_ast **current,
 				t_token	*token_list);
@@ -551,7 +553,7 @@ bool		is_pipe(t_token **tok);
 bool		is_ope(t_token **tokens);
 bool		if_cmd_or_option(t_token **tokens);
 bool		is_redirect(t_token **tok);
-bool		is_redirect_enum(enum s_type word);
+bool		is_redirect_enum(enum e_type word);
 void		free_list_ptr(t_ast_ptr **list, t_ast **temp_free, int option);
 
 /*					SIGNALS					*/
@@ -574,9 +576,9 @@ int			check_builtin(char *word);
 int			check_file(char *word);
 int			check_absolute_path_cmd(char *word);
 int			check_word_part(char *word, t_word *boolean);
-enum s_type	check_word(char *word, t_word *boolean);
+enum e_type	check_word(char *word, t_word *boolean);
 bool		define_word(t_token **token_list, t_word *boolean);
-bool		is_operator(enum s_type type, int option);
+bool		is_operator(enum e_type type, int option);
 int			double_operator(t_token *c);
 int			double_operator_next(t_token *c);
 int			check_first_token(t_token *c);
@@ -604,19 +606,20 @@ void		free_array(char **array);
 void		free_ast(t_ast *node);
 
 /*					 UTILS					*/
-
+void		update_var_sigint(t_all **p);
+void		reset_signal_free(t_all *p);
 bool		ft_is_in_env(t_env *env, char *str);
 void		change_value(t_env *env, char *key, char *value);
 void		change_value_equal(t_env *env, char *key);
 void		error_cd(char *str);
 char		*ft_strndup(char *str, int n);
 int			ft_strcmp(char *s1, char *s2);
-void 		print_env(t_env *env);
+void		print_env(t_env *env);
 void		print_error_token(t_token *current);
 void		print_error_token_special(char *value);
 void		print_error_cmd_not_found(t_token *current);
-void		printAST(t_ast* node, int level);
-const char*	getAST_Class(t_ast *current);
+/* void		printAST(t_ast* node, int level);
+const char	*getAST_Class(t_ast *current); */
 void		print_tab(char **command);
 void		print_folder(char *fd_src, int fd);
 
@@ -639,7 +642,7 @@ int			ft_cd(t_env *env, char **cmd);
 //EXPORT
 char		*get_env_var(t_env *envp, char	*var);
 int			ft_export(t_env *env, char **cmd);
-int 		split_env(char *new_env, int len, t_env **env_list);
+int			split_env(char *new_env, int len, t_env **env_list);
 t_env		*env_init(void);
 int			export_free(t_env **add_env, int option);
 int			valid_export(char *new_env);
@@ -656,10 +659,10 @@ char		*minishell(t_all *p, char **env);
 //extern int	g_sig_int;
 /*						AST	TRY				*/
 
-#define PRECEDENCE_LOWEST 1
-#define PRECEDENCE_AND_OR 2
-#define PRECEDENCE_PIPE 3
-#define PRECEDENCE_REDIRECTION 4
-#define PRECEDENCE_HIGHEST 5
+# define PRECEDENCE_LOWEST 1
+# define PRECEDENCE_AND_OR 2
+# define PRECEDENCE_PIPE 3
+# define PRECEDENCE_REDIRECTION 4
+# define PRECEDENCE_HIGHEST 5
 
 #endif

@@ -6,13 +6,13 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/15 16:42:50 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 16:16:26 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 17:07:33 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	is_operator(enum s_type type, int option)
+bool	is_operator(enum e_type type, int option)
 {
 	if (option == 1)
 	{

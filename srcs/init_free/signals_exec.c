@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals_exec.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 16:35:50 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 17:01:23 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 18:28:29 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,10 @@ void	sig_handler_child(int sig)
 	extern int	g_sig_int;
 
 	if (sig == SIGINT)
-		g_sig_int = 1;
+	{
+		write(1, "\n", 1);
+		g_sig_int = 2;
+	}
 	else if (sig == SIGQUIT)
 	{
 		g_sig_int = 1;

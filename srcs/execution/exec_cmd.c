@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 17:24:24 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 16:43:22 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/15 18:20:05 by Matprod          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+extern int	g_sig_int;
 
 bool	is_builtin(char *cmd)
 {
