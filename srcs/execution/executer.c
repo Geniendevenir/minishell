@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 21:23:21 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 16:43:45 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/16 13:53:32 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,20 +50,20 @@ int	execute_command(t_all *p, t_ast **current, t_exec *exec, char **env)
 			return (error_executer(NULL, 4), exec_free(exec), 1);
 		if (exec->command[0])
 		{
-			assign_redirect((*current), exec);
+			if (assign_redirect(*current, exec) == -1)
+				return (exec_free(exec), 0);
 			if (open_files(p, exec) == 1)
-				return (close_files(exec, p), exec_free(exec), 1);
+				return (close_files(exec, p), exec_free(exec), 0);
 			if (is_builtin(exec->command[0]) == 1 && p->exit_status == 0)
 				p->exit_status = exec_builtin(&p, exec, exec->command);
 			else if (p->exit_status == 0)
 			{
 				p->exit_status = check_cmd(exec, p->env);
-				if (p->exit_status == 0)
-				{
-					p->exit_status = exec_cmd(p, exec, env);
-					if (p->exit_status < 0)
-						return (close_files(exec, p), exec_free(exec), 1);
-				}
+				if (p->exit_status != 0)
+					return (0);
+				p->exit_status = exec_cmd(p, exec, env);
+				if (p->exit_status < 0)
+					return (close_files(exec, p), exec_free(exec), 1);
 			}
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:22:25 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 14:12:47 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/16 13:52:20 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ int	pipe_parser(t_all *p, t_ast *current, t_exec **exec, int option)
 			return (1);
 	}
 	set_pipe(p, node);
-	assign_redirect(current, node);
+	if (assign_redirect(current, node) == -1)
+		return (1);
 	pipe_addback(p, exec, node);
 	if (option == 0)
 	{

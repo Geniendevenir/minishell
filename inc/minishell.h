@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Matprod <matprod42@gmail.com>              +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 11:15:24 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/16 11:32:52 by Matprod          ###   ########.fr       */
+/*   Updated: 2024/09/16 13:42:47 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,6 +284,7 @@ char		*get_path(const char *cmd, t_env *env, int *error);
 
 //exec_redirect
 int			assign_redirect(t_ast *c, t_exec *ex);
+int			assign_redirect_next(t_exec *ex, int option);
 void		redirect_pipe(t_ast *current, t_exec *exec);
 void		redirect_pipe_next(t_ast *current, t_exec *exec);
 

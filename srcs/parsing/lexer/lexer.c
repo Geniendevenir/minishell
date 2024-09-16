@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 14:38:47 by allan             #+#    #+#             */
-/*   Updated: 2024/09/15 16:30:37 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/16 12:29:43 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,12 @@ bool	while_in_lexer(int error, t_token **token_list, char *cmd_line)
 
 bool	lexer(char *cmd_line, t_token **token_list, int error)
 {
-	if (check_quotes(cmd_line) || check_semicolon(cmd_line))
+	if (check_quotes(cmd_line))
 	{
 		if (check_quotes(cmd_line) == 1)
 			error_lexer(ERROR_DQUOTES);
 		else if (check_quotes(cmd_line) == 2)
 			error_lexer(ERROR_SQUOTES);
-		else if (check_semicolon(cmd_line) == 1)
-			error_lexer(ERROR_SEMICOLON);
-		else if (check_semicolon(cmd_line) == 2)
-			error_lexer(ERROR_DUOSEMICOLON);
 		token_free(token_list);
 		return (1);
 	}

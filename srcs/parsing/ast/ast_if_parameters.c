@@ -6,7 +6,7 @@
 /*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 13:23:01 by Matprod           #+#    #+#             */
-/*   Updated: 2024/09/15 17:07:33 by allan            ###   ########.fr       */
+/*   Updated: 2024/09/16 13:54:31 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ bool	is_redirect_enum(enum e_type word)
 {
 	if (word == WORD_FILEIN
 		|| word == WORD_LIMITER || word == WORD_FILEOUT
-		|| word == WORD_FILEOUT_APPEND)
+		|| word == WORD_FILEOUT_APPEND || word == WORD_SQLIMITER)
 		return (1);
 	else
 		return (0);
